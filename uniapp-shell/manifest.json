@@ -1,0 +1,19 @@
+{
+  "name": "PS2UniAppShell",
+  "appid": "__UNI__PS2_SHELL",
+  "description": "UniApp shell for packaged web app",
+  "versionName": "1.0.0",
+  "versionCode": "100",
+  "transformPx": false,
+  "app-plus": {
+    "usingComponents": true,
+    "screenOrientation": ["landscape-primary"],
+    "distribute": {
+      "android": {
+        "permissions": [
+          "<uses-permission android:name=\"android.permission.INTERNET\"/>"
+        ]
+      }
+    }
+  }
+}

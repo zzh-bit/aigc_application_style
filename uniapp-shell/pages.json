@@ -1,0 +1,17 @@
+{
+  "pages": [
+    {
+      "path": "pages/web/web",
+      "style": {
+        "navigationStyle": "custom",
+        "disableScroll": true
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "PS2",
+    "navigationBarBackgroundColor": "#000000",
+    "backgroundColor": "#000000"
+  }
+}

@@ -1,0 +1,6500 @@
+[
+  {
+    "id": "1775576656573-7a05ae4665412",
+    "createdAt": "2026-04-07T15:44:16.573Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 67,
+    "emotions": {
+      "calm": 50,
+      "happy": 19,
+      "sad": 67,
+      "angry": 26,
+      "fear": 66,
+      "surprise": 46,
+      "neutral": 0,
+      "anxious": 60,
+      "excited": 28
+    }
+  },
+  {
+    "id": "1775576656466-7ad7c19a534c9",
+    "createdAt": "2026-04-07T15:44:16.466Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 83,
+      "happy": 3,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 37,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576656367-23e0e3cb4397c",
+    "createdAt": "2026-04-07T15:44:16.367Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 73,
+      "happy": 3,
+      "sad": 94,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576656330-941edfec5a8bc8",
+    "createdAt": "2026-04-07T15:44:16.330Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 79,
+      "happy": 3,
+      "sad": 94,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 44,
+      "neutral": 15,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576656156-525f94c1963fd8",
+    "createdAt": "2026-04-07T15:44:16.157Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 67,
+      "happy": 3,
+      "sad": 93,
+      "angry": 2,
+      "fear": 13,
+      "surprise": 44,
+      "neutral": 0,
+      "anxious": 32,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576656045-306c3fc4d05528",
+    "createdAt": "2026-04-07T15:44:16.045Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 71,
+      "happy": 4,
+      "sad": 93,
+      "angry": 0,
+      "fear": 5,
+      "surprise": 45,
+      "neutral": 0,
+      "anxious": 26,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576655980-02f8adae0cf34",
+    "createdAt": "2026-04-07T15:44:15.980Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 72,
+      "happy": 4,
+      "sad": 93,
+      "angry": 0,
+      "fear": 4,
+      "surprise": 45,
+      "neutral": 0,
+      "anxious": 25,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576655715-05026f383065d",
+    "createdAt": "2026-04-07T15:44:15.715Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 92,
+    "emotions": {
+      "calm": 82,
+      "happy": 4,
+      "sad": 92,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 46,
+      "neutral": 24,
+      "anxious": 23,
+      "excited": 16
+    }
+  },
+  {
+    "id": "1775576655554-2aebbb17ee3768",
+    "createdAt": "2026-04-07T15:44:15.554Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 91,
+    "emotions": {
+      "calm": 82,
+      "happy": 5,
+      "sad": 91,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 47,
+      "neutral": 26,
+      "anxious": 23,
+      "excited": 17
+    }
+  },
+  {
+    "id": "1775576655440-b3f1aa434555e",
+    "createdAt": "2026-04-07T15:44:15.440Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 90,
+    "emotions": {
+      "calm": 82,
+      "happy": 5,
+      "sad": 90,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 48,
+      "neutral": 27,
+      "anxious": 22,
+      "excited": 17
+    }
+  },
+  {
+    "id": "1775576655338-12ed5a4192582",
+    "createdAt": "2026-04-07T15:44:15.338Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 89,
+    "emotions": {
+      "calm": 81,
+      "happy": 6,
+      "sad": 89,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 48,
+      "neutral": 26,
+      "anxious": 22,
+      "excited": 18
+    }
+  },
+  {
+    "id": "1775576655235-80be13de528228",
+    "createdAt": "2026-04-07T15:44:15.235Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 89,
+    "emotions": {
+      "calm": 81,
+      "happy": 6,
+      "sad": 89,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 49,
+      "neutral": 28,
+      "anxious": 22,
+      "excited": 18
+    }
+  },
+  {
+    "id": "1775576655147-b29a7cbd5af67",
+    "createdAt": "2026-04-07T15:44:15.147Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 89,
+    "emotions": {
+      "calm": 81,
+      "happy": 6,
+      "sad": 89,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 48,
+      "neutral": 28,
+      "anxious": 22,
+      "excited": 18
+    }
+  },
+  {
+    "id": "1775576655031-dd0d1993f08fa",
+    "createdAt": "2026-04-07T15:44:15.031Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 89,
+    "emotions": {
+      "calm": 84,
+      "happy": 6,
+      "sad": 89,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 49,
+      "neutral": 40,
+      "anxious": 22,
+      "excited": 18
+    }
+  },
+  {
+    "id": "1775576654902-313a6839ef7cd8",
+    "createdAt": "2026-04-07T15:44:14.902Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 92,
+    "emotions": {
+      "calm": 82,
+      "happy": 4,
+      "sad": 92,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 45,
+      "neutral": 28,
+      "anxious": 23,
+      "excited": 16
+    }
+  },
+  {
+    "id": "1775576654802-25cf3c0e4749d",
+    "createdAt": "2026-04-07T15:44:14.802Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 81,
+      "happy": 3,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 44,
+      "neutral": 21,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576654734-0802fcb4afd0b",
+    "createdAt": "2026-04-07T15:44:14.734Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 82,
+      "happy": 3,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 44,
+      "neutral": 25,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576654572-2aee7525dc54d",
+    "createdAt": "2026-04-07T15:44:14.572Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 81,
+      "happy": 3,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 20,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576654440-78bb48eb72ee6",
+    "createdAt": "2026-04-07T15:44:14.440Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 81,
+      "happy": 3,
+      "sad": 94,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 22,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576654332-c0bb4bb8a0ce6",
+    "createdAt": "2026-04-07T15:44:14.332Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 81,
+      "happy": 3,
+      "sad": 94,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 21,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576654231-cdb972d3b31ff8",
+    "createdAt": "2026-04-07T15:44:14.231Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 84,
+      "happy": 2,
+      "sad": 96,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 42,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576654116-d152501d0fc908",
+    "createdAt": "2026-04-07T15:44:14.116Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 82,
+      "happy": 2,
+      "sad": 96,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 24,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576654004-7532ff348d542",
+    "createdAt": "2026-04-07T15:44:14.004Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 84,
+      "happy": 2,
+      "sad": 96,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 42,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576653900-aae7245bae6eb8",
+    "createdAt": "2026-04-07T15:44:13.900Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 73,
+      "happy": 2,
+      "sad": 96,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576653789-459306ed97e0d8",
+    "createdAt": "2026-04-07T15:44:13.789Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 83,
+      "happy": 2,
+      "sad": 96,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 38,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576653721-c2a356632acc3",
+    "createdAt": "2026-04-07T15:44:13.721Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 80,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 19,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576653556-f1fbb97df7b87",
+    "createdAt": "2026-04-07T15:44:13.556Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 81,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 18,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576653455-02cdf0a3f5a6a8",
+    "createdAt": "2026-04-07T15:44:13.455Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 71,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 3,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 26,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576653342-4dcdb26489c108",
+    "createdAt": "2026-04-07T15:44:13.342Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 75,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576653240-1efab8195771a",
+    "createdAt": "2026-04-07T15:44:13.240Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 76,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576653126-6173d5391a6f",
+    "createdAt": "2026-04-07T15:44:13.126Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 85,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 44,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576653018-7322dcc2138e",
+    "createdAt": "2026-04-07T15:44:13.018Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 82,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 31,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576652928-8edc40987b8ad8",
+    "createdAt": "2026-04-07T15:44:12.928Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 83,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 25,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576652798-9cf7526c6475e8",
+    "createdAt": "2026-04-07T15:44:12.798Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 99,
+    "emotions": {
+      "calm": 48,
+      "happy": 0,
+      "sad": 99,
+      "angry": 30,
+      "fear": 47,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 57,
+      "excited": 16
+    }
+  },
+  {
+    "id": "1775576652710-5e16b6cf2451f",
+    "createdAt": "2026-04-07T15:44:12.710Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 99,
+    "emotions": {
+      "calm": 84,
+      "happy": 0,
+      "sad": 99,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 40,
+      "anxious": 25,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576652657-f4d38b20cf44c",
+    "createdAt": "2026-04-07T15:44:12.657Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 99,
+    "emotions": {
+      "calm": 78,
+      "happy": 0,
+      "sad": 99,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 1,
+      "anxious": 25,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576642094-cd5709e8a4ec7",
+    "createdAt": "2026-04-07T15:44:02.094Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 76,
+    "emotions": {
+      "calm": 76,
+      "happy": 18,
+      "sad": 69,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 75,
+      "neutral": 19,
+      "anxious": 17,
+      "excited": 32
+    }
+  },
+  {
+    "id": "1775576641988-a9e312c0f9ca4",
+    "createdAt": "2026-04-07T15:44:01.988Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 66,
+    "emotions": {
+      "calm": 62,
+      "happy": 20,
+      "sad": 66,
+      "angry": 8,
+      "fear": 38,
+      "surprise": 66,
+      "neutral": 0,
+      "anxious": 40,
+      "excited": 32
+    }
+  },
+  {
+    "id": "1775576641887-90e671b9708a2",
+    "createdAt": "2026-04-07T15:44:01.887Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 86,
+    "emotions": {
+      "calm": 75,
+      "happy": 8,
+      "sad": 86,
+      "angry": 0,
+      "fear": 3,
+      "surprise": 56,
+      "neutral": 0,
+      "anxious": 23,
+      "excited": 21
+    }
+  },
+  {
+    "id": "1775576641783-5979e2b0772d68",
+    "createdAt": "2026-04-07T15:44:01.783Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 89,
+    "emotions": {
+      "calm": 79,
+      "happy": 6,
+      "sad": 89,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 52,
+      "neutral": 20,
+      "anxious": 22,
+      "excited": 19
+    }
+  },
+  {
+    "id": "1775576641669-1527f020110b7",
+    "createdAt": "2026-04-07T15:44:01.669Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 88,
+    "emotions": {
+      "calm": 62,
+      "happy": 6,
+      "sad": 88,
+      "angry": 10,
+      "fear": 27,
+      "surprise": 50,
+      "neutral": 0,
+      "anxious": 40,
+      "excited": 20
+    }
+  },
+  {
+    "id": "1775576641574-1465848027d83",
+    "createdAt": "2026-04-07T15:44:01.574Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 88,
+    "emotions": {
+      "calm": 60,
+      "happy": 7,
+      "sad": 88,
+      "angry": 12,
+      "fear": 32,
+      "surprise": 51,
+      "neutral": 0,
+      "anxious": 43,
+      "excited": 21
+    }
+  },
+  {
+    "id": "1775576641463-114af38879ff18",
+    "createdAt": "2026-04-07T15:44:01.463Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 89,
+    "emotions": {
+      "calm": 66,
+      "happy": 6,
+      "sad": 89,
+      "angry": 4,
+      "fear": 19,
+      "surprise": 48,
+      "neutral": 0,
+      "anxious": 34,
+      "excited": 18
+    }
+  },
+  {
+    "id": "1775576641387-453cb12caf561",
+    "createdAt": "2026-04-07T15:44:01.387Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 87,
+    "emotions": {
+      "calm": 67,
+      "happy": 7,
+      "sad": 87,
+      "angry": 3,
+      "fear": 18,
+      "surprise": 52,
+      "neutral": 0,
+      "anxious": 33,
+      "excited": 20
+    }
+  },
+  {
+    "id": "1775576641235-904ad78082867",
+    "createdAt": "2026-04-07T15:44:01.235Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 85,
+    "emotions": {
+      "calm": 85,
+      "happy": 9,
+      "sad": 84,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 55,
+      "neutral": 46,
+      "anxious": 21,
+      "excited": 21
+    }
+  },
+  {
+    "id": "1775576641104-4321a43521f798",
+    "createdAt": "2026-04-07T15:44:01.104Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 83,
+    "emotions": {
+      "calm": 83,
+      "happy": 12,
+      "sad": 79,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 61,
+      "neutral": 27,
+      "anxious": 20,
+      "excited": 25
+    }
+  },
+  {
+    "id": "1775576641001-132a189a85c5b",
+    "createdAt": "2026-04-07T15:44:01.001Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 82,
+    "emotions": {
+      "calm": 82,
+      "happy": 15,
+      "sad": 74,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 68,
+      "neutral": 33,
+      "anxious": 19,
+      "excited": 28
+    }
+  },
+  {
+    "id": "1775576640893-4a9b6bbe53c85",
+    "createdAt": "2026-04-07T15:44:00.893Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 72,
+    "emotions": {
+      "calm": 57,
+      "happy": 16,
+      "sad": 72,
+      "angry": 17,
+      "fear": 51,
+      "surprise": 71,
+      "neutral": 0,
+      "anxious": 51,
+      "excited": 33
+    }
+  },
+  {
+    "id": "1775576640789-14f3beda9e76",
+    "createdAt": "2026-04-07T15:44:00.789Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 74,
+    "emotions": {
+      "calm": 54,
+      "happy": 15,
+      "sad": 74,
+      "angry": 21,
+      "fear": 54,
+      "surprise": 69,
+      "neutral": 0,
+      "anxious": 54,
+      "excited": 32
+    }
+  },
+  {
+    "id": "1775576640670-81417b923a9b88",
+    "createdAt": "2026-04-07T15:44:00.670Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 78,
+    "emotions": {
+      "calm": 78,
+      "happy": 13,
+      "sad": 78,
+      "angry": 0,
+      "fear": 3,
+      "surprise": 63,
+      "neutral": 14,
+      "anxious": 21,
+      "excited": 26
+    }
+  },
+  {
+    "id": "1775576640566-f8fdc2b6f2de",
+    "createdAt": "2026-04-07T15:44:00.566Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 81,
+    "emotions": {
+      "calm": 61,
+      "happy": 10,
+      "sad": 81,
+      "angry": 11,
+      "fear": 34,
+      "surprise": 59,
+      "neutral": 0,
+      "anxious": 43,
+      "excited": 25
+    }
+  },
+  {
+    "id": "1775576640464-b0a1d0f2851f08",
+    "createdAt": "2026-04-07T15:44:00.464Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 84,
+    "emotions": {
+      "calm": 84,
+      "happy": 9,
+      "sad": 83,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 56,
+      "neutral": 46,
+      "anxious": 21,
+      "excited": 22
+    }
+  },
+  {
+    "id": "1775576640377-13252ca8de6f2",
+    "createdAt": "2026-04-07T15:44:00.377Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 85,
+    "emotions": {
+      "calm": 78,
+      "happy": 9,
+      "sad": 85,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 54,
+      "neutral": 14,
+      "anxious": 21,
+      "excited": 21
+    }
+  },
+  {
+    "id": "1775576640213-dac61729bb01",
+    "createdAt": "2026-04-07T15:44:00.213Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 84,
+      "happy": 4,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 43,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576640086-9d8c2f81aff638",
+    "createdAt": "2026-04-07T15:44:00.086Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 81,
+      "happy": 3,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 25,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576639981-d3979f02b028",
+    "createdAt": "2026-04-07T15:43:59.981Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 82,
+      "happy": 3,
+      "sad": 94,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 23,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576639873-8ecc650666771",
+    "createdAt": "2026-04-07T15:43:59.873Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 80,
+      "happy": 3,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 22,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576639766-dc03c7412f47c8",
+    "createdAt": "2026-04-07T15:43:59.766Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 81,
+      "happy": 3,
+      "sad": 94,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 23,
+      "anxious": 23,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576639653-d1fc9f043487d",
+    "createdAt": "2026-04-07T15:43:59.653Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 80,
+      "happy": 4,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 22,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576639548-ad68c5de2db5f",
+    "createdAt": "2026-04-07T15:43:59.548Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 82,
+      "happy": 3,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 24,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576639449-fe8e30e9bc748",
+    "createdAt": "2026-04-07T15:43:59.449Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 92,
+    "emotions": {
+      "calm": 81,
+      "happy": 4,
+      "sad": 92,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 24,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576639370-bcf00ecc40dfe",
+    "createdAt": "2026-04-07T15:43:59.370Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 92,
+    "emotions": {
+      "calm": 81,
+      "happy": 4,
+      "sad": 92,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 44,
+      "neutral": 22,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576639198-36a041608dfd28",
+    "createdAt": "2026-04-07T15:43:59.198Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 92,
+    "emotions": {
+      "calm": 81,
+      "happy": 4,
+      "sad": 92,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 44,
+      "neutral": 22,
+      "anxious": 23,
+      "excited": 16
+    }
+  },
+  {
+    "id": "1775576639065-fc670b6dee8e9",
+    "createdAt": "2026-04-07T15:43:59.065Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 91,
+    "emotions": {
+      "calm": 80,
+      "happy": 5,
+      "sad": 91,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 45,
+      "neutral": 24,
+      "anxious": 23,
+      "excited": 16
+    }
+  },
+  {
+    "id": "1775576638955-1da8f5f5b08138",
+    "createdAt": "2026-04-07T15:43:58.955Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 92,
+    "emotions": {
+      "calm": 82,
+      "happy": 4,
+      "sad": 92,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 44,
+      "neutral": 27,
+      "anxious": 23,
+      "excited": 16
+    }
+  },
+  {
+    "id": "1775576638843-57389c9f21a038",
+    "createdAt": "2026-04-07T15:43:58.843Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 82,
+      "happy": 3,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 35,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576638734-b0485a592eb3e8",
+    "createdAt": "2026-04-07T15:43:58.734Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 99,
+    "emotions": {
+      "calm": 71,
+      "happy": 0,
+      "sad": 99,
+      "angry": 0,
+      "fear": 1,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 26,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576638621-a8e01aa1d6452",
+    "createdAt": "2026-04-07T15:43:58.621Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 99,
+    "emotions": {
+      "calm": 71,
+      "happy": 0,
+      "sad": 99,
+      "angry": 0,
+      "fear": 2,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 26,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576638527-343f574983269",
+    "createdAt": "2026-04-07T15:43:58.527Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 99,
+    "emotions": {
+      "calm": 75,
+      "happy": 0,
+      "sad": 99,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 25,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576638427-cc341373e42f18",
+    "createdAt": "2026-04-07T15:43:58.427Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 99,
+    "emotions": {
+      "calm": 74,
+      "happy": 0,
+      "sad": 99,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 25,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576638346-5cca9f3efe8de8",
+    "createdAt": "2026-04-07T15:43:58.346Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 99,
+    "emotions": {
+      "calm": 78,
+      "happy": 0,
+      "sad": 99,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 11,
+      "anxious": 25,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576638189-290ca136ff7b2",
+    "createdAt": "2026-04-07T15:43:58.189Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 99,
+    "emotions": {
+      "calm": 75,
+      "happy": 0,
+      "sad": 99,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 25,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576638072-eab9192c98bbe",
+    "createdAt": "2026-04-07T15:43:58.072Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 71,
+      "happy": 0,
+      "sad": 98,
+      "angry": 0,
+      "fear": 1,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 25,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576637977-58ca5c893055c8",
+    "createdAt": "2026-04-07T15:43:57.977Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 71,
+      "happy": 0,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 25,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576637870-243f2639a59708",
+    "createdAt": "2026-04-07T15:43:57.870Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 99,
+    "emotions": {
+      "calm": 70,
+      "happy": 0,
+      "sad": 99,
+      "angry": 0,
+      "fear": 4,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 27,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576637765-386d5e77e6bc7",
+    "createdAt": "2026-04-07T15:43:57.765Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 73,
+      "happy": 0,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 25,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576637659-0080afb11c23e8",
+    "createdAt": "2026-04-07T15:43:57.659Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 75,
+      "happy": 0,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 25,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576637560-031eae33ee1298",
+    "createdAt": "2026-04-07T15:43:57.560Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 77,
+      "happy": 0,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 4,
+      "anxious": 25,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576637451-db107c73d5b928",
+    "createdAt": "2026-04-07T15:43:57.451Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 75,
+      "happy": 0,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 25,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576637347-c1f9d64c0b0a48",
+    "createdAt": "2026-04-07T15:43:57.347Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 72,
+      "happy": 0,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 25,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576637241-230307e4ddb408",
+    "createdAt": "2026-04-07T15:43:57.241Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 70,
+      "happy": 0,
+      "sad": 98,
+      "angry": 0,
+      "fear": 4,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 27,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576637079-c4ff277a0bcba",
+    "createdAt": "2026-04-07T15:43:57.079Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 77,
+      "happy": 0,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 8,
+      "anxious": 25,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576636977-1592921cb146c",
+    "createdAt": "2026-04-07T15:43:56.977Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 75,
+      "happy": 0,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 25,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576636871-6c686c4c647d88",
+    "createdAt": "2026-04-07T15:43:56.871Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 72,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 25,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576636772-77a250cc169f6",
+    "createdAt": "2026-04-07T15:43:56.772Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 78,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 9,
+      "anxious": 25,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576636668-3df827770db33",
+    "createdAt": "2026-04-07T15:43:56.668Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 83,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 35,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576636559-2c5130d0081bf",
+    "createdAt": "2026-04-07T15:43:56.559Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 85,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 38,
+      "anxious": 25,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576636453-aa2f8d0b0f134",
+    "createdAt": "2026-04-07T15:43:56.453Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 78,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 7,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576636358-ee7a9220777e4",
+    "createdAt": "2026-04-07T15:43:56.358Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 99,
+    "emotions": {
+      "calm": 48,
+      "happy": 0,
+      "sad": 99,
+      "angry": 30,
+      "fear": 47,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 57,
+      "excited": 16
+    }
+  },
+  {
+    "id": "1775576636209-c1d28166ed9d08",
+    "createdAt": "2026-04-07T15:43:56.209Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 99,
+    "emotions": {
+      "calm": 78,
+      "happy": 0,
+      "sad": 99,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 1,
+      "anxious": 25,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576634266-3f93d37533c288",
+    "createdAt": "2026-04-07T15:43:54.266Z",
+    "source": "council",
+    "topEmotion": "surprise",
+    "intensity": 88,
+    "emotions": {
+      "calm": 52,
+      "happy": 24,
+      "sad": 59,
+      "angry": 23,
+      "fear": 68,
+      "surprise": 88,
+      "neutral": 0,
+      "anxious": 59,
+      "excited": 43
+    }
+  },
+  {
+    "id": "1775576634175-4d37a5cad55a48",
+    "createdAt": "2026-04-07T15:43:54.175Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 85,
+      "happy": 3,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 44,
+      "neutral": 37,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576634027-c83dd56df36908",
+    "createdAt": "2026-04-07T15:43:54.027Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 83,
+      "happy": 4,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 45,
+      "neutral": 27,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576633857-6060899ce530d",
+    "createdAt": "2026-04-07T15:43:53.857Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 92,
+    "emotions": {
+      "calm": 82,
+      "happy": 4,
+      "sad": 92,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 45,
+      "neutral": 23,
+      "anxious": 23,
+      "excited": 16
+    }
+  },
+  {
+    "id": "1775576633751-1ea4d70ddd8e3",
+    "createdAt": "2026-04-07T15:43:53.751Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 92,
+    "emotions": {
+      "calm": 85,
+      "happy": 4,
+      "sad": 92,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 45,
+      "neutral": 46,
+      "anxious": 23,
+      "excited": 16
+    }
+  },
+  {
+    "id": "1775576633639-b0b691f4daf0f",
+    "createdAt": "2026-04-07T15:43:53.639Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 92,
+    "emotions": {
+      "calm": 82,
+      "happy": 4,
+      "sad": 92,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 45,
+      "neutral": 26,
+      "anxious": 23,
+      "excited": 16
+    }
+  },
+  {
+    "id": "1775576633532-28fccdea04d14",
+    "createdAt": "2026-04-07T15:43:53.532Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 92,
+    "emotions": {
+      "calm": 83,
+      "happy": 4,
+      "sad": 92,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 46,
+      "neutral": 32,
+      "anxious": 23,
+      "excited": 16
+    }
+  },
+  {
+    "id": "1775576633426-6227010067d418",
+    "createdAt": "2026-04-07T15:43:53.426Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 92,
+    "emotions": {
+      "calm": 83,
+      "happy": 4,
+      "sad": 92,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 45,
+      "neutral": 29,
+      "anxious": 23,
+      "excited": 16
+    }
+  },
+  {
+    "id": "1775576633320-bfd9caae94e188",
+    "createdAt": "2026-04-07T15:43:53.320Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 82,
+      "happy": 4,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 45,
+      "neutral": 26,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576633223-5dcd508652c198",
+    "createdAt": "2026-04-07T15:43:53.223Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 85,
+      "happy": 3,
+      "sad": 94,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 36,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576633111-b55e9eb27e417",
+    "createdAt": "2026-04-07T15:43:53.111Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 83,
+      "happy": 3,
+      "sad": 94,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 26,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576633043-abbaa1a6f082a",
+    "createdAt": "2026-04-07T15:43:53.043Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 81,
+      "happy": 4,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 44,
+      "neutral": 20,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576632891-47db69b748ee78",
+    "createdAt": "2026-04-07T15:43:52.891Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 92,
+    "emotions": {
+      "calm": 86,
+      "happy": 4,
+      "sad": 92,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 42,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576632754-3f19b533454cf",
+    "createdAt": "2026-04-07T15:43:52.754Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 92,
+    "emotions": {
+      "calm": 82,
+      "happy": 4,
+      "sad": 92,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 32,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576632637-a366e589668af",
+    "createdAt": "2026-04-07T15:43:52.637Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 92,
+    "emotions": {
+      "calm": 85,
+      "happy": 4,
+      "sad": 92,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 45,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576632539-05dda5b403db78",
+    "createdAt": "2026-04-07T15:43:52.539Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 83,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 34,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576632434-620836ac43411",
+    "createdAt": "2026-04-07T15:43:52.434Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 79,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 14,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576632324-bdd411536813",
+    "createdAt": "2026-04-07T15:43:52.324Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 82,
+      "happy": 3,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 29,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576632224-89fd9d4cf8445",
+    "createdAt": "2026-04-07T15:43:52.224Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 85,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 38,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576632122-9d9d8f8ede5828",
+    "createdAt": "2026-04-07T15:43:52.122Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 84,
+      "happy": 3,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 41,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576632042-b21c270f33ccb",
+    "createdAt": "2026-04-07T15:43:52.042Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 84,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 29,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576631918-e8eea9c170d09",
+    "createdAt": "2026-04-07T15:43:51.918Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 85,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 37,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576631767-dd6b726df41c78",
+    "createdAt": "2026-04-07T15:43:51.767Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 85,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 45,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576631521-3eacbe540a8de8",
+    "createdAt": "2026-04-07T15:43:51.521Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 84,
+      "happy": 3,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 42,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576631466-1695b775fdee8",
+    "createdAt": "2026-04-07T15:43:51.466Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 89,
+    "emotions": {
+      "calm": 85,
+      "happy": 6,
+      "sad": 89,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 49,
+      "neutral": 37,
+      "anxious": 22,
+      "excited": 18
+    }
+  },
+  {
+    "id": "1775576631315-023c4585955e28",
+    "createdAt": "2026-04-07T15:43:51.315Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 85,
+    "emotions": {
+      "calm": 85,
+      "happy": 12,
+      "sad": 80,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 61,
+      "neutral": 45,
+      "anxious": 20,
+      "excited": 25
+    }
+  },
+  {
+    "id": "1775576631190-ae575386933ad8",
+    "createdAt": "2026-04-07T15:43:51.190Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 82,
+    "emotions": {
+      "calm": 82,
+      "happy": 16,
+      "sad": 73,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 70,
+      "neutral": 25,
+      "anxious": 18,
+      "excited": 30
+    }
+  },
+  {
+    "id": "1775576631093-6ea1d947d5f8c",
+    "createdAt": "2026-04-07T15:43:51.093Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 84,
+    "emotions": {
+      "calm": 84,
+      "happy": 19,
+      "sad": 68,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 77,
+      "neutral": 41,
+      "anxious": 17,
+      "excited": 33
+    }
+  },
+  {
+    "id": "1775576631001-03bf213887418",
+    "createdAt": "2026-04-07T15:43:51.002Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 84,
+    "emotions": {
+      "calm": 84,
+      "happy": 20,
+      "sad": 65,
+      "angry": 0,
+      "fear": 3,
+      "surprise": 80,
+      "neutral": 39,
+      "anxious": 18,
+      "excited": 35
+    }
+  },
+  {
+    "id": "1775576630844-cef462ba57e2d8",
+    "createdAt": "2026-04-07T15:43:50.844Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 85,
+    "emotions": {
+      "calm": 85,
+      "happy": 21,
+      "sad": 63,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 82,
+      "neutral": 37,
+      "anxious": 16,
+      "excited": 36
+    }
+  },
+  {
+    "id": "1775576630783-5108ac8dcfc6c",
+    "createdAt": "2026-04-07T15:43:50.783Z",
+    "source": "council",
+    "topEmotion": "surprise",
+    "intensity": 86,
+    "emotions": {
+      "calm": 82,
+      "happy": 23,
+      "sad": 61,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 86,
+      "neutral": 24,
+      "anxious": 15,
+      "excited": 38
+    }
+  },
+  {
+    "id": "1775576630484-d538328a1609f",
+    "createdAt": "2026-04-07T15:43:50.484Z",
+    "source": "council",
+    "topEmotion": "surprise",
+    "intensity": 91,
+    "emotions": {
+      "calm": 72,
+      "happy": 26,
+      "sad": 56,
+      "angry": 0,
+      "fear": 29,
+      "surprise": 91,
+      "neutral": 0,
+      "anxious": 31,
+      "excited": 41
+    }
+  },
+  {
+    "id": "1775576630384-469cff7a64eb8",
+    "createdAt": "2026-04-07T15:43:50.384Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 85,
+      "happy": 4,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 44,
+      "neutral": 39,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576630266-d6af810356e528",
+    "createdAt": "2026-04-07T15:43:50.266Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 82,
+      "happy": 3,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 25,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576630161-2d01765ba633e",
+    "createdAt": "2026-04-07T15:43:50.161Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 82,
+      "happy": 3,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 24,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576630047-540973056779b",
+    "createdAt": "2026-04-07T15:43:50.047Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 82,
+      "happy": 3,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 25,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576629851-bb46d1d6996248",
+    "createdAt": "2026-04-07T15:43:49.851Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 82,
+      "happy": 3,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 25,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576629685-6dfc757b064098",
+    "createdAt": "2026-04-07T15:43:49.685Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 81,
+      "happy": 4,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 22,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576629574-3df63d97efc6d8",
+    "createdAt": "2026-04-07T15:43:49.574Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 82,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 22,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576629487-ed890093c21358",
+    "createdAt": "2026-04-07T15:43:49.487Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 67,
+      "happy": 2,
+      "sad": 95,
+      "angry": 2,
+      "fear": 11,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 31,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576629479-bfe0fe5d354c6",
+    "createdAt": "2026-04-07T15:43:49.479Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 70,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 5,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 27,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576629413-0d35f626268408",
+    "createdAt": "2026-04-07T15:43:49.413Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 85,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 44,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576629265-9c4fe6f7738278",
+    "createdAt": "2026-04-07T15:43:49.265Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 82,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 30,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576628943-82695de099ee18",
+    "createdAt": "2026-04-07T15:43:48.943Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 84,
+      "happy": 3,
+      "sad": 94,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 44,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576628785-659f09f2305f88",
+    "createdAt": "2026-04-07T15:43:48.785Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 84,
+      "happy": 3,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 41,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576628661-17ba9a14c28548",
+    "createdAt": "2026-04-07T15:43:48.661Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 85,
+      "happy": 3,
+      "sad": 94,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 38,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576628555-8b3df26716e69",
+    "createdAt": "2026-04-07T15:43:48.555Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 85,
+      "happy": 3,
+      "sad": 94,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 46,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576628447-96e62418eac728",
+    "createdAt": "2026-04-07T15:43:48.447Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 82,
+      "happy": 3,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 25,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576628343-2e50f94a6ebe8",
+    "createdAt": "2026-04-07T15:43:48.343Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 84,
+      "happy": 4,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 44,
+      "neutral": 43,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576628247-b4c3f384e601a",
+    "createdAt": "2026-04-07T15:43:48.247Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 82,
+      "happy": 3,
+      "sad": 94,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 23,
+      "anxious": 23,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576628192-3fa4101311c748",
+    "createdAt": "2026-04-07T15:43:48.192Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 85,
+      "happy": 3,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 43,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576628036-4914d811d4684",
+    "createdAt": "2026-04-07T15:43:48.036Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 81,
+      "happy": 3,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 21,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576627994-7f3830a1a3c328",
+    "createdAt": "2026-04-07T15:43:47.994Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 81,
+      "happy": 2,
+      "sad": 96,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 28,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576627668-112f3abd84d89",
+    "createdAt": "2026-04-07T15:43:47.668Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 84,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 43,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576627571-176bda4ec543c8",
+    "createdAt": "2026-04-07T15:43:47.571Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 84,
+      "happy": 2,
+      "sad": 96,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 34,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576627477-5886ab4a65962",
+    "createdAt": "2026-04-07T15:43:47.477Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 85,
+      "happy": 2,
+      "sad": 96,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 45,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576627336-688fc8f149abe",
+    "createdAt": "2026-04-07T15:43:47.336Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 99,
+    "emotions": {
+      "calm": 48,
+      "happy": 0,
+      "sad": 99,
+      "angry": 29,
+      "fear": 47,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 57,
+      "excited": 16
+    }
+  },
+  {
+    "id": "1775576627249-953bd66b91e298",
+    "createdAt": "2026-04-07T15:43:47.249Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 99,
+    "emotions": {
+      "calm": 84,
+      "happy": 0,
+      "sad": 99,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 42,
+      "anxious": 25,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576627166-8510c3589f3d",
+    "createdAt": "2026-04-07T15:43:47.166Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 99,
+    "emotions": {
+      "calm": 78,
+      "happy": 0,
+      "sad": 99,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 1,
+      "anxious": 25,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576453411-25e3b4253cfdf",
+    "createdAt": "2026-04-07T15:40:53.411Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 68,
+      "happy": 1,
+      "sad": 98,
+      "angry": 2,
+      "fear": 9,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 30,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576453306-0cbcfd59cfc0e8",
+    "createdAt": "2026-04-07T15:40:53.306Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 73,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 25,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576453209-3bc12c3b6dedf8",
+    "createdAt": "2026-04-07T15:40:53.209Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 71,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 2,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 26,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576453089-9b9a6134daf078",
+    "createdAt": "2026-04-07T15:40:53.089Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 73,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576453005-bdeda8ecc8e74",
+    "createdAt": "2026-04-07T15:40:53.005Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 74,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576452947-bc1ab1328a7858",
+    "createdAt": "2026-04-07T15:40:52.947Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 70,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 4,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 27,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576452823-77930f95521548",
+    "createdAt": "2026-04-07T15:40:52.823Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 74,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576452594-52cc903bab2098",
+    "createdAt": "2026-04-07T15:40:52.594Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 86,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 43,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576452485-eff6cb836a896",
+    "createdAt": "2026-04-07T15:40:52.485Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 81,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 19,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576452379-a0efec41bb21c8",
+    "createdAt": "2026-04-07T15:40:52.379Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 66,
+      "happy": 2,
+      "sad": 96,
+      "angry": 4,
+      "fear": 12,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 32,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576452275-8eac747a78caa",
+    "createdAt": "2026-04-07T15:40:52.275Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 74,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 25,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576452172-0e9e48e561a4b",
+    "createdAt": "2026-04-07T15:40:52.173Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 68,
+      "happy": 1,
+      "sad": 97,
+      "angry": 1,
+      "fear": 8,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 29,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576452068-bd0e0006016848",
+    "createdAt": "2026-04-07T15:40:52.068Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 87,
+    "emotions": {
+      "calm": 66,
+      "happy": 7,
+      "sad": 87,
+      "angry": 4,
+      "fear": 20,
+      "surprise": 44,
+      "neutral": 0,
+      "anxious": 34,
+      "excited": 18
+    }
+  },
+  {
+    "id": "1775576451960-c120a481a91328",
+    "createdAt": "2026-04-07T15:40:51.960Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 89,
+    "emotions": {
+      "calm": 69,
+      "happy": 6,
+      "sad": 89,
+      "angry": 0,
+      "fear": 13,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 30,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576451849-7f2e4f9794c2d",
+    "createdAt": "2026-04-07T15:40:51.849Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 90,
+    "emotions": {
+      "calm": 74,
+      "happy": 6,
+      "sad": 90,
+      "angry": 0,
+      "fear": 3,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576451716-feda2267604888",
+    "createdAt": "2026-04-07T15:40:51.716Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 67,
+      "happy": 1,
+      "sad": 97,
+      "angry": 3,
+      "fear": 11,
+      "surprise": 42,
+      "neutral": 0,
+      "anxious": 31,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576451564-4a3e56d5347d38",
+    "createdAt": "2026-04-07T15:40:51.564Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 72,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 25,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576451455-87543651af3188",
+    "createdAt": "2026-04-07T15:40:51.455Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 70,
+      "happy": 0,
+      "sad": 98,
+      "angry": 0,
+      "fear": 4,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 27,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576451348-a7f04e6af06578",
+    "createdAt": "2026-04-07T15:40:51.348Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 69,
+      "happy": 0,
+      "sad": 98,
+      "angry": 0,
+      "fear": 5,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 28,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576451248-0873b715dd0ce8",
+    "createdAt": "2026-04-07T15:40:51.248Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 66,
+      "happy": 0,
+      "sad": 98,
+      "angry": 4,
+      "fear": 12,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 32,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576451146-9afb8287866e68",
+    "createdAt": "2026-04-07T15:40:51.146Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 69,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 6,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 28,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576451047-1866f28e8fb2b",
+    "createdAt": "2026-04-07T15:40:51.047Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 63,
+      "happy": 1,
+      "sad": 98,
+      "angry": 8,
+      "fear": 18,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 37,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576450943-c15e2ba5f338e",
+    "createdAt": "2026-04-07T15:40:50.943Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 70,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 4,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 27,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576450851-9e7f2fd2e66b5",
+    "createdAt": "2026-04-07T15:40:50.851Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 68,
+      "happy": 1,
+      "sad": 98,
+      "angry": 1,
+      "fear": 8,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 29,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576450777-8dd891f29a7258",
+    "createdAt": "2026-04-07T15:40:50.777Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 68,
+      "happy": 1,
+      "sad": 98,
+      "angry": 2,
+      "fear": 8,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 30,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576450612-fad4b02ce600f",
+    "createdAt": "2026-04-07T15:40:50.612Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 72,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576450494-8e41228665b1d",
+    "createdAt": "2026-04-07T15:40:50.494Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 75,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576450381-62e6e4a0dbd2f8",
+    "createdAt": "2026-04-07T15:40:50.381Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 71,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 3,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 26,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576450273-af95786cb26c9",
+    "createdAt": "2026-04-07T15:40:50.273Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 77,
+      "happy": 3,
+      "sad": 94,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 45,
+      "neutral": 9,
+      "anxious": 24,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576450172-9d1e6cde1e0e1",
+    "createdAt": "2026-04-07T15:40:50.172Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 90,
+    "emotions": {
+      "calm": 66,
+      "happy": 5,
+      "sad": 90,
+      "angry": 4,
+      "fear": 18,
+      "surprise": 49,
+      "neutral": 0,
+      "anxious": 34,
+      "excited": 18
+    }
+  },
+  {
+    "id": "1775576450065-04d26e3bc76be8",
+    "createdAt": "2026-04-07T15:40:50.065Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 89,
+    "emotions": {
+      "calm": 71,
+      "happy": 6,
+      "sad": 89,
+      "angry": 0,
+      "fear": 9,
+      "surprise": 53,
+      "neutral": 0,
+      "anxious": 28,
+      "excited": 19
+    }
+  },
+  {
+    "id": "1775576449960-f6c37ce625144",
+    "createdAt": "2026-04-07T15:40:49.960Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 87,
+    "emotions": {
+      "calm": 56,
+      "happy": 7,
+      "sad": 87,
+      "angry": 18,
+      "fear": 41,
+      "surprise": 55,
+      "neutral": 0,
+      "anxious": 49,
+      "excited": 23
+    }
+  },
+  {
+    "id": "1775576449854-eff2ab8f71469",
+    "createdAt": "2026-04-07T15:40:49.854Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 55,
+      "happy": 3,
+      "sad": 93,
+      "angry": 20,
+      "fear": 38,
+      "surprise": 44,
+      "neutral": 0,
+      "anxious": 49,
+      "excited": 18
+    }
+  },
+  {
+    "id": "1775576449752-6a231f985b9a2",
+    "createdAt": "2026-04-07T15:40:49.752Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 63,
+      "happy": 3,
+      "sad": 93,
+      "angry": 9,
+      "fear": 22,
+      "surprise": 44,
+      "neutral": 0,
+      "anxious": 38,
+      "excited": 16
+    }
+  },
+  {
+    "id": "1775576449662-42690363fe794",
+    "createdAt": "2026-04-07T15:40:49.662Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 66,
+      "happy": 0,
+      "sad": 98,
+      "angry": 5,
+      "fear": 12,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 32,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576449516-e46782ffade668",
+    "createdAt": "2026-04-07T15:40:49.516Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 60,
+      "happy": 1,
+      "sad": 97,
+      "angry": 13,
+      "fear": 24,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 41,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576449398-17f1c4cfac1e9",
+    "createdAt": "2026-04-07T15:40:49.398Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 62,
+      "happy": 2,
+      "sad": 96,
+      "angry": 10,
+      "fear": 21,
+      "surprise": 42,
+      "neutral": 0,
+      "anxious": 38,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576449293-8c40f8db1eed3",
+    "createdAt": "2026-04-07T15:40:49.293Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 62,
+      "happy": 2,
+      "sad": 96,
+      "angry": 10,
+      "fear": 22,
+      "surprise": 43,
+      "neutral": 0,
+      "anxious": 39,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576449193-e2dbcc2425e4f8",
+    "createdAt": "2026-04-07T15:40:49.193Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 63,
+      "happy": 1,
+      "sad": 97,
+      "angry": 8,
+      "fear": 18,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 36,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576449096-61ebfdf798a5",
+    "createdAt": "2026-04-07T15:40:49.096Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 69,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 7,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 28,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576448983-9122bbd10593b8",
+    "createdAt": "2026-04-07T15:40:48.983Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 70,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 4,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 27,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576448900-0b05599215a208",
+    "createdAt": "2026-04-07T15:40:48.900Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 65,
+      "happy": 1,
+      "sad": 97,
+      "angry": 5,
+      "fear": 14,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 33,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576448829-72a5174c68e19",
+    "createdAt": "2026-04-07T15:40:48.829Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 57,
+      "happy": 1,
+      "sad": 97,
+      "angry": 17,
+      "fear": 31,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 45,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576448663-b0aafec26eccf8",
+    "createdAt": "2026-04-07T15:40:48.663Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 65,
+      "happy": 1,
+      "sad": 97,
+      "angry": 5,
+      "fear": 14,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 34,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576448510-643bf32367501",
+    "createdAt": "2026-04-07T15:40:48.510Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 67,
+      "happy": 1,
+      "sad": 97,
+      "angry": 2,
+      "fear": 10,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 31,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576448400-b5a6034b083ff",
+    "createdAt": "2026-04-07T15:40:48.400Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 78,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 12,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576448283-402e228965faa",
+    "createdAt": "2026-04-07T15:40:48.283Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 66,
+      "happy": 1,
+      "sad": 97,
+      "angry": 5,
+      "fear": 13,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 33,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576448175-500c3639fa1538",
+    "createdAt": "2026-04-07T15:40:48.175Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 82,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 32,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576448063-5490ebbb3a8e4",
+    "createdAt": "2026-04-07T15:40:48.063Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 74,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576447961-1861f17382731",
+    "createdAt": "2026-04-07T15:40:47.961Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 69,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 7,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 28,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576447847-916c1969664c18",
+    "createdAt": "2026-04-07T15:40:47.847Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 63,
+      "happy": 0,
+      "sad": 98,
+      "angry": 9,
+      "fear": 18,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 37,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576447744-30cc8164f1458",
+    "createdAt": "2026-04-07T15:40:47.744Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 69,
+      "happy": 0,
+      "sad": 98,
+      "angry": 0,
+      "fear": 6,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 28,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576447595-1513ace1f29a9",
+    "createdAt": "2026-04-07T15:40:47.595Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 66,
+      "happy": 1,
+      "sad": 98,
+      "angry": 4,
+      "fear": 12,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 32,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576447442-97a7ce1885e738",
+    "createdAt": "2026-04-07T15:40:47.442Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 63,
+      "happy": 1,
+      "sad": 98,
+      "angry": 8,
+      "fear": 17,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 36,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576447338-f24d1d63b95bf8",
+    "createdAt": "2026-04-07T15:40:47.338Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 69,
+      "happy": 0,
+      "sad": 98,
+      "angry": 0,
+      "fear": 5,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 28,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576447236-69a86d291a39c8",
+    "createdAt": "2026-04-07T15:40:47.236Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 64,
+      "happy": 1,
+      "sad": 97,
+      "angry": 7,
+      "fear": 17,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 35,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576447134-2a39fc641b36a",
+    "createdAt": "2026-04-07T15:40:47.134Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 64,
+      "happy": 1,
+      "sad": 98,
+      "angry": 7,
+      "fear": 17,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 35,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576447036-d71cf332d81708",
+    "createdAt": "2026-04-07T15:40:47.036Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 62,
+      "happy": 1,
+      "sad": 98,
+      "angry": 9,
+      "fear": 19,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 37,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576446933-cf28982b27866",
+    "createdAt": "2026-04-07T15:40:46.933Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 65,
+      "happy": 1,
+      "sad": 98,
+      "angry": 5,
+      "fear": 14,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 34,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576446832-815847965b6c",
+    "createdAt": "2026-04-07T15:40:46.832Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 64,
+      "happy": 1,
+      "sad": 98,
+      "angry": 7,
+      "fear": 16,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 35,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576446735-5be371f2137758",
+    "createdAt": "2026-04-07T15:40:46.735Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 67,
+      "happy": 1,
+      "sad": 98,
+      "angry": 2,
+      "fear": 9,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 30,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576446610-1196a5490f8ca8",
+    "createdAt": "2026-04-07T15:40:46.610Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 70,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 5,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 27,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576446466-b37c3e67e57d5",
+    "createdAt": "2026-04-07T15:40:46.466Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 66,
+      "happy": 1,
+      "sad": 98,
+      "angry": 5,
+      "fear": 13,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 33,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576446348-066d07df43f",
+    "createdAt": "2026-04-07T15:40:46.348Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 72,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576446245-86e3c755ff2a9",
+    "createdAt": "2026-04-07T15:40:46.245Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 73,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576446144-6f2f4c4dc144b8",
+    "createdAt": "2026-04-07T15:40:46.144Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 69,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 6,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 28,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576446043-43330844f3b35",
+    "createdAt": "2026-04-07T15:40:46.043Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 63,
+      "happy": 1,
+      "sad": 98,
+      "angry": 8,
+      "fear": 18,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 36,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576445939-0afcc2a37f3da",
+    "createdAt": "2026-04-07T15:40:45.939Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 70,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 4,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 27,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576445834-6bb623e9b0c8d",
+    "createdAt": "2026-04-07T15:40:45.834Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 69,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 6,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 28,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576445727-30f552205ec4d8",
+    "createdAt": "2026-04-07T15:40:45.727Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 67,
+      "happy": 1,
+      "sad": 98,
+      "angry": 2,
+      "fear": 9,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 30,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576445628-af9b5a18aa997",
+    "createdAt": "2026-04-07T15:40:45.628Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 71,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 1,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 25,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576445496-8f417a13db2de8",
+    "createdAt": "2026-04-07T15:40:45.496Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 70,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 4,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 27,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576445350-2c8f3d7698bad",
+    "createdAt": "2026-04-07T15:40:45.350Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 69,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 7,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 28,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576445247-aa2392cc31ab98",
+    "createdAt": "2026-04-07T15:40:45.247Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 70,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 4,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 27,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576445140-3de0b918d97a1",
+    "createdAt": "2026-04-07T15:40:45.140Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 74,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576445021-f1db980aa47f98",
+    "createdAt": "2026-04-07T15:40:45.021Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 73,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576444915-4057c4e05eebc8",
+    "createdAt": "2026-04-07T15:40:44.915Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 73,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576444796-b4de19704d07",
+    "createdAt": "2026-04-07T15:40:44.796Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 77,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 6,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576444689-84a6b0659068c8",
+    "createdAt": "2026-04-07T15:40:44.689Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 72,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576444598-885e2ccb50ba",
+    "createdAt": "2026-04-07T15:40:44.598Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 72,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576444451-3e30f3de03d9f8",
+    "createdAt": "2026-04-07T15:40:44.451Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 75,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576444289-d3c6f4e22bbb4",
+    "createdAt": "2026-04-07T15:40:44.289Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 76,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 3,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576444180-02f7836edccfc",
+    "createdAt": "2026-04-07T15:40:44.180Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 69,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 6,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 28,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576444081-a024fb44763598",
+    "createdAt": "2026-04-07T15:40:44.081Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 70,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 4,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 27,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576443976-15bd452f600378",
+    "createdAt": "2026-04-07T15:40:43.976Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 74,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576443869-17a2a5ac25234",
+    "createdAt": "2026-04-07T15:40:43.869Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 73,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576443772-95afa03f4fc14",
+    "createdAt": "2026-04-07T15:40:43.772Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 68,
+      "happy": 1,
+      "sad": 98,
+      "angry": 2,
+      "fear": 9,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 30,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576443673-541ff4cfb68cc8",
+    "createdAt": "2026-04-07T15:40:43.673Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 70,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 4,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 27,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576443559-de17f142b77ea8",
+    "createdAt": "2026-04-07T15:40:43.559Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 71,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 3,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 26,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576443453-edd35a3fd85a68",
+    "createdAt": "2026-04-07T15:40:43.453Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 68,
+      "happy": 1,
+      "sad": 97,
+      "angry": 2,
+      "fear": 8,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 30,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576443272-929f2bb436f91",
+    "createdAt": "2026-04-07T15:40:43.272Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 70,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 3,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 26,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576443174-60a02587486da",
+    "createdAt": "2026-04-07T15:40:43.174Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 69,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 6,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 28,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576443064-282456e269024",
+    "createdAt": "2026-04-07T15:40:43.064Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 68,
+      "happy": 1,
+      "sad": 98,
+      "angry": 2,
+      "fear": 9,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 30,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576442961-8b20143fbf50b",
+    "createdAt": "2026-04-07T15:40:42.961Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 70,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 4,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 27,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576442852-d230ef56a8362",
+    "createdAt": "2026-04-07T15:40:42.852Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 81,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 27,
+      "anxious": 24,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576442732-46cf1978f06fc",
+    "createdAt": "2026-04-07T15:40:42.732Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 77,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 7,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576442629-3fabd19c2e3c3",
+    "createdAt": "2026-04-07T15:40:42.629Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 74,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576442512-c51c8253e86a48",
+    "createdAt": "2026-04-07T15:40:42.512Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 73,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576442370-34a03538e134f8",
+    "createdAt": "2026-04-07T15:40:42.370Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 81,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 15,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576442218-d848f43448e91",
+    "createdAt": "2026-04-07T15:40:42.218Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 66,
+      "happy": 1,
+      "sad": 97,
+      "angry": 4,
+      "fear": 12,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 32,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576442116-70980f2ccbc38",
+    "createdAt": "2026-04-07T15:40:42.116Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 69,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 7,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 28,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576442011-b2f4eebb7677b",
+    "createdAt": "2026-04-07T15:40:42.011Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 66,
+      "happy": 1,
+      "sad": 97,
+      "angry": 4,
+      "fear": 13,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 33,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576441911-df667f4dbfa8d8",
+    "createdAt": "2026-04-07T15:40:41.911Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 71,
+      "happy": 2,
+      "sad": 96,
+      "angry": 0,
+      "fear": 4,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 26,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576441809-e588d87642161",
+    "createdAt": "2026-04-07T15:40:41.809Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 70,
+      "happy": 2,
+      "sad": 96,
+      "angry": 0,
+      "fear": 6,
+      "surprise": 42,
+      "neutral": 0,
+      "anxious": 27,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576441701-9c314fb290986",
+    "createdAt": "2026-04-07T15:40:41.701Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 72,
+      "happy": 2,
+      "sad": 96,
+      "angry": 0,
+      "fear": 2,
+      "surprise": 43,
+      "neutral": 0,
+      "anxious": 25,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576441603-4298f3bcf86358",
+    "createdAt": "2026-04-07T15:40:41.603Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 65,
+      "happy": 3,
+      "sad": 94,
+      "angry": 6,
+      "fear": 17,
+      "surprise": 45,
+      "neutral": 0,
+      "anxious": 35,
+      "excited": 16
+    }
+  },
+  {
+    "id": "1775576441500-07e1d292d886d",
+    "createdAt": "2026-04-07T15:40:41.500Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 91,
+    "emotions": {
+      "calm": 65,
+      "happy": 5,
+      "sad": 91,
+      "angry": 5,
+      "fear": 19,
+      "surprise": 49,
+      "neutral": 0,
+      "anxious": 35,
+      "excited": 18
+    }
+  },
+  {
+    "id": "1775576441359-9b055ef3f6987",
+    "createdAt": "2026-04-07T15:40:41.359Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 87,
+    "emotions": {
+      "calm": 69,
+      "happy": 7,
+      "sad": 87,
+      "angry": 0,
+      "fear": 15,
+      "surprise": 54,
+      "neutral": 0,
+      "anxious": 31,
+      "excited": 20
+    }
+  },
+  {
+    "id": "1775576441197-d588e869a6343",
+    "createdAt": "2026-04-07T15:40:41.197Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 83,
+    "emotions": {
+      "calm": 68,
+      "happy": 10,
+      "sad": 83,
+      "angry": 1,
+      "fear": 20,
+      "surprise": 59,
+      "neutral": 0,
+      "anxious": 33,
+      "excited": 23
+    }
+  },
+  {
+    "id": "1775576441092-37768be976f3",
+    "createdAt": "2026-04-07T15:40:41.092Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 80,
+    "emotions": {
+      "calm": 64,
+      "happy": 12,
+      "sad": 80,
+      "angry": 7,
+      "fear": 31,
+      "surprise": 63,
+      "neutral": 0,
+      "anxious": 40,
+      "excited": 26
+    }
+  },
+  {
+    "id": "1775576440989-d62d093907dde",
+    "createdAt": "2026-04-07T15:40:40.989Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 77,
+    "emotions": {
+      "calm": 55,
+      "happy": 13,
+      "sad": 77,
+      "angry": 19,
+      "fear": 49,
+      "surprise": 66,
+      "neutral": 0,
+      "anxious": 52,
+      "excited": 30
+    }
+  },
+  {
+    "id": "1775576440894-15e09a806f59a",
+    "createdAt": "2026-04-07T15:40:40.894Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 76,
+    "emotions": {
+      "calm": 58,
+      "happy": 14,
+      "sad": 76,
+      "angry": 15,
+      "fear": 44,
+      "surprise": 68,
+      "neutral": 0,
+      "anxious": 48,
+      "excited": 30
+    }
+  },
+  {
+    "id": "1775576440804-5f4e5819bf4708",
+    "createdAt": "2026-04-07T15:40:40.804Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 75,
+    "emotions": {
+      "calm": 57,
+      "happy": 15,
+      "sad": 75,
+      "angry": 17,
+      "fear": 48,
+      "surprise": 69,
+      "neutral": 0,
+      "anxious": 50,
+      "excited": 31
+    }
+  },
+  {
+    "id": "1775576440685-0a9944b5b4a088",
+    "createdAt": "2026-04-07T15:40:40.685Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 75,
+    "emotions": {
+      "calm": 58,
+      "happy": 14,
+      "sad": 75,
+      "angry": 15,
+      "fear": 44,
+      "surprise": 69,
+      "neutral": 0,
+      "anxious": 48,
+      "excited": 31
+    }
+  },
+  {
+    "id": "1775576440572-590896e25af87",
+    "createdAt": "2026-04-07T15:40:40.572Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 75,
+    "emotions": {
+      "calm": 63,
+      "happy": 14,
+      "sad": 75,
+      "angry": 8,
+      "fear": 35,
+      "surprise": 69,
+      "neutral": 0,
+      "anxious": 41,
+      "excited": 30
+    }
+  },
+  {
+    "id": "1775576440452-094baa27e10478",
+    "createdAt": "2026-04-07T15:40:40.452Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 74,
+    "emotions": {
+      "calm": 71,
+      "happy": 15,
+      "sad": 74,
+      "angry": 0,
+      "fear": 18,
+      "surprise": 70,
+      "neutral": 0,
+      "anxious": 29,
+      "excited": 29
+    }
+  },
+  {
+    "id": "1775576440308-216e54ed16fba8",
+    "createdAt": "2026-04-07T15:40:40.308Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 75,
+    "emotions": {
+      "calm": 63,
+      "happy": 15,
+      "sad": 75,
+      "angry": 8,
+      "fear": 35,
+      "surprise": 70,
+      "neutral": 0,
+      "anxious": 41,
+      "excited": 30
+    }
+  },
+  {
+    "id": "1775576440154-3bd571a056e6a8",
+    "createdAt": "2026-04-07T15:40:40.154Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 83,
+    "emotions": {
+      "calm": 83,
+      "happy": 15,
+      "sad": 73,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 71,
+      "neutral": 46,
+      "anxious": 18,
+      "excited": 30
+    }
+  },
+  {
+    "id": "1775576440048-6c307366a7dc2",
+    "createdAt": "2026-04-07T15:40:40.048Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 74,
+    "emotions": {
+      "calm": 74,
+      "happy": 19,
+      "sad": 66,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 74,
+      "neutral": 35,
+      "anxious": 17,
+      "excited": 32
+    }
+  },
+  {
+    "id": "1775576439937-87ce0474575d28",
+    "createdAt": "2026-04-07T15:40:39.937Z",
+    "source": "council",
+    "topEmotion": "surprise",
+    "intensity": 78,
+    "emotions": {
+      "calm": 69,
+      "happy": 23,
+      "sad": 57,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 78,
+      "neutral": 70,
+      "anxious": 14,
+      "excited": 36
+    }
+  },
+  {
+    "id": "1775576439830-58adf693d4bbc8",
+    "createdAt": "2026-04-07T15:40:39.830Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 80,
+    "emotions": {
+      "calm": 80,
+      "happy": 15,
+      "sad": 73,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 72,
+      "neutral": 29,
+      "anxious": 18,
+      "excited": 30
+    }
+  },
+  {
+    "id": "1775576439727-e548029762eb6",
+    "createdAt": "2026-04-07T15:40:39.727Z",
+    "source": "council",
+    "topEmotion": "surprise",
+    "intensity": 74,
+    "emotions": {
+      "calm": 64,
+      "happy": 16,
+      "sad": 72,
+      "angry": 7,
+      "fear": 35,
+      "surprise": 74,
+      "neutral": 0,
+      "anxious": 40,
+      "excited": 32
+    }
+  },
+  {
+    "id": "1775576439626-f40fa17a0a6bf8",
+    "createdAt": "2026-04-07T15:40:39.626Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 82,
+    "emotions": {
+      "calm": 82,
+      "happy": 15,
+      "sad": 74,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 70,
+      "neutral": 46,
+      "anxious": 19,
+      "excited": 29
+    }
+  },
+  {
+    "id": "1775576439527-5af6811c99fb5",
+    "createdAt": "2026-04-07T15:40:39.527Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 85,
+    "emotions": {
+      "calm": 85,
+      "happy": 13,
+      "sad": 77,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 66,
+      "neutral": 43,
+      "anxious": 19,
+      "excited": 27
+    }
+  },
+  {
+    "id": "1775576439423-13fc310834734",
+    "createdAt": "2026-04-07T15:40:39.423Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 83,
+    "emotions": {
+      "calm": 67,
+      "happy": 9,
+      "sad": 83,
+      "angry": 3,
+      "fear": 21,
+      "surprise": 60,
+      "neutral": 0,
+      "anxious": 34,
+      "excited": 23
+    }
+  },
+  {
+    "id": "1775576439282-c74627e5ce5e48",
+    "createdAt": "2026-04-07T15:40:39.282Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 82,
+      "happy": 4,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 47,
+      "neutral": 34,
+      "anxious": 23,
+      "excited": 16
+    }
+  },
+  {
+    "id": "1775576439109-50a0648fd4f09",
+    "createdAt": "2026-04-07T15:40:39.109Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 64,
+      "happy": 1,
+      "sad": 98,
+      "angry": 6,
+      "fear": 15,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 35,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576439009-650176893756d8",
+    "createdAt": "2026-04-07T15:40:39.009Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 68,
+      "happy": 1,
+      "sad": 97,
+      "angry": 2,
+      "fear": 9,
+      "surprise": 42,
+      "neutral": 0,
+      "anxious": 30,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576438901-724b61f2b21808",
+    "createdAt": "2026-04-07T15:40:38.901Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 65,
+      "happy": 1,
+      "sad": 97,
+      "angry": 6,
+      "fear": 15,
+      "surprise": 42,
+      "neutral": 0,
+      "anxious": 34,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576438797-53d1acc7ea64f8",
+    "createdAt": "2026-04-07T15:40:38.797Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 71,
+      "happy": 2,
+      "sad": 96,
+      "angry": 0,
+      "fear": 3,
+      "surprise": 44,
+      "neutral": 0,
+      "anxious": 26,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576438684-d8c384aeeceda",
+    "createdAt": "2026-04-07T15:40:38.684Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 56,
+      "happy": 3,
+      "sad": 94,
+      "angry": 17,
+      "fear": 34,
+      "surprise": 46,
+      "neutral": 0,
+      "anxious": 46,
+      "excited": 18
+    }
+  },
+  {
+    "id": "1775576438587-e8e70231dfb5d",
+    "createdAt": "2026-04-07T15:40:38.587Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 74,
+      "happy": 4,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 48,
+      "neutral": 0,
+      "anxious": 23,
+      "excited": 16
+    }
+  },
+  {
+    "id": "1775576438468-6752b7acd82618",
+    "createdAt": "2026-04-07T15:40:38.468Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 92,
+    "emotions": {
+      "calm": 61,
+      "happy": 4,
+      "sad": 92,
+      "angry": 12,
+      "fear": 27,
+      "surprise": 49,
+      "neutral": 0,
+      "anxious": 41,
+      "excited": 19
+    }
+  },
+  {
+    "id": "1775576438359-975a1769d6d278",
+    "createdAt": "2026-04-07T15:40:38.359Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 90,
+    "emotions": {
+      "calm": 82,
+      "happy": 5,
+      "sad": 90,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 50,
+      "neutral": 36,
+      "anxious": 23,
+      "excited": 18
+    }
+  },
+  {
+    "id": "1775576438205-2664eb7228a1",
+    "createdAt": "2026-04-07T15:40:38.205Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 76,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 2,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576438048-05d584f605632",
+    "createdAt": "2026-04-07T15:40:38.048Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 71,
+      "happy": 0,
+      "sad": 98,
+      "angry": 0,
+      "fear": 2,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 26,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576437952-9aa570bfe9db78",
+    "createdAt": "2026-04-07T15:40:37.952Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 71,
+      "happy": 0,
+      "sad": 98,
+      "angry": 0,
+      "fear": 1,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 25,
+      "excited": 12
+    }
+  },
+  {
+    "id": "1775576437848-e4727a965f563",
+    "createdAt": "2026-04-07T15:40:37.848Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 68,
+      "happy": 1,
+      "sad": 98,
+      "angry": 2,
+      "fear": 8,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 29,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576437746-21238507c093c8",
+    "createdAt": "2026-04-07T15:40:37.746Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 69,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 5,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 28,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576437640-8e7e032cbe625",
+    "createdAt": "2026-04-07T15:40:37.640Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 75,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576437539-2cbd9e8c9f8078",
+    "createdAt": "2026-04-07T15:40:37.539Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 98,
+    "emotions": {
+      "calm": 71,
+      "happy": 1,
+      "sad": 98,
+      "angry": 0,
+      "fear": 1,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 25,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576437439-349ca092c30778",
+    "createdAt": "2026-04-07T15:40:37.439Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 72,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576437334-5e6ecb550bf6c",
+    "createdAt": "2026-04-07T15:40:37.334Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 70,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 5,
+      "surprise": 42,
+      "neutral": 0,
+      "anxious": 27,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576437182-2393d693e25498",
+    "createdAt": "2026-04-07T15:40:37.182Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 97,
+    "emotions": {
+      "calm": 73,
+      "happy": 1,
+      "sad": 97,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576437023-d7789cdb92cd78",
+    "createdAt": "2026-04-07T15:40:37.023Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 74,
+      "happy": 2,
+      "sad": 96,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576436924-bd1a5503b7509",
+    "createdAt": "2026-04-07T15:40:36.924Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 68,
+      "happy": 2,
+      "sad": 96,
+      "angry": 1,
+      "fear": 9,
+      "surprise": 43,
+      "neutral": 0,
+      "anxious": 30,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576436818-07abf2119fba6",
+    "createdAt": "2026-04-07T15:40:36.818Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 75,
+      "happy": 2,
+      "sad": 96,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 44,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576436720-3b6a11385db218",
+    "createdAt": "2026-04-07T15:40:36.720Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 66,
+      "happy": 2,
+      "sad": 96,
+      "angry": 4,
+      "fear": 13,
+      "surprise": 44,
+      "neutral": 0,
+      "anxious": 32,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576436624-340e39a4ca1c18",
+    "createdAt": "2026-04-07T15:40:36.624Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 59,
+      "happy": 2,
+      "sad": 95,
+      "angry": 14,
+      "fear": 28,
+      "surprise": 44,
+      "neutral": 0,
+      "anxious": 43,
+      "excited": 17
+    }
+  },
+  {
+    "id": "1775576436526-934aa23ef3bac",
+    "createdAt": "2026-04-07T15:40:36.526Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 71,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 3,
+      "surprise": 45,
+      "neutral": 0,
+      "anxious": 26,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576436416-7521e686135a8",
+    "createdAt": "2026-04-07T15:40:36.416Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 82,
+      "happy": 3,
+      "sad": 94,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 46,
+      "neutral": 32,
+      "anxious": 23,
+      "excited": 16
+    }
+  },
+  {
+    "id": "1775576436292-f912dfdf62b72",
+    "createdAt": "2026-04-07T15:40:36.292Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 91,
+    "emotions": {
+      "calm": 83,
+      "happy": 4,
+      "sad": 91,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 49,
+      "neutral": 40,
+      "anxious": 23,
+      "excited": 17
+    }
+  },
+  {
+    "id": "1775576436224-cf3a8f30bfb888",
+    "createdAt": "2026-04-07T15:40:36.224Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 83,
+      "happy": 2,
+      "sad": 96,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 38,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576436079-d999001c478b18",
+    "createdAt": "2026-04-07T15:40:36.079Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 78,
+      "happy": 3,
+      "sad": 94,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 45,
+      "neutral": 9,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576435968-8efc78eef448a8",
+    "createdAt": "2026-04-07T15:40:35.968Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 92,
+    "emotions": {
+      "calm": 82,
+      "happy": 4,
+      "sad": 92,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 48,
+      "neutral": 24,
+      "anxious": 23,
+      "excited": 17
+    }
+  },
+  {
+    "id": "1775576435873-5946d680019598",
+    "createdAt": "2026-04-07T15:40:35.873Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 89,
+    "emotions": {
+      "calm": 84,
+      "happy": 6,
+      "sad": 89,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 52,
+      "neutral": 36,
+      "anxious": 22,
+      "excited": 19
+    }
+  },
+  {
+    "id": "1775576435770-a0c0f6eda0b4f8",
+    "createdAt": "2026-04-07T15:40:35.770Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 84,
+    "emotions": {
+      "calm": 84,
+      "happy": 9,
+      "sad": 84,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 59,
+      "neutral": 32,
+      "anxious": 21,
+      "excited": 22
+    }
+  },
+  {
+    "id": "1775576435659-b986e62b063a1",
+    "createdAt": "2026-04-07T15:40:35.659Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 80,
+    "emotions": {
+      "calm": 73,
+      "happy": 12,
+      "sad": 80,
+      "angry": 0,
+      "fear": 12,
+      "surprise": 64,
+      "neutral": 0,
+      "anxious": 27,
+      "excited": 26
+    }
+  },
+  {
+    "id": "1775576435561-6f96219c90ffb",
+    "createdAt": "2026-04-07T15:40:35.561Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 80,
+    "emotions": {
+      "calm": 80,
+      "happy": 13,
+      "sad": 77,
+      "angry": 0,
+      "fear": 1,
+      "surprise": 68,
+      "neutral": 21,
+      "anxious": 20,
+      "excited": 28
+    }
+  },
+  {
+    "id": "1775576435464-c3938ca4875d4",
+    "createdAt": "2026-04-07T15:40:35.464Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 79,
+    "emotions": {
+      "calm": 79,
+      "happy": 14,
+      "sad": 75,
+      "angry": 0,
+      "fear": 4,
+      "surprise": 70,
+      "neutral": 15,
+      "anxious": 21,
+      "excited": 29
+    }
+  },
+  {
+    "id": "1775576435351-624d823cf9e2",
+    "createdAt": "2026-04-07T15:40:35.351Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 74,
+    "emotions": {
+      "calm": 74,
+      "happy": 15,
+      "sad": 74,
+      "angry": 0,
+      "fear": 14,
+      "surprise": 72,
+      "neutral": 0,
+      "anxious": 27,
+      "excited": 30
+    }
+  },
+  {
+    "id": "1775576435244-f39de8c9ac5d2",
+    "createdAt": "2026-04-07T15:40:35.244Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 76,
+    "emotions": {
+      "calm": 76,
+      "happy": 16,
+      "sad": 71,
+      "angry": 0,
+      "fear": 8,
+      "surprise": 74,
+      "neutral": 14,
+      "anxious": 22,
+      "excited": 31
+    }
+  },
+  {
+    "id": "1775576435147-8faca5d2b15ab",
+    "createdAt": "2026-04-07T15:40:35.147Z",
+    "source": "council",
+    "topEmotion": "calm",
+    "intensity": 86,
+    "emotions": {
+      "calm": 86,
+      "happy": 8,
+      "sad": 85,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 57,
+      "neutral": 41,
+      "anxious": 21,
+      "excited": 22
+    }
+  },
+  {
+    "id": "1775576434978-18e7280d97827",
+    "createdAt": "2026-04-07T15:40:34.978Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 83,
+    "emotions": {
+      "calm": 80,
+      "happy": 9,
+      "sad": 83,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 59,
+      "neutral": 15,
+      "anxious": 21,
+      "excited": 23
+    }
+  },
+  {
+    "id": "1775576434871-7e1313f9eed6e",
+    "createdAt": "2026-04-07T15:40:34.871Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 79,
+    "emotions": {
+      "calm": 77,
+      "happy": 12,
+      "sad": 79,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 63,
+      "neutral": 21,
+      "anxious": 20,
+      "excited": 25
+    }
+  },
+  {
+    "id": "1775576434769-603ff5c61f0b68",
+    "createdAt": "2026-04-07T15:40:34.769Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 77,
+    "emotions": {
+      "calm": 75,
+      "happy": 13,
+      "sad": 77,
+      "angry": 0,
+      "fear": 7,
+      "surprise": 66,
+      "neutral": 3,
+      "anxious": 24,
+      "excited": 27
+    }
+  },
+  {
+    "id": "1775576434655-2dde32204743c",
+    "createdAt": "2026-04-07T15:40:34.655Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 85,
+    "emotions": {
+      "calm": 77,
+      "happy": 8,
+      "sad": 85,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 55,
+      "neutral": 19,
+      "anxious": 21,
+      "excited": 21
+    }
+  },
+  {
+    "id": "1775576434548-c9225cb9d7c078",
+    "createdAt": "2026-04-07T15:40:34.548Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 89,
+    "emotions": {
+      "calm": 76,
+      "happy": 6,
+      "sad": 89,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 50,
+      "neutral": 8,
+      "anxious": 22,
+      "excited": 18
+    }
+  },
+  {
+    "id": "1775576434435-f4dfd1b53474a",
+    "createdAt": "2026-04-07T15:40:34.435Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 86,
+    "emotions": {
+      "calm": 76,
+      "happy": 8,
+      "sad": 86,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 54,
+      "neutral": 10,
+      "anxious": 21,
+      "excited": 20
+    }
+  },
+  {
+    "id": "1775576434328-611627e8be828",
+    "createdAt": "2026-04-07T15:40:34.328Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 83,
+    "emotions": {
+      "calm": 79,
+      "happy": 9,
+      "sad": 83,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 58,
+      "neutral": 20,
+      "anxious": 21,
+      "excited": 22
+    }
+  },
+  {
+    "id": "1775576434220-4f53db35218c48",
+    "createdAt": "2026-04-07T15:40:34.220Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 89,
+    "emotions": {
+      "calm": 78,
+      "happy": 6,
+      "sad": 89,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 50,
+      "neutral": 15,
+      "anxious": 22,
+      "excited": 18
+    }
+  },
+  {
+    "id": "1775576434069-da1af72b21acb",
+    "createdAt": "2026-04-07T15:40:34.069Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 89,
+    "emotions": {
+      "calm": 73,
+      "happy": 6,
+      "sad": 89,
+      "angry": 0,
+      "fear": 5,
+      "surprise": 42,
+      "neutral": 0,
+      "anxious": 25,
+      "excited": 16
+    }
+  },
+  {
+    "id": "1775576433908-0fd980ec00952",
+    "createdAt": "2026-04-07T15:40:33.908Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 76,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 3,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576433799-4053865a52e1f",
+    "createdAt": "2026-04-07T15:40:33.799Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 81,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 28,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576433695-398a70db192b98",
+    "createdAt": "2026-04-07T15:40:33.695Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 82,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 32,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576433588-54f0b0c8d6863",
+    "createdAt": "2026-04-07T15:40:33.588Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 65,
+      "happy": 2,
+      "sad": 96,
+      "angry": 6,
+      "fear": 16,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 34,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576433481-00f67fcb700b68",
+    "createdAt": "2026-04-07T15:40:33.481Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 66,
+      "happy": 2,
+      "sad": 96,
+      "angry": 4,
+      "fear": 13,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 33,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576433376-306d9454ec7b8",
+    "createdAt": "2026-04-07T15:40:33.376Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 68,
+      "happy": 2,
+      "sad": 96,
+      "angry": 2,
+      "fear": 10,
+      "surprise": 40,
+      "neutral": 0,
+      "anxious": 30,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576433276-d5239c83d5abf",
+    "createdAt": "2026-04-07T15:40:33.276Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 76,
+      "happy": 2,
+      "sad": 96,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 2,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576433176-cf38382d2b7c6",
+    "createdAt": "2026-04-07T15:40:33.176Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 73,
+      "happy": 2,
+      "sad": 96,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576433070-5bf13b010a6438",
+    "createdAt": "2026-04-07T15:40:33.070Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 68,
+      "happy": 2,
+      "sad": 96,
+      "angry": 1,
+      "fear": 10,
+      "surprise": 41,
+      "neutral": 0,
+      "anxious": 30,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576432923-825cd1decad96",
+    "createdAt": "2026-04-07T15:40:32.923Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 76,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 1,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576432798-5928b558560728",
+    "createdAt": "2026-04-07T15:40:32.798Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 82,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 32,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576432679-34113ebc07c478",
+    "createdAt": "2026-04-07T15:40:32.679Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 80,
+      "happy": 3,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 23,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576432575-c112f2fd846a5",
+    "createdAt": "2026-04-07T15:40:32.575Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 85,
+      "happy": 3,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 35,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576432473-ab001b47f0d338",
+    "createdAt": "2026-04-07T15:40:32.473Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 81,
+      "happy": 3,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 28,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576432361-14d083522554",
+    "createdAt": "2026-04-07T15:40:32.361Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 79,
+      "happy": 3,
+      "sad": 94,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 20,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576432237-1c28f5f152cad",
+    "createdAt": "2026-04-07T15:40:32.237Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 84,
+      "happy": 3,
+      "sad": 94,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 30,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576432131-a1ea8247758bb",
+    "createdAt": "2026-04-07T15:40:32.131Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 85,
+      "happy": 3,
+      "sad": 94,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 35,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576431991-456b60b5f32ce8",
+    "createdAt": "2026-04-07T15:40:31.991Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 81,
+      "happy": 4,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 44,
+      "neutral": 20,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576431838-c73b6612dab058",
+    "createdAt": "2026-04-07T15:40:31.838Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 82,
+      "happy": 3,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 44,
+      "neutral": 24,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576431737-d8a99f2823a41",
+    "createdAt": "2026-04-07T15:40:31.737Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 81,
+      "happy": 3,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 44,
+      "neutral": 20,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576431631-16ffc60bca6ce8",
+    "createdAt": "2026-04-07T15:40:31.631Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 83,
+      "happy": 3,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 44,
+      "neutral": 29,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576431528-5a47ad70b92808",
+    "createdAt": "2026-04-07T15:40:31.528Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 81,
+      "happy": 4,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 44,
+      "neutral": 21,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576431420-495d54947d1028",
+    "createdAt": "2026-04-07T15:40:31.420Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 83,
+      "happy": 4,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 43,
+      "neutral": 30,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576431320-ab461cfed1d7b",
+    "createdAt": "2026-04-07T15:40:31.320Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 93,
+    "emotions": {
+      "calm": 81,
+      "happy": 4,
+      "sad": 93,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 44,
+      "neutral": 28,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576431215-a825c1e5c680b",
+    "createdAt": "2026-04-07T15:40:31.215Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 92,
+    "emotions": {
+      "calm": 85,
+      "happy": 4,
+      "sad": 92,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 44,
+      "neutral": 43,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576431109-7c0b5cfcabb57",
+    "createdAt": "2026-04-07T15:40:31.109Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 86,
+      "happy": 3,
+      "sad": 94,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 40,
+      "anxious": 23,
+      "excited": 15
+    }
+  },
+  {
+    "id": "1775576431007-26cdf03e4abda8",
+    "createdAt": "2026-04-07T15:40:31.007Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 83,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 37,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576430930-2493775ef7d7f",
+    "createdAt": "2026-04-07T15:40:30.930Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 80,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 22,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576430787-1d7bc54b18c3c",
+    "createdAt": "2026-04-07T15:40:30.787Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 85,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 39,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576430680-96931c1e4b364",
+    "createdAt": "2026-04-07T15:40:30.680Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 96,
+    "emotions": {
+      "calm": 84,
+      "happy": 2,
+      "sad": 96,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 34,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576430576-2e64e4e9b6664",
+    "createdAt": "2026-04-07T15:40:30.576Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 82,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 40,
+      "neutral": 20,
+      "anxious": 24,
+      "excited": 13
+    }
+  },
+  {
+    "id": "1775576430493-b7d22f04b6f7d",
+    "createdAt": "2026-04-07T15:40:30.493Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 83,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 29,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576430356-ed6dd5bf247e9",
+    "createdAt": "2026-04-07T15:40:30.356Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 84,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 32,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576430261-d8e49bac720a78",
+    "createdAt": "2026-04-07T15:40:30.261Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 85,
+      "happy": 3,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 45,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576430174-ea1b68115f287",
+    "createdAt": "2026-04-07T15:40:30.174Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 86,
+      "happy": 3,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 43,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576430080-e4c6f1d48930c",
+    "createdAt": "2026-04-07T15:40:30.080Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 83,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 28,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576430029-06727c9d60b19",
+    "createdAt": "2026-04-07T15:40:30.029Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 83,
+      "happy": 2,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 26,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576429830-08f0126a9c45d8",
+    "createdAt": "2026-04-07T15:40:29.830Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 82,
+      "happy": 3,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 23,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576429690-4032125fed5bf8",
+    "createdAt": "2026-04-07T15:40:29.690Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 94,
+    "emotions": {
+      "calm": 82,
+      "happy": 3,
+      "sad": 94,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 41,
+      "neutral": 25,
+      "anxious": 24,
+      "excited": 14
+    }
+  },
+  {
+    "id": "1775576429646-7d8c3c1407d8c8",
+    "createdAt": "2026-04-07T15:40:29.646Z",
+    "source": "council",
+    "topEmotion": "sad",
+    "intensity": 95,
+    "emotions": {
+      "calm": 83,
+      "happy": 3,
+      "sad": 95,
+      "angry": 0,
+      "fear": 0,
+      "surprise": 42,
+      "neutral": 28,
+      "anxious": 24,
+      "excited": 14
+    }
+  }
+]
