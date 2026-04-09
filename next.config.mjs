@@ -1,14 +1,19 @@
 /** @type {import('next').NextConfig} */
-const isVercel = process.env.VERCEL === "1"
+const isExportBuild = process.env.NEXT_OUTPUT_MODE === "export";
 
 const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // 用于 Android WebView 离线加载（next build 会生成 out/ 静态资源）
-  // Vercel 需要 Server 模式来运行 app/api/*；本地打 APK 才用 export
-  output: isVercel ? undefined : "export",
-  trailingSlash: true,
+  // 双模式构建：
+  // - export: Android WebView 离线静态包
+  // - server: 云服务器 API（next start）
+  ...(isExportBuild
+    ? {
+        output: "export",
+        trailingSlash: true,
+      }
+    : {}),
   allowedDevOrigins: ["192.168.56.1"],
   images: {
     unoptimized: true,
@@ -19,9 +24,7 @@ const nextConfig = {
    * 打 Android 包前请设置 NEXT_STATIC_ASSET_PREFIX=./ 再 build（见 npm run build:android）。
    */
   assetPrefix:
-    isVercel
-      ? undefined
-      : process.env.NEXT_STATIC_ASSET_PREFIX === "./"
+    process.env.NEXT_STATIC_ASSET_PREFIX === "./"
       ? "./"
       : undefined,
 }

@@ -117,10 +117,10 @@ aigc_application_style/
 │   └── server/
 │       └── council-archive.ts
 │
-├── android/                               # Day16-Day18 新增
+├── android/                               # WebView 壳（与 docs/BUILD_FULL_PROCESS_ANDROID_APK.md 一致）
 │   └── ps2-shell/
-│       ├── app/src/main/assets/web/      # Next 导出的静态资源
-│       ├── app/src/main/java/.../webview/
+│       ├── app/src/main/assets/web/       # 由 npm run sync:android 从 out/ 同步（gitignore）
+│       ├── app/src/main/java/com/ps2/shell/MainActivity.kt
 │       └── app/src/main/AndroidManifest.xml
 │
 ├── out/                                   # `next export` 输出目录（打包输入）

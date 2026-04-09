@@ -47,13 +47,21 @@ function resolveApiUrl(input: RequestInfo | URL): RequestInfo | URL {
   return input;
 }
 
+function isLikelyHttpBase(base: string): boolean {
+  return /^http:\/\//i.test(base);
+}
+
+function isLikelyEmulatorOnlyHost(base: string): boolean {
+  return /:\/\/10\.0\.2\.2(?::|\/|$)/.test(base);
+}
+
 export function userFacingMessage(err: unknown): string {
   if (err instanceof ApiError) {
     switch (err.code) {
       case "timeout":
         return "请求超时，请检查网络后重试。";
       case "network":
-        return "网络连接失败，请检查网络后重试。";
+        return "网络连接失败。请检查 API 地址、CORS 与 HTTPS/明文网络策略后重试。";
       case "aborted":
         return "请求已取消。";
       case "rate_limited":
@@ -83,7 +91,8 @@ function normalizeFetchError(e: unknown, scope: string): never {
     throw err;
   }
   if (e instanceof TypeError) {
-    const err = new ApiError(e.message || "网络错误", "network");
+    const raw = e.message || "网络错误";
+    const err = new ApiError(raw, "network");
     logApiFailure(scope, err);
     throw err;
   }
@@ -102,6 +111,16 @@ export type FetchJsonOptions = RequestInit & {
 export async function fetchJson<T>(input: RequestInfo | URL, options?: FetchJsonOptions): Promise<T> {
   const { timeoutMs = 45_000, ...init } = options ?? {};
   const resolved = resolveApiUrl(input);
+  const base = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").trim().replace(/\/$/, "");
+  if (base) {
+    if (isLikelyEmulatorOnlyHost(base)) {
+      console.warn("[ps2] NEXT_PUBLIC_API_BASE_URL 使用了 10.0.2.2。该地址仅模拟器可用，真机会失败。");
+    }
+    if (isLikelyHttpBase(base)) {
+      console.warn("[ps2] NEXT_PUBLIC_API_BASE_URL 使用 HTTP。若真机失败，请改 HTTPS 或配置 Android networkSecurityConfig。");
+    }
+  }
+  console.info("[ps2] fetchJson resolved url:", String(resolved));
   const scope = typeof resolved === "string" ? resolved : typeof input === "string" ? input : "fetchJson";
   const controller = new AbortController();
   const timer = window.setTimeout(() => controller.abort(), timeoutMs);
@@ -153,6 +172,16 @@ export type FetchWithTimeoutOptions = RequestInit & {
 export async function fetchWithTimeout(input: RequestInfo | URL, options?: FetchWithTimeoutOptions): Promise<Response> {
   const { timeoutMs = 120_000, externalSignal, ...init } = options ?? {};
   const resolved = resolveApiUrl(input);
+  const base = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").trim().replace(/\/$/, "");
+  if (base) {
+    if (isLikelyEmulatorOnlyHost(base)) {
+      console.warn("[ps2] NEXT_PUBLIC_API_BASE_URL 使用了 10.0.2.2。该地址仅模拟器可用，真机会失败。");
+    }
+    if (isLikelyHttpBase(base)) {
+      console.warn("[ps2] NEXT_PUBLIC_API_BASE_URL 使用 HTTP。若真机失败，请改 HTTPS 或配置 Android networkSecurityConfig。");
+    }
+  }
+  console.info("[ps2] fetchWithTimeout resolved url:", String(resolved));
   const scope = typeof resolved === "string" ? resolved : typeof input === "string" ? input : "fetchWithTimeout";
   const inner = new AbortController();
   let timedOut = false;

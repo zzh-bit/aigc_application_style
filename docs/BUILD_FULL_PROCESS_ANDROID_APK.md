@@ -2,7 +2,7 @@
 
 本文档描述：如何把本项目的 Next.js Web 应用构建为 **静态导出**，并使用 **Android Studio WebView 壳**打包成 APK；同时说明“路线2（独立后端 API）”下的联调方式与常见坑位。
 
-> 约定：本仓库为 Web 工程；Android 壳工程目录在 `D:\yyh35\android_project\ps2shell`（按你的本机路径为准）。
+> 约定：本仓库内已包含 Android 壳工程：`android/ps2-shell/`（亦可复制到其他路径单独打开）。
 
 ## 前置条件
 
@@ -57,9 +57,13 @@ Android 壳工程使用 `WebViewAssetLoader` 从 `assets/` 里加载页面资源
 
 ### 1）拷贝导出产物
 
-把 Web 工程的 `out/` 内容复制到：
+推荐一键同步（复制 `out/` 到壳工程并重命名 `_next` → `next`）：
 
-- `ps2shell/app/src/main/assets/web/`
+```bash
+npm run sync:android
+```
+
+目标目录：`android/ps2-shell/app/src/main/assets/web/`
 
 ### 2）处理 `_next` 目录（非常关键）
 
@@ -67,12 +71,10 @@ Android 壳工程使用 `WebViewAssetLoader` 从 `assets/` 里加载页面资源
 
 本项目采用的策略是：
 
-- 构建/同步阶段把 `out/_next` **重命名为** `out/next`
+- `npm run sync:android` 会把 `assets/web/_next` **重命名为** `assets/web/next`
 - Android 侧对请求路径做映射：`/assets/web/_next/...` → `assets/web/next/...`
 
-对应原生端实现位置：
-
-- `ps2shell/app/src/main/java/.../MainActivity.kt`
+对应原生端：`android/ps2-shell/app/src/main/java/com/ps2/shell/MainActivity.kt`
 
 ## Android 壳工程设置
 
@@ -93,7 +95,7 @@ Android 壳工程使用 `WebViewAssetLoader` 从 `assets/` 里加载页面资源
 
 ## 生成 APK（Debug）
 
-在 `ps2shell` 工程目录执行：
+在 `android/ps2-shell` 工程目录执行（或在 Android Studio 中点击 Run）：
 
 ```bash
 ./gradlew assembleDebug
@@ -101,12 +103,12 @@ Android 壳工程使用 `WebViewAssetLoader` 从 `assets/` 里加载页面资源
 
 产物通常在：
 
-- `ps2shell/app/build/outputs/apk/debug/app-debug.apk`
+- `android/ps2-shell/app/build/outputs/apk/debug/app-debug.apk`
 
 ## 安装到模拟器/真机
 
 ```bash
-adb install -r "ps2shell/app/build/outputs/apk/debug/app-debug.apk"
+adb install -r "android/ps2-shell/app/build/outputs/apk/debug/app-debug.apk"
 ```
 
 如需要查看日志（推荐）：

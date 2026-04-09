@@ -28,10 +28,12 @@ export function PS2App() {
 }
 
 function PS2AppInner() {
+  const [showBootTransition, setShowBootTransition] = useState(true);
   const [currentPage, setCurrentPage] = useState<PageType>("welcome");
   const [currentMentorId, setCurrentMentorId] = useState<string | null>(null);
   const [mentorChatSessionId, setMentorChatSessionId] = useState(0);
   const [showProjection, setShowProjection] = useState(false);
+  const [openProjectionAfterCouncil, setOpenProjectionAfterCouncil] = useState(false);
   const [showBreathing, setShowBreathing] = useState(false);
   const [anxietyLevel, setAnxietyLevel] = useState(0);
   const [letterTriggerToast, setLetterTriggerToast] = useState<{ count: number; titles: string[] } | null>(null);
@@ -67,6 +69,20 @@ function PS2AppInner() {
     void storageSet("app.settings.v1", next);
   };
 
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setShowBootTransition(false);
+    }, 1200);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (currentPage === "council" && openProjectionAfterCouncil) {
+      setShowProjection(true);
+      setOpenProjectionAfterCouncil(false);
+    }
+  }, [currentPage, openProjectionAfterCouncil]);
+
   // 使用 AnimatePresence 而不是条件返回，保持 hooks 调用顺序一致
   return (
     <>
@@ -82,6 +98,10 @@ function PS2AppInner() {
               onEnter={() => setCurrentPage("council")} 
               onGoToMentor={() => setCurrentPage("mentor")}
               onGoToLetters={() => setCurrentPage("letters")}
+              onGoToDecisionTree={() => {
+                setOpenProjectionAfterCouncil(true);
+                setCurrentPage("council");
+              }}
               settings={appSettings}
               onSettingsChange={handleSettingsChange}
             />
@@ -333,6 +353,30 @@ function PS2AppInner() {
                 查看信件
               </button>
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {showBootTransition && (
+          <motion.div
+            className="pointer-events-none fixed inset-0 z-[100] flex items-center justify-center"
+            style={{
+              background: "radial-gradient(circle at 50% 45%, #10264B 0%, #0A0F1A 58%, #070B14 100%)",
+            }}
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+          >
+            <motion.div
+              className="text-center"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, ease: "easeOut" }}
+            >
+              <div className="text-3xl tracking-wide font-light text-white/90">Parallel Self 2.0</div>
+              <div className="mt-2 text-xs tracking-[0.22em] text-white/45">LOADING YOUR COUNCIL...</div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

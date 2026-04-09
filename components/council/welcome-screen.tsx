@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
-import { Settings, HelpCircle, Users, Database, Brain, Compass, Sparkles, MessageCircle } from "lucide-react";
+import { Settings, HelpCircle, Brain, Sun } from "lucide-react";
 import { storageClearAll, storageExportAll } from "@/lib/storage";
 import { DEFAULT_APP_SETTINGS, type AppSettings } from "@/lib/app-settings";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -16,34 +16,341 @@ const FIXED_PARTICLES = Array.from({ length: 100 }).map((_, i) => ({
   delay: ((i * 19) % 20),
 }));
 
-// 功能亮点数据
-const FEATURE_HIGHLIGHTS = [
-  { icon: Users, label: "多自我辩论", desc: "让内心的不同声音进行对话" },
-  { icon: Database, label: "记忆锚点", desc: "存储与调用重要人生记忆" },
-  { icon: Brain, label: "决策树推演", desc: "模拟不同选择的未来路径" },
-  { icon: Compass, label: "情绪感知", desc: "实时监测并调节情绪状态" },
-];
-
-// 导师类型图标
+// 导师类型图标（末层为最前卡片，参考设计稿：绿色光感太阳纹）
 const MENTOR_ICONS = [
   { icon: "philosophy", label: "哲学思辨", color: "#8B5CF6" },
   { icon: "balance", label: "理性分析", color: "#3B82F6" },
-  { icon: "neuron", label: "认知科学", color: "#10B981" },
-];
+  { icon: "sun", label: "洞察核心", color: "#10B981" },
+] as const;
 
+function MentorColumn({
+  isLandscape,
+  isHoveringMentor,
+  setHoverMentor,
+  onGoToMentor,
+}: {
+  isLandscape: boolean;
+  isHoveringMentor: boolean;
+  setHoverMentor: (v: boolean) => void;
+  onGoToMentor?: () => void;
+}) {
+  return (
+    <motion.div
+      className={`pointer-events-auto flex flex-col items-center ${isLandscape ? "flex-1 min-w-0 max-w-[30%]" : "flex-1"}`}
+      onMouseEnter={() => setHoverMentor(true)}
+      onMouseLeave={() => setHoverMentor(false)}
+    >
+      <div className={`relative flex items-center justify-center ${isLandscape ? "w-32 h-24" : "w-36 h-28"}`}>
+        {MENTOR_ICONS.map((mentor, i) => {
+          const baseAngle = -20 + i * 20;
+          const hoverAngle = -30 + i * 30;
+          return (
+            <motion.div
+              key={mentor.icon}
+              className={`absolute rounded-xl backdrop-blur-sm flex items-center justify-center z-[1] ${isLandscape ? "w-14 h-20" : "w-16 h-24"}`}
+              style={{
+                background: `linear-gradient(135deg, ${mentor.color}20, transparent)`,
+                border: `1px solid ${mentor.color}30`,
+                transformOrigin: "bottom center",
+                zIndex: i + 1,
+              }}
+              animate={{
+                rotate: isHoveringMentor ? hoverAngle : baseAngle,
+                y: isHoveringMentor ? -10 : 0,
+              }}
+              transition={{ duration: 0.4 }}
+            >
+              <div
+                className={`${isLandscape ? "w-7 h-7" : "w-8 h-8"} rounded-full flex items-center justify-center`}
+                style={{
+                  background: `${mentor.color}30`,
+                  boxShadow: mentor.icon === "sun" ? `0 0 12px ${mentor.color}88` : undefined,
+                }}
+              >
+                {mentor.icon === "philosophy" && (
+                  <svg className={`${isLandscape ? "w-4 h-4" : "w-5 h-5"}`} viewBox="0 0 24 24" fill="none" stroke={mentor.color} strokeWidth="1.5">
+                    <circle cx="12" cy="8" r="5" />
+                    <path d="M12 13v8M8 17h8" />
+                  </svg>
+                )}
+                {mentor.icon === "balance" && (
+                  <svg className={`${isLandscape ? "w-4 h-4" : "w-5 h-5"}`} viewBox="0 0 24 24" fill="none" stroke={mentor.color} strokeWidth="1.5">
+                    <path d="M12 3v18M3 9l3-3 3 3M15 9l3-3 3 3M6 9v6a3 3 0 003 3M15 9v6a3 3 0 003 3" />
+                  </svg>
+                )}
+                {mentor.icon === "sun" && (
+                  <Sun className={`${isLandscape ? "w-4 h-4" : "w-5 h-5"}`} color={mentor.color} strokeWidth={1.5} />
+                )}
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
 
+      <div className={`text-center ${isLandscape ? "mt-2" : "mt-3"}`}>
+        <h3 className={`${isLandscape ? "text-sm" : "text-base"} font-medium text-white/90`}>虚拟导师</h3>
+        <p className={`${isLandscape ? "text-[10px] mt-0.5" : "text-xs mt-1"} text-white/50`}>引入顶级心智模型</p>
+      </div>
+
+      <motion.button
+        onClick={() => onGoToMentor?.()}
+        onTouchEnd={(e) => {
+          e.preventDefault();
+          onGoToMentor?.();
+        }}
+        onPointerUp={(e) => {
+          if (e.pointerType !== "mouse") onGoToMentor?.();
+        }}
+        className={`${isLandscape ? "mt-2 px-3 py-1.5 text-[10px]" : "mt-3 px-4 py-2 text-xs"} rounded-full backdrop-blur-sm text-white/80`}
+        style={{
+          touchAction: "manipulation",
+          backgroundColor: "rgba(255,255,255,0.1)",
+          border: "1px solid rgba(255,255,255,0.2)",
+        }}
+        whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.15)" }}
+        whileTap={{ scale: 0.98 }}
+      >
+        聘请导师
+      </motion.button>
+    </motion.div>
+  );
+}
+
+function LettersColumn({
+  isLandscape,
+  isHoveringLetter,
+  setHoverLetter,
+  flyingLetters,
+  onGoToLetters,
+}: {
+  isLandscape: boolean;
+  isHoveringLetter: boolean;
+  setHoverLetter: (v: boolean) => void;
+  flyingLetters: number[];
+  onGoToLetters?: () => void;
+}) {
+  return (
+    <motion.div
+      className={`pointer-events-auto flex flex-col items-center ${isLandscape ? "flex-1 min-w-0 max-w-[30%]" : "flex-1"}`}
+      onMouseEnter={() => setHoverLetter(true)}
+      onMouseLeave={() => setHoverLetter(false)}
+    >
+      <div className={`relative flex items-center justify-center ${isLandscape ? "w-28 h-28" : "w-32 h-32"}`}>
+        <motion.div
+          className={`relative rounded-2xl ${isLandscape ? "w-20 h-24" : "w-24 h-28"}`}
+          style={{
+            background: "linear-gradient(135deg, rgba(245,158,11,0.1) 0%, rgba(245,158,11,0.05) 100%)",
+            border: "2px solid rgba(245,158,11,0.5)",
+            boxShadow: "0 0 30px rgba(245,158,11,0.2)",
+          }}
+        >
+          <svg className="absolute inset-0 w-full h-full opacity-30" viewBox="0 0 96 112">
+            <path d="M10 20h20M30 20v20M30 40h15M45 40v30M45 70h20M65 70v20" stroke="#F59E0B" strokeWidth="1" fill="none" />
+            <path d="M86 30h-20M66 30v25M66 55h-15M51 55v25M51 80h-20M31 80v10" stroke="#F59E0B" strokeWidth="1" fill="none" />
+          </svg>
+          <motion.div
+            className="absolute top-1/3 left-1/2 -translate-x-1/2 w-12 h-8 rounded overflow-hidden"
+            style={{
+              background: "linear-gradient(to bottom, rgba(245,158,11,0.2), transparent)",
+              border: "1px solid rgba(245,158,11,0.6)",
+            }}
+          >
+            <motion.div
+              className="absolute inset-0"
+              style={{ backgroundColor: "rgba(245,158,11,0.3)" }}
+              animate={{
+                scaleY: isHoveringLetter ? [1, 0, 1] : [1, 0.3, 1],
+              }}
+              transition={{
+                duration: isHoveringLetter ? 0.5 : 2,
+                repeat: Infinity,
+              }}
+              transformOrigin="top"
+            />
+          </motion.div>
+        </motion.div>
+
+        <AnimatePresence>
+          {flyingLetters.map((id, i) => (
+            <motion.div
+              key={id}
+              className="absolute w-6 h-4 rounded-sm"
+              style={{
+                backgroundColor: "rgba(245,158,11,0.6)",
+                boxShadow: "0 0 10px rgba(245,158,11,0.5)",
+              }}
+              initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+              animate={{
+                x: 100 + i * 20,
+                y: -80 - i * 10,
+                opacity: 0,
+                scale: 0.5,
+                rotate: 15,
+              }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+            />
+          ))}
+        </AnimatePresence>
+      </div>
+
+      <div className={`text-center ${isLandscape ? "mt-1" : "mt-2"}`}>
+        <h3 className={`${isLandscape ? "text-sm" : "text-base"} font-medium text-white/90`}>未来信件</h3>
+        <p className={`${isLandscape ? "text-[10px] mt-0.5" : "text-xs mt-1"} text-white/50`}>与时空中的自己对话</p>
+      </div>
+
+      <motion.button
+        onClick={() => onGoToLetters?.()}
+        onTouchEnd={(e) => {
+          e.preventDefault();
+          onGoToLetters?.();
+        }}
+        onPointerUp={(e) => {
+          if (e.pointerType !== "mouse") onGoToLetters?.();
+        }}
+        className={`${isLandscape ? "mt-2 px-3 py-1.5 text-[10px]" : "mt-3 px-4 py-2 text-xs"} rounded-full backdrop-blur-sm text-white/80`}
+        style={{
+          touchAction: "manipulation",
+          backgroundColor: "rgba(255,255,255,0.1)",
+          border: "1px solid rgba(255,255,255,0.2)",
+        }}
+        whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.15)" }}
+        whileTap={{ scale: 0.98 }}
+      >
+        写信 / 收信
+      </motion.button>
+    </motion.div>
+  );
+}
+
+function WelcomeCenterHub({
+  isLandscape,
+  typedText,
+  isHoveringStart,
+  setHoverStart,
+  onEnter,
+}: {
+  isLandscape: boolean;
+  typedText: string;
+  isHoveringStart: boolean;
+  setHoverStart: (v: boolean) => void;
+  onEnter: () => void;
+}) {
+  return (
+    <div className={`pointer-events-auto flex flex-col items-center shrink-0 ${isLandscape ? "w-[36%] max-w-[320px]" : ""}`}>
+      <h2 className={`${isLandscape ? "text-lg mb-0.5" : "text-2xl mb-2"} font-light text-white/90 tracking-wide text-center`}>
+        与你的平行自我对话
+      </h2>
+      <div className={`${isLandscape ? "h-4 -mt-1" : "h-5 -mt-0.5"} flex items-center justify-center w-full`}>
+        <p className={`${isLandscape ? "text-[11px]" : "text-sm"} font-light text-white/50 tracking-wider text-center px-1`}>
+          {typedText}
+          <motion.span
+            className="inline-block w-0.5 h-4 bg-[#3B82F6] ml-1 align-middle"
+            animate={{ opacity: [1, 0, 1] }}
+            transition={{ duration: 0.8, repeat: Infinity }}
+          />
+        </p>
+      </div>
+      <motion.button
+        onClick={onEnter}
+        onTouchEnd={(e) => {
+          e.preventDefault();
+          onEnter();
+        }}
+        onPointerUp={(e) => {
+          if (e.pointerType !== "mouse") onEnter();
+        }}
+        onMouseEnter={() => setHoverStart(true)}
+        onMouseLeave={() => setHoverStart(false)}
+        className={`relative rounded-full flex items-center justify-center cursor-pointer ${isLandscape ? "mt-5 w-[92px] h-[92px]" : "mt-7 w-[120px] h-[120px]"}`}
+        style={{
+          touchAction: "manipulation",
+          background: "rgba(59,130,246,0.1)",
+          backdropFilter: "blur(10px)",
+          border: "1px solid rgba(59,130,246,0.3)",
+        }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.98 }}
+        animate={{
+          boxShadow: isHoveringStart
+            ? "0 0 60px rgba(59,130,246,0.5), inset 0 0 30px rgba(59,130,246,0.2)"
+            : [
+                "0 0 30px rgba(59,130,246,0.2), inset 0 0 15px rgba(59,130,246,0.1)",
+                "0 0 45px rgba(59,130,246,0.35), inset 0 0 20px rgba(59,130,246,0.15)",
+                "0 0 30px rgba(59,130,246,0.2), inset 0 0 15px rgba(59,130,246,0.1)",
+              ],
+        }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <motion.div
+          animate={{
+            rotate: isHoveringStart ? 360 : 0,
+            scale: isHoveringStart ? 1.1 : 1,
+          }}
+          transition={{
+            rotate: { duration: isHoveringStart ? 1 : 8, repeat: Infinity, ease: "linear" },
+            scale: { duration: 0.3 },
+          }}
+        >
+          <svg
+            width={isLandscape ? 40 : 48}
+            height={isLandscape ? 40 : 48}
+            viewBox="0 0 48 48"
+            fill="none"
+            className="text-[#3B82F6]"
+          >
+            <motion.path
+              d="M24 4L42 16V32L24 44L6 32V16L24 4Z"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              fill="none"
+              animate={{
+                strokeOpacity: [0.6, 1, 0.6],
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+            <motion.path
+              d="M24 4V44M6 16L42 32M42 16L6 32"
+              stroke="currentColor"
+              strokeWidth="1"
+              strokeOpacity="0.5"
+              fill="none"
+            />
+            <motion.circle
+              cx="24"
+              cy="24"
+              r="6"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              fill="rgba(59,130,246,0.2)"
+              animate={{
+                r: [6, 7, 6],
+                fillOpacity: [0.2, 0.4, 0.2],
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+          </svg>
+        </motion.div>
+        <span className={`absolute text-white/70 whitespace-nowrap ${isLandscape ? "-bottom-8 text-xs" : "-bottom-10 text-sm"}`}>
+          与我的平行自我对话
+        </span>
+      </motion.button>
+    </div>
+  );
+}
 
 interface WelcomeScreenProps {
   onEnter: () => void;
   onGoToMentor?: () => void;
   onGoToLetters?: () => void;
+  onGoToDecisionTree?: () => void;
   settings?: AppSettings;
   onSettingsChange?: (next: AppSettings) => void;
 }
 
-export function WelcomeScreen({ onEnter, onGoToMentor, onGoToLetters, settings, onSettingsChange }: WelcomeScreenProps) {
+export function WelcomeScreen({ onEnter, onGoToMentor, onGoToLetters, onGoToDecisionTree, settings, onSettingsChange }: WelcomeScreenProps) {
   const [mounted, setMounted] = useState(false);
-  const [currentFeature, setCurrentFeature] = useState(0);
+  const [clockText, setClockText] = useState("");
   const [isHoveringMentor, setIsHoveringMentor] = useState(false);
   const [isHoveringLetter, setIsHoveringLetter] = useState(false);
   const [isHoveringStart, setIsHoveringStart] = useState(false);
@@ -89,6 +396,18 @@ export function WelcomeScreen({ onEnter, onGoToMentor, onGoToLetters, settings, 
     setMounted(true);
   }, []);
 
+  useEffect(() => {
+    const tick = () => {
+      const d = new Date();
+      const h = d.getHours().toString().padStart(2, "0");
+      const m = d.getMinutes().toString().padStart(2, "0");
+      setClockText(`${h}:${m}`);
+    };
+    tick();
+    const id = window.setInterval(tick, 30_000);
+    return () => window.clearInterval(id);
+  }, []);
+
   // 打字机效果
   useEffect(() => {
     if (!mounted) return;
@@ -105,15 +424,6 @@ export function WelcomeScreen({ onEnter, onGoToMentor, onGoToLetters, settings, 
         }, 3000);
       }
     }, 100);
-    return () => clearInterval(interval);
-  }, [mounted]);
-
-  // 功能亮点轮播（每8秒）
-  useEffect(() => {
-    if (!mounted) return;
-    const interval = setInterval(() => {
-      setCurrentFeature((prev) => (prev + 1) % FEATURE_HIGHLIGHTS.length);
-    }, 8000);
     return () => clearInterval(interval);
   }, [mounted]);
 
@@ -201,7 +511,7 @@ export function WelcomeScreen({ onEnter, onGoToMentor, onGoToLetters, settings, 
       <header className={`absolute top-0 left-0 right-0 flex items-center justify-between z-20 ${isLandscape ? "h-[9%] px-6" : "h-[10%] px-8"}`}>
         {/* 左侧：PS² 发光徽标 */}
         <motion.div 
-          className="flex items-center gap-1"
+          className="flex items-center gap-2"
           animate={{
             textShadow: [
               "0 0 10px rgba(59,130,246,0.3)",
@@ -213,6 +523,11 @@ export function WelcomeScreen({ onEnter, onGoToMentor, onGoToLetters, settings, 
         >
           <span className={`${isLandscape ? "text-xl" : "text-2xl"} font-light tracking-wider text-white`}>PS</span>
           <span className={`${isLandscape ? "text-base" : "text-lg"} font-light text-[#3B82F6] align-super`}>2</span>
+          {clockText && (
+            <span className={`${isLandscape ? "text-[10px]" : "text-xs"} font-light text-white/40 tabular-nums ml-1`}>
+              {clockText}
+            </span>
+          )}
         </motion.div>
 
         {/* 中央：标题 */}
@@ -234,268 +549,99 @@ export function WelcomeScreen({ onEnter, onGoToMentor, onGoToLetters, settings, 
         </button>
       </header>
 
-      {/* ====== 中部：核心功能区 (70%) ====== */}
-      <main className={`absolute left-0 right-0 z-10 flex items-center justify-center ${isLandscape ? "top-[9%] h-[69%]" : "top-[10%] h-[70%]"}`}>
-        {/* ===== 中心区域：PS²徽标 + 标语 + 开始按钮 ===== */}
-        <div className={`flex flex-col items-center ${isLandscape ? "-mt-6" : "-mt-10"}`}>
-
-          {/* 标语文本（横屏略缩小并上移，避免与开始按钮/底部轮播遮挡） */}
-          <h2 className={`${isLandscape ? "text-lg mb-0.5" : "text-2xl mb-2"} font-light text-white/90 tracking-wide`}>
-            与你的平行自我对话
-          </h2>
-
-          {/* 打字机效果副标题 */}
-          <div className={`${isLandscape ? "h-4 -mt-1" : "h-5 -mt-0.5"} flex items-center`}>
-            <p className={`${isLandscape ? "text-[11px]" : "text-sm"} font-light text-white/50 tracking-wider`}>
-              {typedText}
-              <motion.span
-                className="inline-block w-0.5 h-4 bg-[#3B82F6] ml-1"
-                animate={{ opacity: [1, 0, 1] }}
-                transition={{ duration: 0.8, repeat: Infinity }}
+      {/* ====== 中部：核心功能区 — 横屏为三列（与设计稿一致），竖屏中间主区 + 底部分栏 ====== */}
+      <main
+        className={`pointer-events-auto absolute left-0 right-0 z-10 ${
+          isLandscape
+            ? "top-[9%] h-[69%] flex flex-row items-center justify-between px-4 max-w-[1600px] mx-auto"
+            : "top-[10%] h-[70%] flex flex-col justify-between pb-2"
+        }`}
+      >
+        {isLandscape ? (
+          <>
+            <MentorColumn
+              isLandscape
+              isHoveringMentor={isHoveringMentor}
+              setHoverMentor={setIsHoveringMentor}
+              onGoToMentor={onGoToMentor}
+            />
+            <WelcomeCenterHub
+              isLandscape
+              typedText={typedText}
+              isHoveringStart={isHoveringStart}
+              setHoverStart={setIsHoveringStart}
+              onEnter={handleEnter}
+            />
+            <LettersColumn
+              isLandscape
+              isHoveringLetter={isHoveringLetter}
+              setHoverLetter={setIsHoveringLetter}
+              flyingLetters={flyingLetters}
+              onGoToLetters={onGoToLetters}
+            />
+          </>
+        ) : (
+          <>
+            <div className="flex-1 flex flex-col items-center justify-center min-h-0 -mt-6">
+              <WelcomeCenterHub
+                isLandscape={false}
+                typedText={typedText}
+                isHoveringStart={isHoveringStart}
+                setHoverStart={setIsHoveringStart}
+                onEnter={handleEnter}
               />
-            </p>
-          </div>
+            </div>
+            <div className="flex flex-row items-end justify-between gap-3 px-4 w-full shrink-0">
+              <MentorColumn
+                isLandscape={false}
+                isHoveringMentor={isHoveringMentor}
+                setHoverMentor={setIsHoveringMentor}
+                onGoToMentor={onGoToMentor}
+              />
+              <LettersColumn
+                isLandscape={false}
+                isHoveringLetter={isHoveringLetter}
+                setHoverLetter={setIsHoveringLetter}
+                flyingLetters={flyingLetters}
+                onGoToLetters={onGoToLetters}
+              />
+            </div>
+          </>
+        )}
 
-          {/* 开始按钮：圆形玻璃态，120px直径 */}
-          <motion.button
+        {/* 触控兜底热区：避免 WebView 某些机型/层级导致按钮命中失败 */}
+        <div className="pointer-events-none absolute inset-0 z-30">
+          {/* 中间进入热区 */}
+          <button
+            type="button"
+            aria-label="进入议会"
             onClick={handleEnter}
-            onMouseEnter={() => setIsHoveringStart(true)}
-            onMouseLeave={() => setIsHoveringStart(false)}
-            className={`relative rounded-full flex items-center justify-center cursor-pointer ${isLandscape ? "mt-5 w-[92px] h-[92px]" : "mt-7 w-[120px] h-[120px]"}`}
-            style={{
-              background: "rgba(59,130,246,0.1)",
-              backdropFilter: "blur(10px)",
-              border: "1px solid rgba(59,130,246,0.3)",
-            }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.98 }}
-            animate={{
-              boxShadow: isHoveringStart 
-                ? "0 0 60px rgba(59,130,246,0.5), inset 0 0 30px rgba(59,130,246,0.2)"
-                : [
-                    "0 0 30px rgba(59,130,246,0.2), inset 0 0 15px rgba(59,130,246,0.1)",
-                    "0 0 45px rgba(59,130,246,0.35), inset 0 0 20px rgba(59,130,246,0.15)",
-                    "0 0 30px rgba(59,130,246,0.2), inset 0 0 15px rgba(59,130,246,0.1)",
-                  ],
-            }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          >
-            {/* 多面体图标（旋转） */}
-            <motion.div
-              animate={{ 
-                rotate: isHoveringStart ? 360 : 0,
-                scale: isHoveringStart ? 1.1 : 1,
-              }}
-              transition={{ 
-                rotate: { duration: isHoveringStart ? 1 : 8, repeat: Infinity, ease: "linear" },
-                scale: { duration: 0.3 },
-              }}
-            >
-              <svg 
-                width={isLandscape ? 40 : 48}
-                height={isLandscape ? 40 : 48}
-                viewBox="0 0 48 48" 
-                fill="none" 
-                className="text-[#3B82F6]"
-              >
-                {/* 多面体 - 抽象几何图形 */}
-                <motion.path
-                  d="M24 4L42 16V32L24 44L6 32V16L24 4Z"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  fill="none"
-                  animate={{
-                    strokeOpacity: [0.6, 1, 0.6],
-                  }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-                <motion.path
-                  d="M24 4V44M6 16L42 32M42 16L6 32"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                  strokeOpacity="0.5"
-                  fill="none"
-                />
-                <motion.circle
-                  cx="24"
-                  cy="24"
-                  r="6"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  fill="rgba(59,130,246,0.2)"
-                  animate={{
-                    r: [6, 7, 6],
-                    fillOpacity: [0.2, 0.4, 0.2],
-                  }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-              </svg>
-            </motion.div>
-
-            {/* 按钮文字 */}
-            <span className={`absolute text-white/70 whitespace-nowrap ${isLandscape ? "-bottom-8 text-xs" : "-bottom-10 text-sm"}`}>
-              与我的平行自我对话
-            </span>
-          </motion.button>
-        </div>
-
-        {/* ===== 行星A：虚拟导师库入口 (左下方) ===== */}
-        <motion.div
-          className={`absolute flex flex-col items-center ${isLandscape ? "left-[8%] bottom-[6%]" : "left-[12%] bottom-[10%]"}`}
-          onMouseEnter={() => setIsHoveringMentor(true)}
-          onMouseLeave={() => setIsHoveringMentor(false)}
-        >
-          {/* 扇形卡片组 */}
-          <div className={`relative flex items-center justify-center ${isLandscape ? "w-32 h-24" : "w-40 h-32"}`}>
-            {MENTOR_ICONS.map((mentor, i) => {
-              const baseAngle = -20 + i * 20;
-              const hoverAngle = -30 + i * 30;
-              return (
-                <motion.div
-                  key={i}
-                  className={`absolute rounded-xl backdrop-blur-sm flex items-center justify-center ${isLandscape ? "w-14 h-20" : "w-16 h-24"}`}
-                  style={{
-                    background: `linear-gradient(135deg, ${mentor.color}20, transparent)`,
-                    border: `1px solid ${mentor.color}30`,
-                    transformOrigin: "bottom center",
-                  }}
-                  animate={{
-                    rotate: isHoveringMentor ? hoverAngle : baseAngle,
-                    y: isHoveringMentor ? -10 : 0,
-                  }}
-                  transition={{ duration: 0.4 }}
-                >
-                  <div className={`${isLandscape ? "w-7 h-7" : "w-8 h-8"} rounded-full flex items-center justify-center`} style={{ background: `${mentor.color}30` }}>
-                    {mentor.icon === "philosophy" && (
-                      <svg className={`${isLandscape ? "w-4 h-4" : "w-5 h-5"}`} viewBox="0 0 24 24" fill="none" stroke={mentor.color} strokeWidth="1.5">
-                        <circle cx="12" cy="8" r="5" />
-                        <path d="M12 13v8M8 17h8" />
-                      </svg>
-                    )}
-                    {mentor.icon === "balance" && (
-                      <svg className={`${isLandscape ? "w-4 h-4" : "w-5 h-5"}`} viewBox="0 0 24 24" fill="none" stroke={mentor.color} strokeWidth="1.5">
-                        <path d="M12 3v18M3 9l3-3 3 3M15 9l3-3 3 3M6 9v6a3 3 0 003 3M15 9v6a3 3 0 003 3" />
-                      </svg>
-                    )}
-                    {mentor.icon === "neuron" && (
-                      <svg className={`${isLandscape ? "w-4 h-4" : "w-5 h-5"}`} viewBox="0 0 24 24" fill="none" stroke={mentor.color} strokeWidth="1.5">
-                        <circle cx="12" cy="12" r="3" />
-                        <path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M5 19l3-3M16 8l3-3" />
-                      </svg>
-                    )}
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-
-          <div className={`text-center ${isLandscape ? "mt-2" : "mt-4"}`}>
-            <h3 className={`${isLandscape ? "text-sm" : "text-base"} font-medium text-white/90`}>虚拟导师</h3>
-            <p className={`${isLandscape ? "text-[10px] mt-0.5" : "text-xs mt-1"} text-white/50`}>引入顶级心智模型</p>
-          </div>
-
-          <motion.button
+            className={`pointer-events-auto absolute rounded-full ${
+              isLandscape ? "w-28 h-28 left-1/2 -translate-x-1/2 top-[42%]" : "w-36 h-36 left-1/2 -translate-x-1/2 top-[45%]"
+            }`}
+            style={{ background: "transparent" }}
+          />
+          {/* 左侧导师热区 */}
+          <button
+            type="button"
+            aria-label="进入导师"
             onClick={() => onGoToMentor?.()}
-            className={`${isLandscape ? "mt-2 px-3 py-1.5 text-[10px]" : "mt-3 px-4 py-2 text-xs"} rounded-full backdrop-blur-sm text-white/80`}
-            style={{ 
-              backgroundColor: "rgba(255,255,255,0.1)",
-              border: "1px solid rgba(255,255,255,0.2)",
-            }}
-            whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.15)" }}
-            whileTap={{ scale: 0.98 }}
-          >
-            聘请导师
-          </motion.button>
-        </motion.div>
-
-        {/* ===== 行星B：未来信件入口 (右下方) ===== */}
-        <motion.div
-          className={`absolute flex flex-col items-center ${isLandscape ? "right-[8%] bottom-[6%]" : "right-[12%] bottom-[10%]"}`}
-          onMouseEnter={() => setIsHoveringLetter(true)}
-          onMouseLeave={() => setIsHoveringLetter(false)}
-        >
-          {/* 时光胶囊 */}
-          <div className={`relative flex items-center justify-center ${isLandscape ? "w-28 h-28" : "w-32 h-32"}`}>
-            <motion.div
-              className={`relative rounded-2xl ${isLandscape ? "w-20 h-24" : "w-24 h-28"}`}
-              style={{
-                background: "linear-gradient(135deg, rgba(245,158,11,0.1) 0%, rgba(245,158,11,0.05) 100%)",
-                border: "2px solid rgba(245,158,11,0.5)",
-                boxShadow: "0 0 30px rgba(245,158,11,0.2)",
-              }}
-            >
-              {/* 电路纹路 */}
-              <svg className="absolute inset-0 w-full h-full opacity-30" viewBox="0 0 96 112">
-                <path d="M10 20h20M30 20v20M30 40h15M45 40v30M45 70h20M65 70v20" stroke="#F59E0B" strokeWidth="1" fill="none" />
-                <path d="M86 30h-20M66 30v25M66 55h-15M51 55v25M51 80h-20M31 80v10" stroke="#F59E0B" strokeWidth="1" fill="none" />
-              </svg>
-
-              {/* 舱门 */}
-              <motion.div
-                className="absolute top-1/3 left-1/2 -translate-x-1/2 w-12 h-8 rounded overflow-hidden"
-                style={{ 
-                  background: "linear-gradient(to bottom, rgba(245,158,11,0.2), transparent)",
-                  border: "1px solid rgba(245,158,11,0.6)",
-                }}
-              >
-                <motion.div
-                  className="absolute inset-0"
-                  style={{ backgroundColor: "rgba(245,158,11,0.3)" }}
-                  animate={{
-                    scaleY: isHoveringLetter ? [1, 0, 1] : [1, 0.3, 1],
-                  }}
-                  transition={{
-                    duration: isHoveringLetter ? 0.5 : 2,
-                    repeat: Infinity,
-                  }}
-                  transformOrigin="top"
-                />
-              </motion.div>
-            </motion.div>
-
-            {/* 飞出的信件 */}
-            <AnimatePresence>
-              {flyingLetters.map((id, i) => (
-                <motion.div
-                  key={id}
-                  className="absolute w-6 h-4 rounded-sm"
-                  style={{
-                    backgroundColor: "rgba(245,158,11,0.6)",
-                    boxShadow: "0 0 10px rgba(245,158,11,0.5)",
-                  }}
-                  initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
-                  animate={{
-                    x: 100 + i * 20,
-                    y: -80 - i * 10,
-                    opacity: 0,
-                    scale: 0.5,
-                    rotate: 15,
-                  }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 1.5, ease: "easeOut" }}
-                />
-              ))}
-            </AnimatePresence>
-          </div>
-
-          <div className={`text-center ${isLandscape ? "mt-1" : "mt-2"}`}>
-            <h3 className={`${isLandscape ? "text-sm" : "text-base"} font-medium text-white/90`}>未来信件</h3>
-            <p className={`${isLandscape ? "text-[10px] mt-0.5" : "text-xs mt-1"} text-white/50`}>与时空中的自己对话</p>
-          </div>
-
-          <motion.button
+            className={`pointer-events-auto absolute rounded-2xl ${
+              isLandscape ? "w-44 h-40 left-[6%] top-[48%]" : "w-44 h-40 left-[8%] top-[60%]"
+            }`}
+            style={{ background: "transparent" }}
+          />
+          {/* 右侧信件热区 */}
+          <button
+            type="button"
+            aria-label="进入信件"
             onClick={() => onGoToLetters?.()}
-            className={`${isLandscape ? "mt-2 px-3 py-1.5 text-[10px]" : "mt-3 px-4 py-2 text-xs"} rounded-full backdrop-blur-sm text-white/80`}
-            style={{ 
-              backgroundColor: "rgba(255,255,255,0.1)",
-              border: "1px solid rgba(255,255,255,0.2)",
-            }}
-            whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.15)" }}
-            whileTap={{ scale: 0.98 }}
-          >
-            写信 / 收信
-          </motion.button>
-        </motion.div>
+            className={`pointer-events-auto absolute rounded-2xl ${
+              isLandscape ? "w-44 h-40 right-[6%] top-[48%]" : "w-44 h-40 right-[8%] top-[60%]"
+            }`}
+            style={{ background: "transparent" }}
+          />
+        </div>
       </main>
 
       {/* ====== 底部：功能描述轮播 + 导航 (20%) ====== */}
@@ -505,47 +651,33 @@ export function WelcomeScreen({ onEnter, onGoToMentor, onGoToLetters, settings, 
           background: "linear-gradient(to bottom, transparent, rgba(10,15,26,0.9) 40%)",
         }}
       >
-        {/* 功能亮点轮播 */}
-        <div className={`relative flex items-center justify-center ${isLandscape ? "h-12 mb-2" : "h-16 mb-4"}`}>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentFeature}
-              className={`flex items-center rounded-full ${isLandscape ? "gap-3 px-4 py-2" : "gap-4 px-6 py-3"}`}
-              style={{
-                background: "rgba(255,255,255,0.05)",
-                border: "1px solid rgba(255,255,255,0.1)",
-              }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
-            >
-              {(() => {
-                const feature = FEATURE_HIGHLIGHTS[currentFeature];
-                const Icon = feature.icon;
-                return (
-                  <>
-                    <div className={`${isLandscape ? "w-8 h-8" : "w-10 h-10"} rounded-full bg-[#3B82F6]/20 flex items-center justify-center`}>
-                      <Icon className={`${isLandscape ? "w-4 h-4" : "w-5 h-5"} text-[#3B82F6]`} />
-                    </div>
-                    <div className="text-left">
-                      <h4 className={`${isLandscape ? "text-xs" : "text-sm"} font-medium text-white/90`}>{feature.label}</h4>
-                      <p className={`${isLandscape ? "text-[10px]" : "text-xs"} text-white/50`}>{feature.desc}</p>
-                    </div>
-                  </>
-                );
-              })()}
-            </motion.div>
-          </AnimatePresence>
+        {/* 决策树推演主条（与设计稿一致：宽胶囊 + 左脑中图标） */}
+        <div className={`relative flex flex-col items-center justify-center ${isLandscape ? "h-14 mb-1" : "h-16 mb-3"}`}>
+          <motion.button
+            type="button"
+            onClick={() => onGoToDecisionTree?.()}
+            className={`pointer-events-auto flex items-center rounded-full ${isLandscape ? "gap-3 px-5 py-2.5 max-w-[min(92vw,520px)] w-full" : "gap-4 px-6 py-3 max-w-[min(94vw,520px)] w-full"} justify-start`}
+            style={{
+              background: "rgba(255,255,255,0.06)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              boxShadow: "0 0 24px rgba(59,130,246,0.12)",
+            }}
+            whileTap={{ scale: 0.99 }}
+          >
+            <div className={`${isLandscape ? "w-8 h-8" : "w-10 h-10"} rounded-full bg-[#3B82F6]/25 flex items-center justify-center shrink-0`}>
+              <Brain className={`${isLandscape ? "w-4 h-4" : "w-5 h-5"} text-[#93C5FD]`} />
+            </div>
+            <div className="text-left min-w-0">
+              <h4 className={`${isLandscape ? "text-xs" : "text-sm"} font-medium text-white/90`}>决策树推演</h4>
+              <p className={`${isLandscape ? "text-[10px]" : "text-xs"} text-white/45 leading-snug`}>模拟不同选择的未来路径</p>
+            </div>
+          </motion.button>
 
-          {/* 轮播指示器 */}
-          <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-            {FEATURE_HIGHLIGHTS.map((_, i) => (
+          <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+            {[0, 1, 2].map((i) => (
               <div
                 key={i}
-                className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
-                  i === currentFeature ? "bg-[#3B82F6]" : "bg-white/20"
-                }`}
+                className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${i === 1 ? "bg-[#3B82F6]" : "bg-white/20"}`}
               />
             ))}
           </div>

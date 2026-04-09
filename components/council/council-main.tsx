@@ -563,29 +563,8 @@ export function CouncilMain({ onAnxiousDetected, onLettersTriggered, settings }:
 
   return (
     <div className="relative w-full h-full min-h-screen flex flex-col overflow-hidden">
-      {/* 顶部栏 */}
-      <header className="relative z-10 flex items-center justify-between px-4 py-3 md:px-6 md:py-4">
-        {/* Logo */}
-        <motion.div
-          className="flex items-center gap-2"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-        >
-          <span className="text-lg md:text-xl font-bold bg-gradient-to-r from-primary to-future bg-clip-text text-transparent">
-            PS²
-          </span>
-        </motion.div>
-
-        {/* 情绪指示器 */}
-        <div className="flex items-center gap-3">
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-          >
-            <MoodIndicator mood={mood.type} level={mood.level} />
-          </motion.div>
-        </div>
-      </header>
+      {/* 顶部预留层：保留空间与动画层级，不再放主图标 */}
+      <header className="relative z-10 h-10 md:h-12" />
 
       {councilNetworkError && (
         <div className="relative z-20 mx-4 mb-2 flex flex-wrap items-center justify-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
@@ -625,6 +604,7 @@ export function CouncilMain({ onAnxiousDetected, onLettersTriggered, settings }:
             />
           </div>
         ))}
+
       </div>
 
       {/* 中央区域 */}
@@ -691,8 +671,22 @@ export function CouncilMain({ onAnxiousDetected, onLettersTriggered, settings }:
       </main>
 
       {/* 底部输入栏 */}
-      <footer className="fixed bottom-0 left-0 right-0 z-30 pb-3 pt-3 bg-background/20 backdrop-blur-md border-t border-border/30">
+      <footer className="fixed bottom-0 left-0 right-0 z-30 pb-3 pt-3 bg-background/20 border-t border-border/30">
         {archiveHint && <div className="text-center text-xs text-emerald-300 mb-2 px-6">{archiveHint}</div>}
+
+        {/* 底部输入框左侧：PS² + 情绪图标并排，且不拦截输入点击 */}
+        <div className="pointer-events-none absolute left-4 md:left-6 bottom-4">
+          <motion.div
+            className="flex items-center gap-3"
+            initial={{ opacity: 0, x: -16 }}
+            animate={{ opacity: 1, x: 0 }}
+          >
+            <span className="text-base md:text-lg font-bold bg-gradient-to-r from-primary to-future bg-clip-text text-transparent select-none">
+              PS²
+            </span>
+            <MoodIndicator mood={mood.type} level={mood.level} />
+          </motion.div>
+        </div>
 
         {/* 右下角操作区：邀请导师 + 决策完成 */}
         <div className="pointer-events-none absolute right-4 bottom-4 flex flex-col items-end gap-2">

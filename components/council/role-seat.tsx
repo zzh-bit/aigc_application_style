@@ -51,8 +51,8 @@ const positionClasses: Record<string, string> = {
 };
 
 const landscapePositionClasses: Record<string, string> = {
-  // 横屏顶部容易被系统栏遮挡：左右两派下移一档
-  "top-left": "top-8 left-4 md:top-9 md:left-6",
+  // 横屏：左侧顺序需要是 PS² -> 激进派 -> 未来派，因此激进派放到中上段
+  "top-left": "top-[39%] -translate-y-1/2 left-4 md:left-6",
   "top-right": "top-8 right-4 md:top-9 md:right-6",
   // 顶到最上侧：与顶部 PS² 齐平或略高
   "top-center": "top-1 left-1/2 -translate-x-1/2",

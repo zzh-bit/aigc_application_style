@@ -14,3 +14,7 @@ next.user-config.*
 node_modules
 .next/
 .DS_Store
+
+# Android: sync with npm run sync:android after build:android (avoid committing exported site)
+android/ps2-shell/app/src/main/assets/web/*
+!android/ps2-shell/app/src/main/assets/web/.gitkeep
