@@ -154,6 +154,8 @@ export async function storageSet<T>(key: string, value: T): Promise<void> {
   if (canUseIndexedDb()) {
     try {
       await idbSet(fullKey, value)
+      // 冗余写入 localStorage：IndexedDB 异常/兼容性问题时可直接回读
+      lsSet(fullKey, value)
       return
     } catch {
       lsSet(fullKey, value)

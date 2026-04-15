@@ -3,8 +3,15 @@
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart, DollarSign, Zap, X } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { usePerformanceProfile } from "@/lib/performance";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // ─── 类型定义 ──────────────────────────────────────────────────────────────────
 
@@ -96,6 +103,139 @@ const EMOTION_LABEL: Record<string, string> = {
   sad: "低落",
 };
 
+function factionSupportText(support?: number): string {
+  if (typeof support !== "number" || Number.isNaN(support)) return "--";
+  const s = Math.max(0, Math.min(100, Math.round(support)));
+  return `${s}%`;
+}
+
+function BranchCompareSelectRow({
+  slot,
+  value,
+  onChange,
+  branches,
+  excludeId,
+}: {
+  slot: "A" | "B";
+  value: string | undefined;
+  onChange: (id: string | undefined) => void;
+  branches: DecisionBranch[];
+  excludeId?: string | null;
+}) {
+  const candidates =
+    excludeId && branches.some((b) => b.id === excludeId)
+      ? branches.filter((b) => b.id !== excludeId)
+      : branches;
+  const list = candidates.length > 0 ? candidates : branches;
+  const v = value && branches.some((b) => b.id === value) ? value : undefined;
+  return (
+    <div className="min-w-0 flex-1 flex flex-col gap-1">
+      <span className="text-[10px] font-medium uppercase tracking-wide text-white/45">路径 {slot}</span>
+      <Select
+        value={v}
+        onValueChange={(id) => onChange(id)}
+      >
+        <SelectTrigger
+          size="sm"
+          className={cn(
+            "h-9 w-full min-w-0 border-white/18 bg-black/45 text-xs text-white/92 shadow-sm",
+            "focus-visible:ring-2 focus-visible:ring-indigo-400/40 focus-visible:border-indigo-300/45",
+            "[&_[data-slot=select-value]]:truncate [&_[data-slot=select-value]]:text-left",
+          )}
+        >
+          <SelectValue placeholder={slot === "A" ? "选择分支 A" : "选择分支 B"} />
+        </SelectTrigger>
+        <SelectContent
+          position="popper"
+          sideOffset={6}
+          className="z-[300] max-h-[min(280px,46vh)] w-[var(--radix-select-trigger-width)] min-w-[10rem] border-white/15 bg-[oklch(0.12_0.02_260)] text-white/95 shadow-2xl backdrop-blur-xl"
+        >
+          {list.map((b) => (
+            <SelectItem
+              key={`cmp-${slot}-${b.id}`}
+              value={b.id}
+              className="cursor-pointer text-xs py-2.5 focus:bg-white/10 focus:text-white"
+            >
+              {b.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
+
+function BranchComparePanel({
+  branches,
+  setCompareA,
+  setCompareB,
+  effectiveCompareA,
+  effectiveCompareB,
+  compareSummary,
+  comparedDelta,
+}: {
+  branches: DecisionBranch[];
+  setCompareA: (id: string | null) => void;
+  setCompareB: (id: string | null) => void;
+  effectiveCompareA: string | null;
+  effectiveCompareB: string | null;
+  compareSummary?: string;
+  comparedDelta: DecisionPathProps["comparedDelta"];
+}) {
+  return (
+    <>
+      <div className="text-xs font-medium text-white/65 mb-2">分支比较</div>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-3 mb-3">
+        <BranchCompareSelectRow
+          slot="A"
+          value={effectiveCompareA ?? undefined}
+          onChange={(id) => setCompareA(id ?? null)}
+          branches={branches}
+          excludeId={effectiveCompareB ?? undefined}
+        />
+        <BranchCompareSelectRow
+          slot="B"
+          value={effectiveCompareB ?? undefined}
+          onChange={(id) => setCompareB(id ?? null)}
+          branches={branches}
+          excludeId={effectiveCompareA ?? undefined}
+        />
+      </div>
+      {effectiveCompareA && effectiveCompareB && effectiveCompareA !== effectiveCompareB && (
+        <div className="text-xs text-white/75 leading-relaxed space-y-2">
+          {(() => {
+            const a = branches.find((b) => b.id === effectiveCompareA);
+            const b = branches.find((b) => b.id === effectiveCompareB);
+            if (!a || !b) return "请选择有效分支。";
+            const emoA = a.emotionForecast ? EMOTION_LABEL[a.emotionForecast] ?? a.emotionForecast : "-";
+            const emoB = b.emotionForecast ? EMOTION_LABEL[b.emotionForecast] ?? b.emotionForecast : "-";
+            return (
+              <>
+                <p>
+                  <span className="text-white/90 font-medium">A · {a.name}</span>：收益 {a.benefitScore ?? "-"} /
+                  风险 {a.riskScore ?? "-"} · 情绪预测 {emoA}
+                </p>
+                <p>
+                  <span className="text-white/90 font-medium">B · {b.name}</span>：收益 {b.benefitScore ?? "-"} /
+                  风险 {b.riskScore ?? "-"} · 情绪预测 {emoB}
+                </p>
+                {comparedDelta && (
+                  <p className="text-white/55">
+                    相对差值（A−B）：收益 {comparedDelta.benefit > 0 ? "+" : ""}
+                    {comparedDelta.benefit}，风险 {comparedDelta.risk > 0 ? "+" : ""}
+                    {comparedDelta.risk}
+                  </p>
+                )}
+                {(compareSummary ?? "").trim().length > 0 && <p>{compareSummary}</p>}
+              </>
+            );
+          })()}
+        </div>
+      )}
+    </>
+  );
+}
+
 export function DecisionPath({
   question,
   branches,
@@ -132,14 +272,33 @@ export function DecisionPath({
     setSelectedFaction(prev => (prev === factionId ? null : factionId));
   };
 
-  // SVG 坐标系：viewBox="0 0 100 100"
+  // SVG 坐标系：viewBox="0 0 100 100"（树在小屏/横屏下更容易被裁切，需更克制的缩放与半径）
   const CX = 50;
-  const CY = 32;
-  const TREE_SCALE = 1.22;
-  const treeTransform = `translate(${CX * (1 - TREE_SCALE)} ${(CY + 2) * (1 - TREE_SCALE)}) scale(${TREE_SCALE})`;
+  const CY = 30;
+  const TREE_SCALE = 1.18;
+  const treeTransform = `translate(${CX * (1 - TREE_SCALE)} ${(CY + 1) * (1 - TREE_SCALE)}) scale(${TREE_SCALE})`;
+  const tx = CX * (1 - TREE_SCALE);
+  const ty = (CY + 1) * (1 - TREE_SCALE);
+
+  const selectedBranchGeom = useMemo(() => {
+    if (!selectedBranchData) return null;
+    const index = branches.findIndex((b) => b.id === selectedBranchData.id);
+    if (index < 0) return null;
+    const totalBranches = branches.length;
+    const spread = 76;
+    const angleDenom = Math.max(1, totalBranches - 1);
+    const angleOffset = (index - (totalBranches - 1) / 2) * (spread / angleDenom);
+    const rad = (angleOffset * Math.PI) / 180;
+    const endX = CX + Math.sin(rad) * 46;
+    const endY = CY + 44 + Math.abs(Math.sin(rad)) * 4;
+    // Apply the same transform as the SVG group: translate then scale.
+    const xT = (endX + tx) * TREE_SCALE;
+    const yT = (endY + ty) * TREE_SCALE;
+    return { xT, yT };
+  }, [selectedBranchData, branches, CX, CY, TREE_SCALE, tx, ty]);
 
   return (
-    <div className="relative w-full h-full flex flex-col overflow-hidden">
+    <div className="relative w-full h-full overflow-hidden">
 
       {/* 星空背景 */}
       <div className="absolute inset-0 pointer-events-none">
@@ -165,36 +324,111 @@ export function DecisionPath({
         })}
       </div>
 
-      {/* ── 决策树 SVG ── */}
-      <div className="relative flex-1 min-h-0">
-        <svg
-          className="w-full h-full"
-          viewBox="0 0 100 100"
-          preserveAspectRatio="xMidYMid meet"
-        >
-          <g transform={treeTransform}>
-          {/* 分支路径 */}
-          {branches.map((branch, index) => {
-            const totalBranches = branches.length;
-            const spread        = 64;
-            const angleOffset   = (index - (totalBranches - 1) / 2) * (spread / (totalBranches - 1));
-            const rad           = (angleOffset * Math.PI) / 180;
-            const endX          = CX + Math.sin(rad) * 42;
-            const endY          = CY + 40 + Math.abs(Math.sin(rad)) * 4;
+      <div className="relative z-10 h-full min-h-0 flex flex-col">
+        {/* 上方：决策树（左 3/4） + 分支比较（右侧） */}
+        <div className="shrink-0 h-[72dvh] md:h-[75dvh] min-h-[14rem] flex min-w-0">
+          {/* ── 决策树 SVG：占 3/4，略左移，避免文字被遮挡 ── */}
+          <div className="relative z-30 flex-[3] min-w-0 overflow-visible px-2 sm:px-4 md:pl-3 md:pr-1 md:-translate-x-1">
+            {/* 顶部主题：用 HTML 叠层，避免 SVG/裁切导致遮挡 */}
+            <div className="absolute left-2 right-2 top-2 z-20 flex justify-center pointer-events-none">
+              <div
+                className="max-w-[min(92%,20rem)] rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[11px] text-white/75 backdrop-blur-md truncate"
+                title={question}
+              >
+                {question}
+              </div>
+            </div>
 
-            const isSelected = selectedBranch === branch.id;
-            const isOther    = selectedBranch !== null && !isSelected;
+            {/* 选中分支：派系意见用 HTML 叠层（避免 WebView foreignObject 不显示） */}
+            {selectedBranch && selectedBranchGeom && (
+              <div
+                className="absolute z-[90] pointer-events-none"
+                style={{
+                  left: `${selectedBranchGeom.xT}%`,
+                  top: `${selectedBranchGeom.yT}%`,
+                  transform: "translate(-50%, -50%)",
+                }}
+              >
+                <div className="relative pointer-events-auto">
+                  {(() => {
+                    const offsets = [
+                      { x: -40, y: -44 },
+                      { x: 0, y: -58 },
+                      { x: 40, y: -44 },
+                    ];
+                    return FACTIONS.map((f, i) => {
+                      const op = currentBranchOpinions[f.id];
+                      const isActive = selectedFaction === f.id;
+                      const o = offsets[i] ?? { x: 0, y: 0 };
+                      return (
+                        <div
+                          key={`overlay-faction-${f.id}`}
+                          className="absolute"
+                          style={{ transform: `translate(${o.x}px, ${o.y}px)` }}
+                        >
+                          {isActive && op?.opinion && (
+                            <div
+                              className="mb-1 w-[168px] max-w-[42vw] rounded-xl border px-2 py-2 text-[11px] leading-snug text-white/90 backdrop-blur-xl"
+                              style={{
+                                backgroundColor: "rgba(10,15,26,0.92)",
+                                borderColor: f.borderColor,
+                                boxShadow: `0 0 18px ${f.glow}`,
+                              }}
+                            >
+                              {op.opinion}
+                            </div>
+                          )}
+                          <button
+                            type="button"
+                            className="flex flex-col items-center gap-0.5 select-none"
+                            onClick={() => handleFactionClick(f.id)}
+                          >
+                            <div
+                              className="h-8 w-8 rounded-full flex items-center justify-center text-[12px] font-bold"
+                              style={{
+                                backgroundColor: f.bgColor,
+                                border: `2px solid ${isActive ? f.color : f.borderColor}`,
+                                color: f.color,
+                                boxShadow: isActive ? `0 0 18px ${f.glow}` : "none",
+                              }}
+                            >
+                              {f.name[0]}
+                            </div>
+                            <div className="text-[10px] text-white/55">{factionSupportText(op?.support)}</div>
+                          </button>
+                        </div>
+                      );
+                    });
+                  })()}
+                </div>
+              </div>
+            )}
 
-            const pathD = `M ${CX} ${CY} C ${CX + (endX - CX) * 0.3} ${CY + 8}, ${endX - (endX - CX) * 0.2} ${endY - 8}, ${endX} ${endY}`;
+            <svg className="w-full h-full overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+              <g transform={treeTransform}>
+                {/* 分支路径 */}
+                {branches.map((branch, index) => {
+                  const totalBranches = branches.length;
+                  const spread = 76;
+                  const angleDenom = Math.max(1, totalBranches - 1);
+                  const angleOffset = (index - (totalBranches - 1) / 2) * (spread / angleDenom);
+                  const rad = (angleOffset * Math.PI) / 180;
+                  const endX = CX + Math.sin(rad) * 46;
+                  const endY = CY + 44 + Math.abs(Math.sin(rad)) * 4;
 
-            return (
-              <g key={branch.id}>
+                  const isSelected = selectedBranch === branch.id;
+                  const isOther = selectedBranch !== null && !isSelected;
+
+                  const pathD = `M ${CX} ${CY} C ${CX + (endX - CX) * 0.3} ${CY + 8}, ${endX - (endX - CX) * 0.2} ${endY - 8}, ${endX} ${endY}`;
+
+                  return (
+                    <g key={branch.id}>
                 {/* 主路径 */}
                 <motion.path
                   d={pathD}
                   fill="none"
                   strokeLinecap="round"
-                  strokeWidth={isSelected ? 0.8 : 0.5}
+                  strokeWidth={isSelected ? 1.05 : 0.65}
                   stroke={isSelected ? "#fbbf24" : "#818cf8"}
                   initial={perf.lowPerformanceMode ? { opacity: 0 } : { pathLength: 0, opacity: 0 }}
                   animate={
@@ -213,7 +447,7 @@ export function DecisionPath({
                   d={pathD}
                   fill="none"
                   stroke="transparent"
-                  strokeWidth="10"
+                  strokeWidth="14"
                   style={{ cursor: "pointer" }}
                   onClick={() => handleBranchClick(branch.id)}
                 />
@@ -231,17 +465,17 @@ export function DecisionPath({
                   <circle
                     cx={endX}
                     cy={endY}
-                    r={4}
+                    r={4.6}
                     fill={isSelected ? "rgba(251,191,36,0.2)" : "rgba(99,102,241,0.2)"}
                     stroke={isSelected ? "#fbbf24" : "#818cf8"}
-                    strokeWidth="0.4"
+                    strokeWidth="0.45"
                   />
                   <text
                     x={endX}
                     y={endY + 0.5}
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    fontSize="3"
+                    fontSize="3.2"
                     fill={isSelected ? "#fbbf24" : "rgba(255,255,255,0.85)"}
                     fontWeight={isSelected ? "600" : "400"}
                   >
@@ -249,175 +483,64 @@ export function DecisionPath({
                   </text>
                   <text
                     x={endX}
-                    y={endY + 7}
+                    y={endY + 8.5}
                     textAnchor="middle"
-                    fontSize="2.2"
+                    fontSize="2.4"
                     fill="rgba(255,255,255,0.45)"
                   >
                     {Math.round(branch.probability * 100)}%
                   </text>
                 </motion.g>
-              </g>
-            );
-          })}
+                    </g>
+                  );
+                })}
 
           {/* 中心原点 */}
           <motion.circle
-            cx={CX} cy={CY} r={3}
+            cx={CX} cy={CY} r={3.6}
             fill="white"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.4 }}
           />
           <motion.circle
-            cx={CX} cy={CY} r={6}
+            cx={CX} cy={CY} r={7}
             fill="none"
             stroke="rgba(255,255,255,0.3)"
-            strokeWidth="0.3"
+            strokeWidth="0.35"
             style={{ opacity: 0.5 }}
-            animate={perf.lowPerformanceMode ? undefined : { r: [5, 9, 5], opacity: [0.5, 0, 0.5] }}
+            animate={perf.lowPerformanceMode ? undefined : { r: [6, 11, 6], opacity: [0.5, 0, 0.5] }}
             transition={perf.lowPerformanceMode ? undefined : { duration: 2.5, repeat: Infinity }}
           />
 
-          {/* 问题标签 */}
-          <foreignObject x={CX - 18} y={CY - 12} width={36} height={8}>
-            <div
-              className="flex items-center justify-center w-full h-full text-center"
-              style={{ fontSize: "3px", color: "rgba(255,255,255,0.7)", lineHeight: 1.3 }}
-            >
-              {question}
-            </div>
-          </foreignObject>
-          </g>
-        </svg>
-      </div>
+              </g>
+            </svg>
+          </div>
 
-      {/* ── 底部交互区 ── */}
-      <div className="flex-shrink-0 px-6 pb-6 space-y-4">
-
-        {/* 三个派系按钮（选中路径后显示） */}
-        <AnimatePresence>
-          {selectedBranch && (
-            <motion.div
-              key="factions"
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 8 }}
-              transition={{ duration: 0.3 }}
-              className="flex items-end justify-center gap-8"
-            >
-              {FACTIONS.map((faction, i) => {
-                const opinion   = currentBranchOpinions[faction.id];
-                const isActive  = selectedFaction === faction.id;
-
-                return (
-                  <motion.button
-                    key={faction.id}
-                    onClick={() => handleFactionClick(faction.id)}
-                    className="flex flex-col items-center gap-2 select-none"
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: i * 0.08 }}
-                    whileHover={perf.lowPerformanceMode ? undefined : { y: -4 }}
-                    whileTap={perf.lowPerformanceMode ? undefined : { scale: 0.92 }}
-                  >
-                    {/* 头像圆 */}
-                    <div
-                      className="w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold transition-all duration-200"
-                      style={{
-                        backgroundColor: faction.bgColor,
-                        border:          `2.5px solid ${isActive ? faction.color : faction.borderColor}`,
-                        color:           faction.color,
-                        boxShadow:       isActive ? `0 0 24px ${faction.glow}` : "none",
-                        transform:       isActive ? "translateY(-4px)" : "none",
-                      }}
-                    >
-                      {faction.name[0]}
-                    </div>
-
-                    {/* 派系名 */}
-                    <span
-                      className="text-xs font-medium transition-colors duration-200"
-                      style={{ color: isActive ? faction.color : "rgba(255,255,255,0.65)" }}
-                    >
-                      {faction.name}
-                    </span>
-
-                    {/* 支持度指示条 */}
-                    {opinion && (
-                      <div
-                        className="h-1 rounded-full transition-all duration-300"
-                        style={{
-                          width:           `${Math.max(opinion.support * 0.55, 18)}px`,
-                          backgroundColor: faction.color,
-                          opacity:         isActive ? 1 : 0.45,
-                        }}
-                      />
-                    )}
-                  </motion.button>
-                );
-              })}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* 意见详情卡片 */}
-        <AnimatePresence mode="wait">
-          {activeFaction && activeOpinion ? (
-            <motion.div
-              key={`opinion-${selectedFaction}`}
-              className={`rounded-2xl border ${perf.lowPerformanceMode ? "" : "backdrop-blur-xl"} px-5 py-4`}
-              style={{
-                backgroundColor: "rgba(10,15,26,0.92)",
-                borderColor:      activeFaction.borderColor,
-                boxShadow:        `0 0 32px ${activeFaction.glow}`,
-              }}
-              initial={{ opacity: 0, y: 14, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0,  scale: 1    }}
-              exit={{   opacity: 0, y: 8,   scale: 0.98 }}
-              transition={{ duration: 0.22 }}
-            >
-              {/* 卡片头部 */}
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-3">
-                  <div
-                    className="w-9 h-9 rounded-full flex items-center justify-center text-base font-bold"
-                    style={{ backgroundColor: activeFaction.bgColor, color: activeFaction.color }}
-                  >
-                    {activeFaction.name[0]}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-white">{activeFaction.name}</p>
-                    <p className="text-xs" style={{ color: activeFaction.color }}>
-                      支持度 {activeOpinion.support}%
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setSelectedFaction(null)}
-                  className="p-1.5 rounded-full hover:bg-white/10 text-white/40 hover:text-white transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* 支持度进度条 */}
-              <div className="h-1.5 rounded-full bg-white/10 overflow-hidden mb-3">
-                <motion.div
-                  className="h-full rounded-full"
-                  style={{ backgroundColor: activeFaction.color }}
-                  initial={{ width: 0 }}
-                  animate={{ width: `${activeOpinion.support}%` }}
-                  transition={{ duration: 0.5, ease: "easeOut" }}
+          {/* ── 分支比较：移到右侧（中大屏显示，小屏继续在底部） ── */}
+          {branches.length >= 2 && (
+            <div className="hidden sm:flex z-10 flex-1 min-w-[14rem] max-w-[32vw] min-h-0 pr-2 pl-1 py-2 sm:pr-3 sm:pl-1 sm:py-3">
+              <div className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 overflow-y-auto">
+                <BranchComparePanel
+                  branches={branches}
+                  setCompareA={setCompareA}
+                  setCompareB={setCompareB}
+                  effectiveCompareA={effectiveCompareA}
+                  effectiveCompareB={effectiveCompareB}
+                  compareSummary={compareSummary}
+                  comparedDelta={comparedDelta}
                 />
               </div>
+            </div>
+          )}
+        </div>
 
-              {/* 意见正文 */}
-              <p className="text-sm text-white/85 leading-relaxed">
-                {activeOpinion.opinion}
-              </p>
-            </motion.div>
-          ) : selectedBranch && !selectedFaction ? (
+        {/* 下方：派系/详情（占 1/4，可滚动） */}
+        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-4 sm:px-6 pb-4 sm:pb-6 space-y-4">
+
+        {/* 意见详情卡片（点击派系后意见已在图标上方展示，这里保留未选派系时的分支总览） */}
+        <AnimatePresence mode="wait">
+          {selectedBranch && !selectedFaction ? (
             <motion.div
               key="description"
               className={`rounded-2xl border border-white/15 ${perf.lowPerformanceMode ? "" : "backdrop-blur-xl"} px-5 py-4 bg-white/5`}
@@ -458,79 +581,31 @@ export function DecisionPath({
         {/* 无选择时的提示 */}
         {!selectedBranch && (
           <motion.p
-            className="text-center text-xs text-white/35"
+            className="text-right text-xs text-white/35 pr-1"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.2 }}
           >
-            点击路径查看三个派系的意见
+            点击路径后，点派系图标可在图标上方查看对应意见
           </motion.p>
         )}
 
-        {/* 分支比较视图（至少两条分支） */}
+        {/* 分支比较视图（小屏保底放在底部；中大屏已移到右侧） */}
         {branches.length >= 2 && (
-          <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-            <div className="text-xs text-white/60 mb-2">分支比较</div>
-            <div className="flex flex-wrap gap-2 mb-3">
-              <select
-                value={effectiveCompareA ?? ""}
-                onChange={(e) => setCompareA(e.target.value || null)}
-                className="px-2 py-1 rounded-lg bg-black/30 border border-white/10 text-xs text-white"
-              >
-                <option value="">选择分支A</option>
-                {branches.map((b) => (
-                  <option key={`a-${b.id}`} value={b.id}>
-                    {b.name}
-                  </option>
-                ))}
-              </select>
-              <select
-                value={effectiveCompareB ?? ""}
-                onChange={(e) => setCompareB(e.target.value || null)}
-                className="px-2 py-1 rounded-lg bg-black/30 border border-white/10 text-xs text-white"
-              >
-                <option value="">选择分支B</option>
-                {branches.map((b) => (
-                  <option key={`b-${b.id}`} value={b.id}>
-                    {b.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            {effectiveCompareA && effectiveCompareB && effectiveCompareA !== effectiveCompareB && (
-              <div className="text-xs text-white/75 leading-relaxed space-y-2">
-                {(() => {
-                  const a = branches.find((b) => b.id === effectiveCompareA);
-                  const b = branches.find((b) => b.id === effectiveCompareB);
-                  if (!a || !b) return "请选择有效分支。";
-                  const emoA = a.emotionForecast ? EMOTION_LABEL[a.emotionForecast] ?? a.emotionForecast : "-";
-                  const emoB = b.emotionForecast ? EMOTION_LABEL[b.emotionForecast] ?? b.emotionForecast : "-";
-                  return (
-                    <>
-                      <p>
-                        <span className="text-white/90 font-medium">A · {a.name}</span>：收益 {a.benefitScore ?? "-"} /
-                        风险 {a.riskScore ?? "-"} · 情绪预测 {emoA}
-                      </p>
-                      <p>
-                        <span className="text-white/90 font-medium">B · {b.name}</span>：收益 {b.benefitScore ?? "-"} /
-                        风险 {b.riskScore ?? "-"} · 情绪预测 {emoB}
-                      </p>
-                      {comparedDelta && (
-                        <p className="text-white/55">
-                          相对差值（A−B）：收益 {comparedDelta.benefit > 0 ? "+" : ""}
-                          {comparedDelta.benefit}，风险 {comparedDelta.risk > 0 ? "+" : ""}
-                          {comparedDelta.risk}
-                        </p>
-                      )}
-                      {(compareSummary ?? "").trim().length > 0 && <p>{compareSummary}</p>}
-                    </>
-                  );
-                })()}
-              </div>
-            )}
+          <div className="sm:hidden rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+            <BranchComparePanel
+              branches={branches}
+              setCompareA={setCompareA}
+              setCompareB={setCompareB}
+              effectiveCompareA={effectiveCompareA}
+              effectiveCompareB={effectiveCompareB}
+              compareSummary={compareSummary}
+              comparedDelta={comparedDelta}
+            />
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }

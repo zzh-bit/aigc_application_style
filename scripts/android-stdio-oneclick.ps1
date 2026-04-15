@@ -25,7 +25,47 @@ function Run-Checked([string]$cmd, [string]$workdir) {
   }
 }
 
+function Run-ExeChecked([string]$exe, [string[]]$arguments, [string]$workdir) {
+  if ($DryRun) {
+    $joined = if ($null -ne $arguments -and $arguments.Length -gt 0) { $arguments -join " " } else { "" }
+    Write-Host "[DRY-RUN] ($workdir) `"$exe`" $joined" -ForegroundColor Yellow
+    return
+  }
+  Push-Location $workdir
+  try {
+    & $exe @arguments
+    if ($LASTEXITCODE -ne 0) {
+      throw "Command failed with exit code ${LASTEXITCODE}: `"$exe`" $($arguments -join ' ')"
+    }
+  } finally {
+    Pop-Location
+  }
+}
+
 function Resolve-SdkRoot {
+  # 1) local.properties beside workspace shell
+  $workspaceLocal = Join-Path $root "android\ps2-shell\local.properties"
+  if (Test-Path $workspaceLocal) {
+    $line = (Get-Content $workspaceLocal | Where-Object { $_ -match "^sdk\.dir=" } | Select-Object -First 1)
+    if ($line) {
+      $raw = $line.Substring("sdk.dir=".Length).Trim()
+      $normalized = $raw -replace "\\\\", "\" -replace "\\:", ":"
+      if (Test-Path $normalized) { return $normalized }
+    }
+  }
+  # 2) local.properties beside legacy shell path used by rebuild script
+  $legacyLocal = "D:\yyh35\android_project\ps2shell\local.properties"
+  if (Test-Path $legacyLocal) {
+    $line = (Get-Content $legacyLocal | Where-Object { $_ -match "^sdk\.dir=" } | Select-Object -First 1)
+    if ($line) {
+      $raw = $line.Substring("sdk.dir=".Length).Trim()
+      $normalized = $raw -replace "\\\\", "\" -replace "\\:", ":"
+      if (Test-Path $normalized) { return $normalized }
+    }
+  }
+  # 3) common explicit SDK location in this project docs
+  $docHint = "D:\yyh35\sdk"
+  if (Test-Path $docHint) { return $docHint }
   if ($env:ANDROID_SDK_ROOT -and (Test-Path $env:ANDROID_SDK_ROOT)) { return $env:ANDROID_SDK_ROOT }
   if ($env:ANDROID_HOME -and (Test-Path $env:ANDROID_HOME)) { return $env:ANDROID_HOME }
   $fallback = Join-Path $env:LOCALAPPDATA "Android\Sdk"
@@ -66,6 +106,7 @@ function Wait-ForDevice([string]$adbExe, [int]$timeoutSec = 180) {
 
 $root = Split-Path -Parent $PSScriptRoot
 $androidShellDir = Join-Path $root "android\ps2-shell"
+$localProperties = Join-Path $androidShellDir "local.properties"
 
 if (-not (Test-Path $androidShellDir)) {
   throw "Android shell not found: $androidShellDir"
@@ -99,6 +140,15 @@ if (-not $gradlewBat) {
     Write-Host "[DRY-RUN] gradlew.bat missing; using placeholder path." -ForegroundColor Yellow
   } else {
     throw "gradlew.bat not found in $androidShellDir. Open project once in Android Studio to generate wrapper."
+  }
+}
+
+if (-not (Test-Path $localProperties)) {
+  if ($DryRun) {
+    Write-Host "[DRY-RUN] create local.properties with sdk.dir=$sdkRoot" -ForegroundColor Yellow
+  } else {
+    $gradlePath = $sdkRoot -replace "\\", "/"
+    Set-Content -Path $localProperties -Value "sdk.dir=$gradlePath" -Encoding ASCII
   }
 }
 
@@ -148,7 +198,7 @@ if ($DryRun -or $needsBoot) {
 }
 
 Step "Assemble debug APK"
-Run-Checked "`"$gradlewBat`" assembleDebug" $androidShellDir
+Run-ExeChecked $gradlewBat @("assembleDebug") $androidShellDir
 
 $apkPath = Join-Path $androidShellDir "app\build\outputs\apk\debug\app-debug.apk"
 if (-not (Test-Path $apkPath) -and -not $DryRun) {

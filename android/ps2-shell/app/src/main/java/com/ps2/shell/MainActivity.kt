@@ -14,23 +14,28 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.webkit.WebViewAssetLoader
+import fi.iki.elonen.NanoHTTPD
 import java.io.InputStream
 
 class MainActivity : AppCompatActivity() {
     private val tag = "PS2WebView"
 
     private lateinit var webView: WebView
+    private var apiProxy: ApiLoopbackProxy? = null
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
 
+        startApiProxyIfNeeded()
+
         webView = WebView(this)
         setContentView(webView)
-        setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
+        setWebContentsDebuggingEnabled(true)
 
         val assetLoader = WebViewAssetLoader.Builder()
+            .setHttpAllowed(true)
             .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(this))
             .build()
 
@@ -39,8 +44,15 @@ class MainActivity : AppCompatActivity() {
             domStorageEnabled = true
             allowFileAccess = false
             allowContentAccess = false
-            mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
-            cacheMode = WebSettings.LOAD_DEFAULT
+            // https 离线页请求 http://127.0.0.1 本地 API 代理（绕过错误 DNS）
+            mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+            // 离线资源频繁迭代时，避免 WebView 旧缓存导致 UI 未更新
+            cacheMode = WebSettings.LOAD_NO_CACHE
+        }
+        try {
+            webView.clearCache(true)
+            webView.clearHistory()
+        } catch (_: Exception) {
         }
 
         webView.webViewClient = object : WebViewClient() {
@@ -48,14 +60,19 @@ class MainActivity : AppCompatActivity() {
                 view: WebView,
                 request: WebResourceRequest,
             ): WebResourceResponse? {
-                val url = request.url.toString()
+                val url = request.url
+                // 公网 API（如 https://api.xxx）必须由系统网络栈处理，勿交给 AssetLoader
+                if (url.host != "appassets.androidplatform.net") {
+                    return null
+                }
+                val urlStr = url.toString()
                 val marker = "/assets/web/_next/"
-                if (url.contains(marker)) {
-                    val suffix = url.substringAfter(marker)
+                if (urlStr.contains(marker)) {
+                    val suffix = urlStr.substringAfter(marker)
                     val path = "web/next/$suffix"
                     return loadAssetResponse(path)
                 }
-                return assetLoader.shouldInterceptRequest(request.url)
+                return assetLoader.shouldInterceptRequest(url)
             }
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
@@ -96,6 +113,32 @@ class MainActivity : AppCompatActivity() {
         }
 
         webView.loadUrl("https://appassets.androidplatform.net/assets/web/index.html")
+    }
+
+    private fun startApiProxyIfNeeded() {
+        try {
+            val port = BuildConfig.PS2_LOOPBACK_PROXY_PORT
+            val proxy = ApiLoopbackProxy(
+                "127.0.0.1",
+                port,
+                BuildConfig.PS2_API_FORWARD_HOST,
+                BuildConfig.PS2_API_PINNED_IPV4,
+            )
+            proxy.start(NanoHTTPD.SOCKET_READ_TIMEOUT, false)
+            apiProxy = proxy
+            android.util.Log.i(tag, "API loopback proxy listening on 127.0.0.1:$port -> ${BuildConfig.PS2_API_FORWARD_HOST}")
+        } catch (e: Exception) {
+            android.util.Log.e(tag, "API proxy failed to start", e)
+        }
+    }
+
+    override fun onDestroy() {
+        try {
+            apiProxy?.stop()
+        } catch (_: Exception) {
+        }
+        apiProxy = null
+        super.onDestroy()
     }
 
     private fun loadAssetResponse(assetPath: String): WebResourceResponse? {

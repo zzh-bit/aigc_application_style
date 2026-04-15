@@ -10,10 +10,10 @@ type SummarizeRequestBody = {
 
 function summarizeMock(text: string) {
   const cleaned = text.replace(/\s+/g, " ").trim();
-  if (!cleaned) return "（mock）无内容可摘要。";
+  if (!cleaned) return "无内容可摘要。";
   const maxLen = 120;
-  if (cleaned.length <= maxLen) return `（mock）${cleaned}`;
-  return `（mock）${cleaned.slice(0, maxLen)}…`;
+  if (cleaned.length <= maxLen) return cleaned;
+  return `${cleaned.slice(0, maxLen)}…`;
 }
 
 export async function POST(req: Request) {

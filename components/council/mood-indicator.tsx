@@ -8,6 +8,7 @@ export type MoodType = "calm" | "anxious" | "excited" | "happy" | "sad";
 interface MoodIndicatorProps {
   mood: MoodType;
   level: number; // 0-100
+  anxietyOnly?: boolean;
 }
 
 const moodStroke: Record<MoodType, string> = {
@@ -26,10 +27,11 @@ const moodLabels: Record<MoodType, string> = {
   sad: "难过",
 };
 
-export function MoodIndicator({ mood, level }: MoodIndicatorProps) {
+export function MoodIndicator({ mood, level, anxietyOnly = false }: MoodIndicatorProps) {
   const radius = 18;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (level / 100) * circumference;
+  const displayMood: MoodType = anxietyOnly ? (level < 65 ? "calm" : "anxious") : mood;
 
   return (
     <div className="flex items-center gap-2">
@@ -53,7 +55,7 @@ export function MoodIndicator({ mood, level }: MoodIndicatorProps) {
             fill="none"
             strokeWidth="3"
             strokeLinecap="round"
-            stroke={moodStroke[mood]}
+            stroke={moodStroke[displayMood]}
             strokeDasharray={circumference}
             initial={{ strokeDashoffset: circumference }}
             animate={{ strokeDashoffset }}
@@ -63,11 +65,11 @@ export function MoodIndicator({ mood, level }: MoodIndicatorProps) {
         <motion.div
           className={cn(
             "absolute inset-0 flex items-center justify-center text-xs font-medium",
-            mood === "calm" && "text-cyan-300",
-            mood === "anxious" && "text-red-300",
-            mood === "excited" && "text-orange-300",
-            mood === "happy" && "text-amber-300",
-            mood === "sad" && "text-blue-300"
+            displayMood === "calm" && "text-cyan-300",
+            displayMood === "anxious" && "text-red-300",
+            displayMood === "excited" && "text-orange-300",
+            displayMood === "happy" && "text-amber-300",
+            displayMood === "sad" && "text-blue-300"
           )}
           animate={{ opacity: [0.7, 1, 0.7] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
@@ -75,7 +77,7 @@ export function MoodIndicator({ mood, level }: MoodIndicatorProps) {
           {level}%
         </motion.div>
       </div>
-      <span className="text-xs text-muted-foreground hidden sm:block">{moodLabels[mood]}</span>
+      <span className="text-xs text-muted-foreground hidden sm:block">{moodLabels[displayMood]}</span>
     </div>
   );
 }

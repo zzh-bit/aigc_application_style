@@ -1,5 +1,29 @@
 import { logApiFailure } from "@/lib/client-log";
 
+/** 须与 Android `ps2-shell` 中 `BuildConfig.PS2_LOOPBACK_PROXY_PORT` 一致 */
+const PS2_LOOPBACK_PROXY_PORT = 37123;
+
+/**
+ * APK WebView 离线资源域名下，经本机回环代理访问 API（原生层用固定 IP 连 HTTPS，绕过错误 DNS）。
+ */
+function webViewLoopbackApiBase(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    if (window.location.hostname === "appassets.androidplatform.net") {
+      return `http://127.0.0.1:${PS2_LOOPBACK_PROXY_PORT}`;
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
+
+function effectiveApiBase(): string {
+  const loopback = webViewLoopbackApiBase();
+  if (loopback) return loopback;
+  return (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").trim().replace(/\/$/, "");
+}
+
 export type ApiErrorCode =
   | "timeout"
   | "network"
@@ -23,8 +47,8 @@ export class ApiError extends Error {
 
 function resolveApiUrl(input: RequestInfo | URL): RequestInfo | URL {
   // Route 2: 前端始终用“独立后端”承接 `/api/*`，避免 `next export` + WebView 离线打开时 404。
-  // 约定：设置 NEXT_PUBLIC_API_BASE_URL=https://your-domain.com（无则保持同源）。
-  const base = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").trim().replace(/\/$/, "");
+  // WebView 壳内优先走 127.0.0.1 回环代理（见 ApiLoopbackProxy）；否则用 NEXT_PUBLIC_API_BASE_URL。
+  const base = effectiveApiBase();
   if (!base) return input;
 
   if (typeof input === "string") {
@@ -103,16 +127,20 @@ function normalizeFetchError(e: unknown, scope: string): never {
 
 export type FetchJsonOptions = RequestInit & {
   timeoutMs?: number;
+  /** 与内置超时合并：任一方 abort 都会中断请求 */
+  externalSignal?: AbortSignal;
 };
 
 /**
  * JSON API：统一超时、HTTP 状态、429、非 JSON 与解析失败处理。
  */
 export async function fetchJson<T>(input: RequestInfo | URL, options?: FetchJsonOptions): Promise<T> {
-  const { timeoutMs = 45_000, ...init } = options ?? {};
+  const { timeoutMs = 45_000, externalSignal, ...init } = options ?? {};
   const resolved = resolveApiUrl(input);
-  const base = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").trim().replace(/\/$/, "");
-  if (base) {
+  const base = effectiveApiBase();
+  if (webViewLoopbackApiBase()) {
+    console.info("[ps2] fetchJson using WebView loopback API proxy (127.0.0.1)");
+  } else if (base) {
     if (isLikelyEmulatorOnlyHost(base)) {
       console.warn("[ps2] NEXT_PUBLIC_API_BASE_URL 使用了 10.0.2.2。该地址仅模拟器可用，真机会失败。");
     }
@@ -124,9 +152,26 @@ export async function fetchJson<T>(input: RequestInfo | URL, options?: FetchJson
   const scope = typeof resolved === "string" ? resolved : typeof input === "string" ? input : "fetchJson";
   const controller = new AbortController();
   const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+  const onExternalAbort = () => {
+    try {
+      controller.abort();
+    } catch {
+      /* noop */
+    }
+  };
+  if (externalSignal) {
+    if (externalSignal.aborted) controller.abort();
+    else externalSignal.addEventListener("abort", onExternalAbort);
+  }
 
   try {
-    const res = await fetch(resolved, { ...init, signal: controller.signal });
+    const res = await fetch(resolved, {
+      mode: "cors",
+      credentials: "omit",
+      cache: "no-store",
+      ...init,
+      signal: controller.signal,
+    });
     clearTimeout(timer);
 
     if (res.status === 429) {
@@ -157,6 +202,8 @@ export async function fetchJson<T>(input: RequestInfo | URL, options?: FetchJson
   } catch (e) {
     clearTimeout(timer);
     normalizeFetchError(e, scope);
+  } finally {
+    externalSignal?.removeEventListener("abort", onExternalAbort);
   }
 }
 
@@ -172,8 +219,10 @@ export type FetchWithTimeoutOptions = RequestInit & {
 export async function fetchWithTimeout(input: RequestInfo | URL, options?: FetchWithTimeoutOptions): Promise<Response> {
   const { timeoutMs = 120_000, externalSignal, ...init } = options ?? {};
   const resolved = resolveApiUrl(input);
-  const base = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").trim().replace(/\/$/, "");
-  if (base) {
+  const base = effectiveApiBase();
+  if (webViewLoopbackApiBase()) {
+    console.info("[ps2] fetchWithTimeout using WebView loopback API proxy (127.0.0.1)");
+  } else if (base) {
     if (isLikelyEmulatorOnlyHost(base)) {
       console.warn("[ps2] NEXT_PUBLIC_API_BASE_URL 使用了 10.0.2.2。该地址仅模拟器可用，真机会失败。");
     }
@@ -203,7 +252,13 @@ export async function fetchWithTimeout(input: RequestInfo | URL, options?: Fetch
   }
 
   try {
-    const res = await fetch(resolved, { ...init, signal: inner.signal });
+    const res = await fetch(resolved, {
+      mode: "cors",
+      credentials: "omit",
+      cache: "no-store",
+      ...init,
+      signal: inner.signal,
+    });
     clearTimeout(timer);
     externalSignal?.removeEventListener("abort", onExternalAbort);
 

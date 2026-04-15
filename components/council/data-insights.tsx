@@ -6,6 +6,12 @@ import { ArrowLeft, Brain, Heart, Target, TrendingUp, AlertTriangle, RefreshCw }
 import { NebulaBackground } from "./nebula-background";
 import { fetchJson, userFacingMessage } from "@/lib/api-client";
 import { clientLog } from "@/lib/client-log";
+import { storageGet } from "@/lib/storage";
+import {
+  dominantInsightEmotion,
+  INSIGHT_TOPICS,
+  primaryInsightTopic,
+} from "@/lib/insights-classify";
 
 interface DataInsightsProps {
   onBack: () => void;
@@ -15,13 +21,33 @@ type InsightResponse = {
   totalRecords: number;
   reviewFrequencyPerWeek: number;
   emotionDistribution: Array<{ emotion: string; label: string; count: number; percentage: number }>;
-  topicDistribution: Array<{ topic: string; count: number }>;
+  topicDistribution: Array<{ topic: string; count: number; percentage?: number }>;
   biasCards: Array<{ type: string; level: string; evidence: string; suggestion: string }>;
   aiExplanation: string;
   weeklyAdvice: string;
 };
+type LocalArchiveRecord = {
+  id: string;
+  date: string;
+  summary: string;
+  emotions: Array<"happy" | "sad" | "anxious" | "calm" | "excited">;
+  keywords: string[];
+  messageCount: number;
+  messages: Array<{ role: "user" | "assistant"; name: string; content: string }>;
+};
 
 const COLORS = ["#8B5CF6", "#60A5FA", "#34D399", "#F59E0B", "#F87171", "#A78BFA"];
+
+function orderedTopicRows(raw: Array<{ topic: string; count: number; percentage?: number }>) {
+  const map = new Map(raw.map((r) => [r.topic, r]));
+  return INSIGHT_TOPICS.map((topic) => {
+    const row = map.get(topic);
+    const count = row && Number.isFinite(row.count) ? Math.max(0, row.count) : 0;
+    const percentage =
+      typeof row?.percentage === "number" && Number.isFinite(row.percentage) ? row.percentage : 0;
+    return { topic, count, percentage };
+  });
+}
 
 export function DataInsights({ onBack }: DataInsightsProps) {
   const [data, setData] = useState<InsightResponse | null>(null);
@@ -35,14 +61,109 @@ export function DataInsights({ onBack }: DataInsightsProps) {
       setLoading(true);
       setError("");
       try {
-        const json = await fetchJson<InsightResponse>("/api/insights", {
-          method: "GET",
-          timeoutMs: 30_000,
+        const localArchives = await storageGet<LocalArchiveRecord[]>("council.archives.local.v1", []);
+        const noise = ["欢迎来到今天的议会", "语音情绪识别", "收到数字"];
+        const valid = localArchives.filter((a) => {
+          const users = (a.messages ?? []).filter((m) => m.role === "user");
+          const text = users.map((u) => u.content).join(" ").trim();
+          if (!text || /^\d+$/.test(text)) return false;
+          if (noise.some((n) => text.includes(n))) return false;
+          return true;
         });
-        if (!cancelled) setData(json);
+        const now = Date.now();
+        const weekMs = 7 * 24 * 60 * 60 * 1000;
+        const week = valid.filter((a) => {
+          const ts = Date.parse(a.date);
+          return Number.isFinite(ts) && now - ts <= weekMs && now - ts >= 0;
+        });
+        const totalRecords = valid.length;
+        const reviewFrequencyPerWeek = week.length;
+        const emotionKeys: Array<{ emotion: string; label: string }> = [
+          { emotion: "happy", label: "愉悦" },
+          { emotion: "sad", label: "低落" },
+          { emotion: "anxious", label: "焦虑" },
+          { emotion: "calm", label: "平静" },
+          { emotion: "excited", label: "兴奋" },
+        ];
+        const emotionCountMap = new Map<string, number>(emotionKeys.map((k) => [k.emotion, 0]));
+        for (const a of week) {
+          const userText = (a.messages ?? [])
+            .filter((m) => m.role === "user")
+            .map((m) => m.content)
+            .join("\n");
+          const emo = dominantInsightEmotion(userText);
+          emotionCountMap.set(emo, (emotionCountMap.get(emo) ?? 0) + 1);
+        }
+        const sessionWeek = week.length;
+        const emotionDistribution = emotionKeys.map((k) => {
+          const count = emotionCountMap.get(k.emotion) ?? 0;
+          return {
+            emotion: k.emotion,
+            label: k.label,
+            count,
+            percentage: sessionWeek === 0 ? 0 : Math.round((count / sessionWeek) * 100),
+          };
+        });
+        const topicCounts = new Map<string, number>(INSIGHT_TOPICS.map((t) => [t, 0]));
+        for (const a of week) {
+          const userText = (a.messages ?? [])
+            .filter((m) => m.role === "user")
+            .map((m) => m.content)
+            .join("\n");
+          const topic = primaryInsightTopic(userText);
+          topicCounts.set(topic, (topicCounts.get(topic) ?? 0) + 1);
+        }
+        const topicDistribution = INSIGHT_TOPICS.map((t) => {
+          const count = topicCounts.get(t) ?? 0;
+          return {
+            topic: t,
+            count,
+            percentage: sessionWeek === 0 ? 0 : Math.round((count / sessionWeek) * 100),
+          };
+        });
+        const anxiousRate = emotionDistribution.find((e) => e.emotion === "anxious")?.percentage ?? 0;
+        const calmRate = emotionDistribution.find((e) => e.emotion === "calm")?.percentage ?? 0;
+        const topTopic = [...topicDistribution].sort((a, b) => b.count - a.count)[0]?.topic ?? "暂无";
+        const aiExplanation =
+          totalRecords === 0
+            ? "暂无有效归档数据。请先完成真实对话并点击“决策完成”保存。"
+            : `近一周有效归档 ${reviewFrequencyPerWeek} 次（累计 ${totalRecords} 次），主题重心为「${topTopic}」，焦虑占比 ${Math.round(
+                anxiousRate,
+              )}% ，平静占比 ${Math.round(calmRate)}%。`;
+        const localData: InsightResponse = {
+          totalRecords,
+          reviewFrequencyPerWeek,
+          emotionDistribution,
+          topicDistribution,
+          biasCards: [
+            {
+              type: "冲动决策",
+              level: anxiousRate >= 35 ? "高" : anxiousRate >= 20 ? "中" : "低",
+              evidence: `焦虑占比 ${Math.round(anxiousRate)}%`,
+              suggestion: "高压情境先冷却 10 分钟，再进入最终选择。",
+            },
+            {
+              type: "拖延规避",
+              level: reviewFrequencyPerWeek < 2 ? "高" : reviewFrequencyPerWeek < 4 ? "中" : "低",
+              evidence: `近一周复盘 ${reviewFrequencyPerWeek} 次`,
+              suggestion: "固定每周至少 2 次复盘并设置提醒。",
+            },
+            {
+              type: "过度规避风险",
+              level: calmRate > 60 ? "中" : "低",
+              evidence: `平静占比 ${Math.round(calmRate)}%`,
+              suggestion: "每次决策保留 1 个可控探索选项。",
+            },
+          ],
+          aiExplanation,
+          weeklyAdvice: reviewFrequencyPerWeek < 3 ? "下周建议：固定 3 次 15 分钟复盘。" : "下周建议：保持复盘并增加一次反事实推演。",
+        };
+        if (!cancelled) setData(localData);
       } catch (e) {
         clientLog("warn", "insights.load", "failed", { detail: String(e) });
-        if (!cancelled) setError(userFacingMessage(e));
+        if (!cancelled) {
+          setError(userFacingMessage(e));
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -52,7 +173,14 @@ export function DataInsights({ onBack }: DataInsightsProps) {
     };
   }, [retryKey]);
 
-  const topTopic = useMemo(() => data?.topicDistribution[0]?.topic ?? "暂无", [data]);
+  const topTopic = useMemo(() => {
+    if (!data?.topicDistribution?.length) return "暂无";
+    return [...data.topicDistribution].sort((a, b) => b.count - a.count)[0]?.topic ?? "暂无";
+  }, [data?.topicDistribution]);
+  const normalizedTopics = useMemo(
+    () => orderedTopicRows(data?.topicDistribution ?? []),
+    [data?.topicDistribution],
+  );
 
   const handleRetry = () => {
     setData(null);
@@ -132,9 +260,10 @@ export function DataInsights({ onBack }: DataInsightsProps) {
               </div>
 
               <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-                <h3 className="text-sm text-white/70 mb-4 flex items-center gap-2">
+                <h3 className="text-sm text-white/70 mb-1 flex items-center gap-2">
                   <Heart className="w-4 h-4" />情绪分布
                 </h3>
+                <p className="text-xs text-white/40 mb-4">按每场归档的主导情绪计 1 票（近一周）</p>
                 <div className="space-y-3">
                   {data.emotionDistribution.map((item, i) => (
                     <div key={item.emotion}>
@@ -154,17 +283,38 @@ export function DataInsights({ onBack }: DataInsightsProps) {
               </div>
 
               <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-                <h3 className="text-sm text-white/70 mb-4">决策主题分布</h3>
-                <div className="space-y-2">
-                  {data.topicDistribution.length === 0 && <p className="text-sm text-white/45">暂无主题数据</p>}
-                  {data.topicDistribution.map((topic, i) => (
-                    <div key={topic.topic} className="flex items-center justify-between p-2 rounded-lg bg-white/5">
-                      <span className="text-white/80 text-sm">
-                        {i + 1}. {topic.topic}
-                      </span>
-                      <span className="text-white/50 text-sm">{topic.count}</span>
-                    </div>
-                  ))}
+                <h3 className="text-sm text-white/70 mb-1">决策主题分布</h3>
+                <p className="text-xs text-white/40 mb-4">
+                  固定五类主主题（每场归档计 1 次）：生活 / 工作 / 旅行 / 学习 / 情绪；统计范围为近一周
+                </p>
+                <div className="space-y-3">
+                  {normalizedTopics.every((t) => t.count === 0) && <p className="text-sm text-white/45">近一周暂无有效主题数据</p>}
+                  {normalizedTopics.map((topic, i) => {
+                    const pct =
+                      typeof topic.percentage === "number"
+                        ? topic.percentage
+                        : data.totalRecords > 0
+                          ? Math.round((topic.count / data.totalRecords) * 100)
+                          : 0;
+                    return (
+                      <div key={topic.topic}>
+                        <div className="flex items-center justify-between text-sm text-white/75 mb-1">
+                          <span>
+                            {i + 1}. {topic.topic}
+                          </span>
+                          <span className="text-white/50 tabular-nums">
+                            {topic.count} 场 · {pct}%
+                          </span>
+                        </div>
+                        <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-[width] duration-500"
+                            style={{ width: `${pct}%`, backgroundColor: COLORS[i % COLORS.length] }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>

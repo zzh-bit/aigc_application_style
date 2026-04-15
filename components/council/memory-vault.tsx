@@ -10,9 +10,7 @@ import {
   Plane,
   GraduationCap,
   Star,
-  Eye,
   Pencil,
-  EyeOff,
   Quote,
   ChevronLeft,
   ChevronRight,
@@ -23,6 +21,7 @@ import {
   Search,
   Tags,
   X,
+  Trash2,
 } from "lucide-react";
 import { storageGet, storageSet } from "@/lib/storage";
 import { fetchJson } from "@/lib/api-client";
@@ -51,80 +50,7 @@ interface Memory {
   summaryStatus?: "ready" | "pending";
 }
 
-const DEFAULT_MEMORIES: Memory[] = [
-  {
-    id: "1",
-    type: "work",
-    title: "第一次独立完成项目",
-    content: "今天终于把那个棘手的项目交付了。虽然过程中遇到了很多困难，但最终还是克服了。领导的认可让我感到所有的付出都是值得的。",
-    summary: "独立完成重要项目，获得认可",
-    date: "2024-03-15",
-    year: 2024,
-    emotion: "happy",
-    relevance: 5,
-    keywords: ["成就", "工作", "成长"],
-  },
-  {
-    id: "2",
-    type: "emotion",
-    title: "深夜的思考",
-    content: "有时候会想，现在的选择是否正确？但转念一想，每一步都是自己走过来的，没有所谓的对错，只有经历。",
-    summary: "对人生选择的哲学思考",
-    date: "2024-02-20",
-    year: 2024,
-    emotion: "calm",
-    relevance: 4,
-    keywords: ["反思", "人生", "选择"],
-  },
-  {
-    id: "3",
-    type: "travel",
-    title: "日本之行",
-    content: "在京都的那个雨天，漫步在哲学之道上，樱花落满了小径。那一刻，时间仿佛静止了。这种宁静的美好，是我一直在寻找的。",
-    summary: "京都哲学之道的静谧体验",
-    date: "2023-04-08",
-    year: 2023,
-    emotion: "calm",
-    relevance: 5,
-    keywords: ["旅行", "日本", "宁静"],
-  },
-  {
-    id: "4",
-    type: "life",
-    title: "和老友重逢",
-    content: "十年未见的老友突然联系我，我们约在老地方见面。聊起往事，仿佛时光倒流。有些友情，真的可以跨越时间。",
-    summary: "与十年未见的老友重逢",
-    date: "2023-08-22",
-    year: 2023,
-    emotion: "happy",
-    relevance: 4,
-    keywords: ["友情", "重逢", "回忆"],
-  },
-  {
-    id: "5",
-    type: "education",
-    title: "毕业典礼",
-    content: "站在礼堂里，听着校长的致辞，回想四年的点点滴滴。感谢这段时光，让我成为了更好的自己。",
-    summary: "大学毕业的感慨时刻",
-    date: "2018-06-30",
-    year: 2018,
-    emotion: "excited",
-    relevance: 5,
-    keywords: ["毕业", "青春", "成长"],
-  },
-  {
-    id: "6",
-    type: "emotion",
-    title: "疫情中的坚持",
-    content: "居家办公的日子虽然艰难，但也让我学会了与自己相处。在这段特殊时期，我完成了很多一直想做但没时间做的事。",
-    summary: "疫情期间的自我成长",
-    date: "2020-05-15",
-    year: 2020,
-    emotion: "calm",
-    relevance: 3,
-    keywords: ["疫情", "成长", "独处"],
-  },
-];
+const DEFAULT_MEMORIES: Memory[] = [];
 
 // 情绪颜色映射
 const EMOTION_COLORS: Record<string, string> = {
@@ -154,6 +80,14 @@ const TYPE_ICONS: Record<MemoryType, React.ElementType> = {
 interface MemoryVaultProps {
   onBack: () => void;
 }
+
+const MEMORY_TYPE_OPTIONS: { value: MemoryType; label: string }[] = [
+  { value: "life", label: "生活" },
+  { value: "work", label: "工作" },
+  { value: "travel", label: "旅行" },
+  { value: "education", label: "学习" },
+  { value: "emotion", label: "情绪" },
+];
 
 const STOPWORDS = new Set([
   "的",
@@ -239,6 +173,14 @@ function extractKeywords(text: string) {
     .slice(0, 8);
 }
 
+function sanitizeSummaryText(text: string) {
+  return text.trim().replace(/^[（(]\s*mock\s*[)）]\s*/i, "");
+}
+
+function sanitizeKeywords(keywords: string[]) {
+  return keywords.filter((k) => k.trim().toLowerCase() !== "mock");
+}
+
 async function summarizeAsync(text: string) {
   try {
     const data = await fetchJson<{ summary?: string }>("/api/summarize", {
@@ -262,14 +204,15 @@ function applySummaryResult(
   setMemories: Dispatch<SetStateAction<Memory[]>>,
   setSelectedMemory: Dispatch<SetStateAction<Memory | null>>,
 ) {
-  const autoKeywords = extractKeywords(`${title} ${summaryText} ${content}`);
+  const cleanedSummary = sanitizeSummaryText(summaryText);
+  const autoKeywords = extractKeywords(`${title} ${cleanedSummary} ${content}`);
   setMemories((prev) => {
     const next = prev.map((m) =>
       m.id === memoryId
         ? {
             ...m,
-            summary: summaryText || m.summary,
-            keywords: Array.from(new Set([...m.keywords, ...autoKeywords])).slice(0, 10),
+            summary: cleanedSummary || sanitizeSummaryText(m.summary),
+            keywords: sanitizeKeywords(Array.from(new Set([...m.keywords, ...autoKeywords])).slice(0, 10)),
             summaryStatus: "ready" as const,
           }
         : m,
@@ -281,8 +224,8 @@ function applySummaryResult(
     prev && prev.id === memoryId
       ? {
           ...prev,
-          summary: summaryText || prev.summary,
-          keywords: Array.from(new Set([...prev.keywords, ...autoKeywords])).slice(0, 10),
+          summary: cleanedSummary || sanitizeSummaryText(prev.summary),
+          keywords: sanitizeKeywords(Array.from(new Set([...prev.keywords, ...autoKeywords])).slice(0, 10)),
           summaryStatus: "ready",
         }
       : prev,
@@ -315,6 +258,17 @@ export function MemoryVault({ onBack }: MemoryVaultProps) {
   const [keywordDraft, setKeywordDraft] = useState("");
   /** 时间线：近三年快速筛选（与按年单选可叠加） */
   const [yearRangeFilter, setYearRangeFilter] = useState<"all" | "recent3">("all");
+  const [deleteTarget, setDeleteTarget] = useState<Memory | null>(null);
+
+  const commitDeleteMemory = (id: string) => {
+    setMemories((prev) => {
+      const next = prev.filter((m) => m.id !== id);
+      void storageSet("memory.memories.v1", next);
+      return next;
+    });
+    setSelectedMemory((prev) => (prev?.id === id ? null : prev));
+    setDeleteTarget(null);
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -322,8 +276,15 @@ export function MemoryVault({ onBack }: MemoryVaultProps) {
       const saved = await storageGet<Memory[]>("memory.memories.v1", []);
       if (cancelled) return;
       if (saved.length > 0) {
-        setMemories(saved);
-        for (const m of saved) {
+        const normalized = saved.map((m) => ({
+          ...m,
+          summary: sanitizeSummaryText(m.summary),
+          keywords: sanitizeKeywords(m.keywords),
+        }));
+        const changed = JSON.stringify(normalized) !== JSON.stringify(saved);
+        setMemories(normalized);
+        if (changed) await storageSet("memory.memories.v1", normalized);
+        for (const m of normalized) {
           if (cancelled) break;
           if (m.summaryStatus !== "pending" || !m.content?.trim()) continue;
           void (async () => {
@@ -339,8 +300,8 @@ export function MemoryVault({ onBack }: MemoryVaultProps) {
         }
         return;
       }
-      setMemories(DEFAULT_MEMORIES);
-      await storageSet("memory.memories.v1", DEFAULT_MEMORIES);
+      setMemories([]);
+      await storageSet("memory.memories.v1", []);
     })();
     return () => {
       cancelled = true;
@@ -461,18 +422,26 @@ export function MemoryVault({ onBack }: MemoryVaultProps) {
   };
 
   return (
-    <div className="relative w-full h-screen flex overflow-hidden bg-background">
+    <div
+      className="relative w-full h-[100dvh] max-h-[100dvh] flex overflow-hidden bg-background box-border"
+      style={{
+        paddingTop: "max(0px, env(safe-area-inset-top, 0px))",
+        paddingBottom: "max(0px, env(safe-area-inset-bottom, 0px))",
+      }}
+    >
       {/* 左侧栏 - 时间轴导航 */}
-      <aside className="w-[20%] min-w-[200px] h-full border-r border-border/30 flex flex-col bg-card/30 backdrop-blur-sm">
-        {/* 返回按钮 */}
-        <div className="p-4 border-b border-border/30">
+      <aside className="w-[20%] min-w-[200px] h-full min-h-0 border-r border-border/30 flex flex-col bg-card/30 backdrop-blur-sm">
+        {/* 返回按钮：顶栏安全区由外层统一处理，此处保留内边距便于点击 */}
+        <div className="px-4 pb-3 pt-3 border-b border-border/30 shrink-0">
           <motion.button
+            type="button"
             onClick={onBack}
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className="flex w-full min-h-11 items-center gap-2 rounded-xl px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-card/60 active:bg-card/80 border border-transparent hover:border-border/40 transition-colors"
             whileHover={perf.lowPerformanceMode ? undefined : { x: -2 }}
+            whileTap={perf.lowPerformanceMode ? undefined : { scale: 0.98 }}
           >
-            <ChevronLeft className="w-4 h-4" />
-            <span>返回议会</span>
+            <ChevronLeft className="w-5 h-5 shrink-0" />
+            <span className="font-medium">返回议会</span>
           </motion.button>
         </div>
 
@@ -561,10 +530,11 @@ export function MemoryVault({ onBack }: MemoryVaultProps) {
         </div>
 
         {/* 添加记忆按钮 */}
-        <div className="p-4 border-t border-border/30">
+        <div className="p-4 border-t border-border/30 shrink-0">
           <motion.button
+            type="button"
             onClick={handleOpenAddMemory}
-            className="w-full flex items-center justify-center gap-2 py-2.5 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg transition-colors"
+            className="w-full min-h-11 flex items-center justify-center gap-2 py-2.5 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg transition-colors"
             whileHover={perf.lowPerformanceMode ? undefined : { scale: 1.02 }}
             whileTap={perf.lowPerformanceMode ? undefined : { scale: 0.98 }}
           >
@@ -575,9 +545,9 @@ export function MemoryVault({ onBack }: MemoryVaultProps) {
       </aside>
 
       {/* 中间栏 - 记忆卡片墙 */}
-      <main className="flex-1 h-full overflow-hidden flex flex-col">
+      <main className="flex-1 h-full min-h-0 overflow-hidden flex flex-col">
         {/* 标题栏 */}
-        <div className="px-6 py-4 border-b border-border/30 flex items-center justify-between">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-border/30 flex flex-wrap items-center justify-between gap-3 shrink-0">
           <div>
             <h1 className="text-lg font-semibold text-foreground">记忆库</h1>
             <p className="text-sm text-muted-foreground">
@@ -687,15 +657,31 @@ export function MemoryVault({ onBack }: MemoryVaultProps) {
                         </div>
 
                         {/* 快速操作 */}
-                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button className="p-1.5 rounded-md hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors">
+                        <div className="flex items-center gap-0.5 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                          <button
+                            type="button"
+                            title="引用"
+                            className="min-h-9 min-w-9 flex items-center justify-center rounded-md hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                          >
                             <Quote className="w-3 h-3" />
                           </button>
-                          <button className="p-1.5 rounded-md hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors">
+                          <button
+                            type="button"
+                            title="编辑（即将支持）"
+                            className="min-h-9 min-w-9 flex items-center justify-center rounded-md hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                          >
                             <Pencil className="w-3 h-3" />
                           </button>
-                          <button className="p-1.5 rounded-md hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors">
-                            <EyeOff className="w-3 h-3" />
+                          <button
+                            type="button"
+                            title="删除记忆"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setDeleteTarget(memory);
+                            }}
+                            className="min-h-9 min-w-9 flex items-center justify-center rounded-md hover:bg-destructive/15 text-muted-foreground hover:text-destructive transition-colors"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       </div>
@@ -709,7 +695,7 @@ export function MemoryVault({ onBack }: MemoryVaultProps) {
       </main>
 
       {/* 右侧栏 - 记忆详情/统计 */}
-      <aside className="w-[30%] min-w-[280px] h-full min-h-0 border-l border-border/30 flex flex-col bg-card/30 backdrop-blur-sm">
+      <aside className="w-[30%] min-w-[260px] max-w-[min(100%,420px)] h-full min-h-0 border-l border-border/30 flex flex-col bg-card/30 backdrop-blur-sm">
         <AnimatePresence mode="wait">
           {selectedMemory ? (
             <motion.div
@@ -720,14 +706,24 @@ export function MemoryVault({ onBack }: MemoryVaultProps) {
               className="flex-1 min-h-0 flex flex-col"
             >
               {/* 详情头部 */}
-              <div className="p-4 border-b border-border/30 flex items-center justify-between">
+              <div className="p-4 border-b border-border/30 flex flex-wrap items-center justify-between gap-2 shrink-0">
                 <h2 className="text-sm font-medium text-foreground">记忆详情</h2>
-                <button
-                  onClick={() => setSelectedMemory(null)}
-                  className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  关闭
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setDeleteTarget(selectedMemory)}
+                    className="min-h-9 px-3 rounded-lg text-xs text-destructive hover:bg-destructive/15 border border-destructive/25 transition-colors"
+                  >
+                    删除
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedMemory(null)}
+                    className="min-h-9 px-3 rounded-lg text-xs text-muted-foreground hover:text-foreground hover:bg-card/60 transition-colors"
+                  >
+                    关闭
+                  </button>
+                </div>
               </div>
 
               {/* 详情内容 */}
@@ -952,14 +948,14 @@ export function MemoryVault({ onBack }: MemoryVaultProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-sm"
             onClick={() => setIsAddingMemory(false)}
           >
-            <motion.div
+          <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="w-full max-w-md bg-card rounded-2xl border border-border/50 p-6 shadow-xl"
+            className="w-full max-w-md max-h-[85vh] overflow-y-auto bg-card rounded-2xl border border-border/50 p-6 shadow-xl"
               onClick={(e) => e.stopPropagation()}
             >
               <h3 className="text-lg font-semibold text-foreground mb-4">添加新记忆</h3>
@@ -983,34 +979,42 @@ export function MemoryVault({ onBack }: MemoryVaultProps) {
                     placeholder="记录下这段记忆..."
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-sm text-muted-foreground mb-1 block">类型</label>
-                    <select
-                      value={newType}
-                      onChange={(e) => setNewType(e.target.value as MemoryType)}
-                      className="w-full px-3 py-2 bg-background rounded-lg border border-border/50 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                    >
-                      <option value="life">生活</option>
-                      <option value="work">工作</option>
-                      <option value="travel">旅行</option>
-                      <option value="education">学习</option>
-                      <option value="emotion">情绪</option>
-                    </select>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-sm text-muted-foreground block">类型</label>
+                    <Select value={newType} onValueChange={(v) => setNewType(v as MemoryType)}>
+                      <SelectTrigger className="h-11 w-full rounded-xl border-border/50 bg-background/90 text-foreground shadow-sm">
+                        <SelectValue placeholder="选择类型" />
+                      </SelectTrigger>
+                      <SelectContent
+                        position="popper"
+                        className="z-[220] max-h-[min(70vh,320px)] border-border/60 bg-[#0E1629]/98 text-foreground backdrop-blur-xl"
+                      >
+                        {MEMORY_TYPE_OPTIONS.map((opt) => (
+                          <SelectItem key={`mem-type-${opt.value}`} value={opt.value} className="rounded-lg">
+                            {opt.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
-                  <div>
-                    <label className="text-sm text-muted-foreground mb-1 block">情绪</label>
-                    <select
-                      value={newEmotion}
-                      onChange={(e) => setNewEmotion(e.target.value as EmotionType)}
-                      className="w-full px-3 py-2 bg-background rounded-lg border border-border/50 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                    >
-                      {EMOTION_TRIGGER_OPTIONS.map((opt) => (
-                        <option key={`mem-emo-${opt.value}`} value={opt.value}>
-                          {opt.label}
-                        </option>
-                      ))}
-                    </select>
+                  <div className="space-y-1.5">
+                    <label className="text-sm text-muted-foreground block">情绪触发</label>
+                    <Select value={newEmotion} onValueChange={(v) => setNewEmotion(v as EmotionType)}>
+                      <SelectTrigger className="h-11 w-full rounded-xl border-border/50 bg-background/90 text-foreground shadow-sm">
+                        <SelectValue placeholder="选择情绪场景" />
+                      </SelectTrigger>
+                      <SelectContent
+                        position="popper"
+                        className="z-[220] max-h-[min(70vh,360px)] border-border/60 bg-[#0E1629]/98 text-foreground backdrop-blur-xl"
+                      >
+                        {EMOTION_TRIGGER_OPTIONS.map((opt) => (
+                          <SelectItem key={`mem-emo-${opt.value}`} value={opt.value} className="rounded-lg text-sm">
+                            {opt.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
                 <div>
@@ -1025,7 +1029,7 @@ export function MemoryVault({ onBack }: MemoryVaultProps) {
                     className="w-full"
                   />
                 </div>
-                <div className="flex gap-3">
+                <div className="pt-2 flex gap-3">
                   <button
                     onClick={() => setIsAddingMemory(false)}
                     className="flex-1 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -1039,6 +1043,52 @@ export function MemoryVault({ onBack }: MemoryVaultProps) {
                     保存
                   </button>
                 </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {deleteTarget && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[110] flex items-center justify-center bg-background/85 backdrop-blur-sm px-4"
+            style={{
+              paddingTop: "max(1rem, env(safe-area-inset-top, 0px))",
+              paddingBottom: "max(1rem, env(safe-area-inset-bottom, 0px))",
+            }}
+            onClick={() => setDeleteTarget(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.94, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.94, opacity: 0 }}
+              className="w-full max-w-sm rounded-2xl border border-border/50 bg-card p-5 shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 className="text-base font-semibold text-foreground">删除这条记忆？</h3>
+              <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{deleteTarget.title}</p>
+              <p className="mt-1 text-xs text-muted-foreground/80">
+                将从本机存储（IndexedDB / localStorage）中永久移除，且无法恢复。
+              </p>
+              <div className="mt-5 flex gap-3 justify-end">
+                <button
+                  type="button"
+                  onClick={() => setDeleteTarget(null)}
+                  className="min-h-10 px-4 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-card/80"
+                >
+                  取消
+                </button>
+                <button
+                  type="button"
+                  onClick={() => commitDeleteMemory(deleteTarget.id)}
+                  className="min-h-10 px-4 rounded-xl text-sm font-medium bg-destructive/90 text-destructive-foreground hover:bg-destructive"
+                >
+                  删除
+                </button>
               </div>
             </motion.div>
           </motion.div>

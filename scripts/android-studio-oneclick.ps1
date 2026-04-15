@@ -1,7 +1,7 @@
 param(
   [string]$WebRoot = "D:\yyh35\android_project\aigc_application\aigc_application_style",
   [string]$AndroidShellRoot = "D:\yyh35\android_project\ps2shell",
-  [switch]$SkipNpmInstall,
+  [switch]$RunNpmInstall,
   [switch]$SkipAdbInstall,
   [switch]$DryRun
 )
@@ -127,10 +127,10 @@ $adbPath = Resolve-AdbPath $sdkDir
 $emulatorPath = Resolve-EmulatorPath $sdkDir
 
 Step "Web dependencies"
-if ($SkipNpmInstall) {
-  Write-Host "Skip npm install by option." -ForegroundColor DarkYellow
-} else {
+if ($RunNpmInstall) {
   Run-InDir $WebRoot "npm install"
+} else {
+  Write-Host "Skip npm install (default). Run with -RunNpmInstall to install deps first." -ForegroundColor DarkYellow
 }
 
 Step "Build static export for Android"

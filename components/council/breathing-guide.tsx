@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 
 interface BreathingGuideProps {
@@ -27,28 +27,25 @@ const phaseDurations: Record<BreathPhase, number> = {
 export function BreathingGuide({ isActive, onReturn }: BreathingGuideProps) {
   const [phase, setPhase] = useState<BreathPhase>("inhale");
   const [cycles, setCycles] = useState(0);
-  const [isStable, setIsStable] = useState(false);
+  const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!isActive) return;
 
     const phases: BreathPhase[] = ["inhale", "hold", "exhale"];
     let currentPhaseIndex = 0;
+    let cancelled = false;
 
     const runPhase = () => {
+      if (cancelled) return;
       const currentPhase = phases[currentPhaseIndex];
       setPhase(currentPhase);
 
-      setTimeout(() => {
+      timerRef.current = window.setTimeout(() => {
+        if (cancelled) return;
         currentPhaseIndex = (currentPhaseIndex + 1) % phases.length;
         if (currentPhaseIndex === 0) {
-          setCycles((c) => {
-            const newCycles = c + 1;
-            if (newCycles >= 3) {
-              setIsStable(true);
-            }
-            return newCycles;
-          });
+          setCycles((c) => c + 1);
         }
         runPhase();
       }, phaseDurations[currentPhase]);
@@ -57,11 +54,24 @@ export function BreathingGuide({ isActive, onReturn }: BreathingGuideProps) {
     runPhase();
 
     return () => {
+      cancelled = true;
+      if (timerRef.current !== null) {
+        window.clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
       setPhase("inhale");
       setCycles(0);
-      setIsStable(false);
     };
   }, [isActive]);
+
+  useEffect(() => {
+    if (!isActive) return;
+    if (cycles < 3) return;
+    const doneTimer = window.setTimeout(() => {
+      onReturn?.();
+    }, 600);
+    return () => window.clearTimeout(doneTimer);
+  }, [isActive, cycles, onReturn]);
 
   return (
     <AnimatePresence>
@@ -153,23 +163,6 @@ export function BreathingGuide({ isActive, onReturn }: BreathingGuideProps) {
           >
             {phaseLabels[phase]}
           </motion.p>
-
-          {/* 返回按钮 */}
-          <motion.button
-            onClick={onReturn}
-            className={cn(
-              "mt-16 px-6 py-2 text-sm rounded-full border transition-all duration-500",
-              isStable
-                ? "border-foreground/50 text-foreground/80 hover:bg-foreground/10"
-                : "border-foreground/10 text-foreground/30 cursor-not-allowed"
-            )}
-            animate={{
-              opacity: isStable ? 1 : 0.3,
-            }}
-            disabled={!isStable}
-          >
-            返回议会
-          </motion.button>
 
           {/* 呼吸周期指示 */}
           <div className="absolute bottom-8 flex gap-2">

@@ -46,18 +46,18 @@ const positionClasses: Record<string, string> = {
   "top-left": "top-4 left-4 md:top-6 md:left-6",
   "top-right": "top-4 right-4 md:top-6 md:right-6",
   "top-center": "top-0.5 left-1/2 -translate-x-1/2 md:top-2",
-  "bottom-left": "bottom-28 left-4 md:bottom-32 md:left-6",
-  "bottom-right": "bottom-28 right-4 md:bottom-32 md:right-6",
+  "bottom-left": "bottom-32 left-4 md:bottom-36 md:left-6",
+  "bottom-right": "bottom-32 right-4 md:bottom-36 md:right-6",
 };
 
 const landscapePositionClasses: Record<string, string> = {
   // 横屏：左侧顺序需要是 PS² -> 激进派 -> 未来派，因此激进派放到中上段
   "top-left": "top-[39%] -translate-y-1/2 left-4 md:left-6",
-  "top-right": "top-8 right-4 md:top-9 md:right-6",
+  "top-right": "top-[39%] -translate-y-1/2 right-4 md:right-6",
   // 顶到最上侧：与顶部 PS² 齐平或略高
   "top-center": "top-1 left-1/2 -translate-x-1/2",
-  "bottom-left": "bottom-24 left-4 md:bottom-28 md:left-6",
-  "bottom-right": "bottom-24 right-4 md:bottom-28 md:right-6",
+  "bottom-left": "bottom-28 left-4 md:bottom-32 md:left-6",
+  "bottom-right": "bottom-28 right-4 md:bottom-32 md:right-6",
 };
 
 const roleIcons: Record<RoleType, React.ReactNode> = {

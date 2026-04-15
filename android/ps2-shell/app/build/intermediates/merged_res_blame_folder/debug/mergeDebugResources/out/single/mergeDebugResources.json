@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "com.ps2.shell.app-debug-25:/xml_network_security_config.xml.flat",
+        "source": "com.ps2.shell.app-main-27:/xml/network_security_config.xml"
+    },
+    {
+        "merged": "com.ps2.shell.app-debug-25:/drawable_ic_launcher.xml.flat",
+        "source": "com.ps2.shell.app-main-27:/drawable/ic_launcher.xml"
+    }
+]

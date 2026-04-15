@@ -12,7 +12,6 @@ import {
   Lightbulb,
   MessageCircle,
   X,
-  ChevronRight,
   BookOpen,
   Users,
   Target,
@@ -20,6 +19,10 @@ import {
   Eye,
   Flame,
   Feather,
+  GraduationCap,
+  Microscope,
+  Gavel,
+  ScrollText,
 } from "lucide-react";
 
 // 导师类型定义
@@ -39,9 +42,9 @@ interface Mentor {
   bestFor: string[];
 }
 
-// 预设导师数据 - 多类型导师（已扩充）
+// 预设导师数据 — 四类各 4 位
 const MENTORS: Mentor[] = [
-  // 哲学思辨 (2个)
+  // 哲学思辨 (4)
   {
     id: "stoic",
     name: "马可·奥勒留",
@@ -99,8 +102,27 @@ const MENTORS: Mentor[] = [
     ],
     bestFor: ["选择焦虑", "意义探索", "行动勇气"],
   },
+  {
+    id: "plato",
+    name: "柏拉图",
+    title: "理念论哲学家",
+    school: "古希腊哲学",
+    category: "philosophy",
+    icon: <GraduationCap className="w-6 h-6" />,
+    color: "#3B82F6",
+    bgGradient: "from-blue-500/20 to-indigo-500/20",
+    description: "学园派创始人，以理念论与对话体著作著称，强调至善与理性秩序。",
+    corePhilosophy: "现象可变，理念恒在；灵魂趋向真理与善。",
+    thinkingModel: ["理念与现象", "洞穴隐喻", "辩证法", "灵魂三分"],
+    famousQuotes: [
+      "哲学始于惊奇。",
+      "至善是万物所趋向的目的。",
+      "未经省察的人生不值得过。（学园传统中与苏格拉底一脉相承）",
+    ],
+    bestFor: ["价值排序", "教育规划", "公共与私人之善"],
+  },
 
-  // 认知心理 (2个)
+  // 认知心理 (4)
   {
     id: "cognitive",
     name: "丹尼尔·卡尼曼",
@@ -158,8 +180,27 @@ const MENTORS: Mentor[] = [
     ],
     bestFor: ["低谷重建", "意志力", "突破舒适圈"],
   },
+  {
+    id: "freud",
+    name: "西格蒙德·弗洛伊德",
+    title: "精神分析学派创始人",
+    school: "精神分析",
+    category: "psychology",
+    icon: <Microscope className="w-6 h-6" />,
+    color: "#0D9488",
+    bgGradient: "from-teal-600/20 to-cyan-500/20",
+    description: "探索潜意识、防御机制与梦的意涵，帮助理解重复模式背后的动力。",
+    corePhilosophy: "被压抑之物会以症状或行动归来；觉察即疗愈的起点。",
+    thinkingModel: ["本我自我超我", "压抑与移情", "梦的显隐意", "防御机制"],
+    famousQuotes: [
+      "本我在哪里，自我便在哪里。",
+      "梦是通往无意识的皇家大道。",
+      "爱与工作，人生足矣。",
+    ],
+    bestFor: ["反复模式", "关系纠缠", "焦虑与梦的困惑"],
+  },
 
-  // 战略思维 (2个)
+  // 战略思维 (4)
   {
     id: "strategic",
     name: "孙子",
@@ -217,8 +258,27 @@ const MENTORS: Mentor[] = [
     ],
     bestFor: ["生活取舍", "压力管理", "长期幸福感"],
   },
+  {
+    id: "hanfei",
+    name: "韩非子",
+    title: "法家集大成者",
+    school: "法家",
+    category: "strategy",
+    icon: <Gavel className="w-6 h-6" />,
+    color: "#64748B",
+    bgGradient: "from-slate-600/20 to-zinc-500/20",
+    description: "以法、术、势一体论著称，强调制度、激励与权责边界，适合复杂组织与博弈场景。",
+    corePhilosophy: "明法审令，因能授官；信赏必罚，则人尽其力。",
+    thinkingModel: ["法势术", "激励相容", "权责清晰", "可验证约束"],
+    famousQuotes: [
+      "不期修古，不法常可。",
+      "事异则备变。",
+      "以计代力，以智取胜。",
+    ],
+    bestFor: ["制度设计", "团队管理", "合规与博弈"],
+  },
 
-  // 东方智慧 (2个)
+  // 东方智慧 (4)
   {
     id: "eastern",
     name: "老子",
@@ -275,6 +335,25 @@ const MENTORS: Mentor[] = [
       "觉察即自由的开始。",
     ],
     bestFor: ["情绪调节", "正念训练", "关系修复"],
+  },
+  {
+    id: "wangyangming",
+    name: "王阳明",
+    title: "心学集大成者",
+    school: "儒家心学",
+    category: "eastern",
+    icon: <ScrollText className="w-6 h-6" />,
+    color: "#B45309",
+    bgGradient: "from-amber-700/20 to-yellow-600/20",
+    description: "倡导致良知与知行合一，强调在日用事上磨练，把道德直觉落到具体行动。",
+    corePhilosophy: "知是行之始，行是知之成；事上磨练，方见真功夫。",
+    thinkingModel: ["致良知", "知行合一", "事上磨练", "心即理"],
+    famousQuotes: [
+      "破山中贼易，破心中贼难。",
+      "你未看此花时，此花与汝心同归于寂。",
+      "志不立，天下无可成之事。",
+    ],
+    bestFor: ["拖延与知行不一", "职业伦理", "日常决策中的良知"],
   },
 ];
 
@@ -549,15 +628,6 @@ export function MentorLibrary({ onBack, onStartChat }: MentorLibraryProps) {
                   >
                     <MessageCircle className="w-4 h-4" />
                     <span>开始对话</span>
-                  </motion.button>
-
-                  <motion.button
-                    className="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-white/70 font-medium flex items-center justify-center gap-2 hover:bg-white/10 hover:text-white transition-colors"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <span>了解更多</span>
-                    <ChevronRight className="w-4 h-4" />
                   </motion.button>
                 </div>
               </div>

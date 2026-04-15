@@ -16,15 +16,21 @@ import {
   Feather,
   Eye,
   Flame,
-  MoreVertical,
-  Volume2,
-  VolumeX,
   BookOpen,
   Quote,
   RefreshCw,
+  GraduationCap,
+  Microscope,
+  Gavel,
+  ScrollText,
 } from "lucide-react";
 import { storageGet } from "@/lib/storage";
-import { selectRelevantMemories, type MemoryContextHit } from "@/lib/memory-context";
+import {
+  selectRelevantMemories,
+  formatHitsForUserEvidence,
+  MEMORY_RETRIEVAL_MAX_HITS,
+  type MemoryContextHit,
+} from "@/lib/memory-context";
 import type { MemoryItem } from "@/lib/types/domain";
 import { triggerLettersByChatKeywords } from "@/lib/letter-trigger";
 import type { AppSettings } from "@/lib/app-settings";
@@ -110,6 +116,22 @@ const MENTOR_DATA: Record<string, MentorData> = {
       "让我们区分一下系统1（快速直觉）和系统2（慢速分析）的反应。你的决定主要来自哪个系统？",
     ],
   },
+  plato: {
+    id: "plato",
+    name: "柏拉图",
+    title: "理念论哲学家",
+    school: "古希腊哲学",
+    icon: <GraduationCap className="w-6 h-6" />,
+    color: "#3B82F6",
+    bgGradient: "from-blue-500/20 to-indigo-500/20",
+    greeting: "欢迎来到理念的殿堂。表象之下，总有更接近「善」的秩序。今天，你想澄清哪一个概念或抉择？",
+    style: "理性、层层追问、追求至善",
+    sampleResponses: [
+      "我们先区分「现象」与「应然」：你描述的是事实，还是你认为应当如此？",
+      "若把人生看作灵魂转向光明的旅程，你现在被哪类欲望拖住了视线？",
+      "试着用辩证法检验：这个选择的反面会推出什么不可接受的结论吗？",
+    ],
+  },
   existential: {
     id: "existential",
     name: "让-保罗·萨特",
@@ -174,6 +196,22 @@ const MENTOR_DATA: Record<string, MentorData> = {
       "知之为知之，不知为不知，是知也。承认自己的不知，才是智慧的开始。",
     ],
   },
+  freud: {
+    id: "freud",
+    name: "西格蒙德·弗洛伊德",
+    title: "精神分析学派创始人",
+    school: "精神分析",
+    icon: <Microscope className="w-6 h-6" />,
+    color: "#0D9488",
+    bgGradient: "from-teal-600/20 to-cyan-500/20",
+    greeting: "请随意联想。我们关注的不只是你说的话，还有没说出的部分——重复的情绪、梦与口误，往往指向被压抑的愿望。从哪里开始谈？",
+    style: "洞察潜意识、防御与移情",
+    sampleResponses: [
+      "这个反应是否在别的人际关系里也出现过？若有，共同点是什么？",
+      "你对他人的强烈情绪，有时是自己某部分经验的投射——愿意一起检视吗？",
+      "如果把症状当作「被压抑之物的信使」，它想告诉你什么需求？",
+    ],
+  },
   nietzsche: {
     id: "nietzsche",
     name: "尼采",
@@ -222,6 +260,22 @@ const MENTOR_DATA: Record<string, MentorData> = {
       "一切皆是因缘和合。你所经历的困境，也会像其他一切一样，生起，然后消逝。",
     ],
   },
+  hanfei: {
+    id: "hanfei",
+    name: "韩非子",
+    title: "法家集大成者",
+    school: "法家",
+    icon: <Gavel className="w-6 h-6" />,
+    color: "#64748B",
+    bgGradient: "from-slate-600/20 to-zinc-500/20",
+    greeting: "明主不恃其私智，而因法数。先把权责、激励与约束说清楚，再谈抱负。你的局面里，谁承担什么、如何验收？",
+    style: "冷峻现实、制度与激励",
+    sampleResponses: [
+      "把「想要的结果」写成可验证指标，否则善意也会变成扯皮。",
+      "赏罚不信则令不行：你能否承诺并执行一条简单明确的规则？",
+      "势异则事异：旧办法若已失灵，就该改制度而非只改口号。",
+    ],
+  },
   epicurus: {
     id: "epicurus",
     name: "伊壁鸠鲁",
@@ -236,6 +290,22 @@ const MENTOR_DATA: Record<string, MentorData> = {
       "你追求的这个目标——它真的会带来持久的快乐吗？还是只是欲望驱使的短暂满足？",
       "真正的财富不是拥有更多，而是需要更少。审视你真正需要什么，放下多余的欲望。",
       "友谊是生活中最珍贵的宝藏。在追逐成功的同时，不要忽视那些真正关心你的人。",
+    ],
+  },
+  wangyangming: {
+    id: "wangyangming",
+    name: "王阳明",
+    title: "心学集大成者",
+    school: "儒家心学",
+    icon: <ScrollText className="w-6 h-6" />,
+    color: "#B45309",
+    bgGradient: "from-amber-700/20 to-yellow-600/20",
+    greeting: "知行合一。真知必落在行上；若行不出，说明知未真。今日一事，你明知当为却未为者是什么？",
+    style: "事上磨练、致良知",
+    sampleResponses: [
+      "把「应当」落成今晚可做的一小步，否则良知只停留在情绪里。",
+      "私意起时，正是磨练时：你此刻的犹豫，怕的是失败还是怕丢面子？",
+      "心即理：外物纷扰时，先问此心是否自慊，再定去留。",
     ],
   },
   zhuangzi: {
@@ -258,13 +328,22 @@ const MENTOR_DATA: Record<string, MentorData> = {
 
 interface MentorChatProps {
   mentorId: string;
+  /** 为 false 时表示已切到导师库页但组件仍挂载，便于后台继续拉取回复 */
+  isUiActive?: boolean;
   onBack: () => void;
   onAnxiousDetected?: (payload: { source: "mentor"; score: number; text: string }) => void;
   onLettersTriggered?: (payload: { count: number; titles: string[] }) => void;
   settings?: AppSettings;
 }
 
-export function MentorChat({ mentorId, onBack, onAnxiousDetected, onLettersTriggered, settings }: MentorChatProps) {
+export function MentorChat({
+  mentorId,
+  isUiActive = true,
+  onBack,
+  onAnxiousDetected,
+  onLettersTriggered,
+  settings,
+}: MentorChatProps) {
   const mentor = MENTOR_DATA[mentorId] || MENTOR_DATA.stoic;
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -277,7 +356,6 @@ export function MentorChat({ mentorId, onBack, onAnxiousDetected, onLettersTrigg
   const [inputValue, setInputValue] = useState("");
   const [isThinking, setIsThinking] = useState(false);
   const [chatStatus, setChatStatus] = useState<"idle" | "generating" | "cancelled" | "retrying">("idle");
-  const [isMuted, setIsMuted] = useState(false);
   const [activeMentorMessageId, setActiveMentorMessageId] = useState<string | null>(null);
   const [citedMemories, setCitedMemories] = useState<MemoryContextHit[]>([]);
   const [lastUserInput, setLastUserInput] = useState<string>("");
@@ -285,24 +363,74 @@ export function MentorChat({ mentorId, onBack, onAnxiousDetected, onLettersTrigg
   const emotionThreshold = settings?.emotionTriggerThreshold ?? 0.72;
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
+  const abortReasonRef = useRef<"user" | "away-timeout" | null>(null);
+  const awayAbortTimerRef = useRef<number | null>(null);
+  const awayAbortMs = Math.max(15_000, Math.min(600_000, settings?.mentorAwayAbortMs ?? 120_000));
+
+  const clearAwayAbortTimer = () => {
+    if (awayAbortTimerRef.current !== null) {
+      window.clearTimeout(awayAbortTimerRef.current);
+      awayAbortTimerRef.current = null;
+    }
+  };
 
   // 自动滚动到底部
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  /** 退回导师库时：短于阈值不中止请求；超过阈值则中止并在气泡内提示 */
   useEffect(() => {
+    if (isUiActive) {
+      clearAwayAbortTimer();
+      return;
+    }
+    const busy = isThinking || activeMentorMessageId !== null;
+    if (!busy) {
+      clearAwayAbortTimer();
+      return;
+    }
+    clearAwayAbortTimer();
+    awayAbortTimerRef.current = window.setTimeout(() => {
+      awayAbortTimerRef.current = null;
+      const ac = abortRef.current;
+      if (ac && !ac.signal.aborted) {
+        abortReasonRef.current = "away-timeout";
+        ac.abort();
+      }
+    }, awayAbortMs);
     return () => {
-      abortRef.current?.abort();
-      abortRef.current = null;
+      clearAwayAbortTimer();
     };
-  }, []);
+  }, [isUiActive, isThinking, activeMentorMessageId, awayAbortMs]);
 
-  const toApiMessages = (chatMessages: Message[]): ApiChatMessage[] => {
-    return chatMessages.map((m) => ({
-      role: m.role === "mentor" ? "assistant" : "user",
-      content: m.content,
-    }));
+  /** 重试时去掉末尾未完成的导师占位，只保留到最后一条用户话为止 */
+  const sliceThroughLastUser = (chatMessages: Message[]): Message[] => {
+    let lastUser = -1;
+    for (let i = 0; i < chatMessages.length; i++) {
+      if (chatMessages[i].role === "user") lastUser = i;
+    }
+    if (lastUser >= 0) return chatMessages.slice(0, lastUser + 1);
+    return chatMessages.filter((m) => m.role === "mentor");
+  };
+
+  /** 构建发给 /api/chat 的消息：导师→assistant；本轮检索到的记忆附在最后一条用户话后（整段对话仍完整上传） */
+  const buildMentorApiMessages = (chatMessages: Message[], memoryHits: MemoryContextHit[]): ApiChatMessage[] => {
+    const memoryBlock =
+      memoryHits.length > 0 ? `\n\n${formatHitsForUserEvidence(memoryHits, MEMORY_RETRIEVAL_MAX_HITS)}` : "";
+    const out: ApiChatMessage[] = [];
+    for (let i = 0; i < chatMessages.length; i++) {
+      const m = chatMessages[i];
+      const base = m.content.trim();
+      const isLastUser = m.role === "user" && i === chatMessages.length - 1;
+      const content = isLastUser && memoryBlock ? `${base}${memoryBlock}` : base;
+      if (content.length === 0) continue;
+      out.push({
+        role: m.role === "mentor" ? "assistant" : "user",
+        content,
+      });
+    }
+    return out;
   };
 
   const updateMentorMessageContent = (messageId: string, nextChunk: string, append: boolean) => {
@@ -320,7 +448,12 @@ export function MentorChat({ mentorId, onBack, onAnxiousDetected, onLettersTrigg
   };
 
   const stopStreaming = () => {
-    abortRef.current?.abort();
+    clearAwayAbortTimer();
+    const ac = abortRef.current;
+    if (ac && !ac.signal.aborted) {
+      abortReasonRef.current = "user";
+      ac.abort();
+    }
     abortRef.current = null;
     setIsThinking(false);
     setChatStatus("cancelled");
@@ -337,6 +470,24 @@ export function MentorChat({ mentorId, onBack, onAnxiousDetected, onLettersTrigg
     }
   };
 
+  /** 清除本会话中与导师的对话记录，仅保留开场问候 */
+  const resetMentorSession = () => {
+    stopStreaming();
+    setCitedMemories([]);
+    setLastUserInput("");
+    setInputValue("");
+    setChatStatus("idle");
+    setActiveMentorMessageId(null);
+    setMessages([
+      {
+        id: `greeting-${Date.now()}`,
+        role: "mentor",
+        content: mentor.greeting,
+        timestamp: new Date(),
+      },
+    ]);
+  };
+
   const detectMentorEmotion = async (text: string) => {
     const trimmed = text.trim();
     if (!trimmed) return;
@@ -347,7 +498,11 @@ export function MentorChat({ mentorId, onBack, onAnxiousDetected, onLettersTrigg
         body: JSON.stringify({ text: trimmed, inputMode: "text", voiceMockEnabled }),
         timeoutMs: 12_000,
       });
-      if (data.label === "anxious" && typeof data.score === "number" && data.score >= emotionThreshold) {
+      if (
+        (data.label === "anxious" || data.label === "sad") &&
+        typeof data.score === "number" &&
+        data.score >= emotionThreshold
+      ) {
         onAnxiousDetected?.({ source: "mentor", score: data.score, text: trimmed });
       }
     } catch (e) {
@@ -372,7 +527,7 @@ export function MentorChat({ mentorId, onBack, onAnxiousDetected, onLettersTrigg
     }
 
     const nextBaseMessages = isRetry
-      ? [...messages]
+      ? sliceThroughLastUser(messages)
       : [
           ...messages,
           {
@@ -398,6 +553,7 @@ export function MentorChat({ mentorId, onBack, onAnxiousDetected, onLettersTrigg
     setIsThinking(true);
     setActiveMentorMessageId(mentorMessageId);
 
+    abortReasonRef.current = null;
     const controller = new AbortController();
     abortRef.current = controller;
     let assembledMentorText = "";
@@ -410,14 +566,10 @@ export function MentorChat({ mentorId, onBack, onAnxiousDetected, onLettersTrigg
       const hits = selectRelevantMemories({
         query: trimmedInput,
         memories: memoryRecords,
-        topK: 3,
+        maxHits: MEMORY_RETRIEVAL_MAX_HITS,
       });
       setCitedMemories(hits);
-      const memoryContext = hits.length > 0
-        ? `\n\n用户历史记忆参考：\n${hits
-            .map((h, i) => `${i + 1}. ${h.title}：${h.summary}（关键词：${h.keywords.join("、")}）`)
-            .join("\n")}`
-        : "";
+      const apiMessages = buildMentorApiMessages(sliceThroughLastUser(nextBaseMessages), hits);
 
       const response = await fetchWithTimeout("/api/chat", {
         method: "POST",
@@ -425,15 +577,10 @@ export function MentorChat({ mentorId, onBack, onAnxiousDetected, onLettersTrigg
           "content-type": "application/json",
         },
         body: JSON.stringify({
-          messages: [
-            ...toApiMessages(nextMessages),
-            {
-              role: "system",
-              content: `请结合导师风格回答，口语化且尽量简洁（不超过3句）。${memoryContext}`,
-            },
-          ],
+          messages: apiMessages,
           mode: `mentor:${mentor.id}`,
-          stream: true,
+          // Android WebView 对 ReadableStream/getReader 支持不完整时会抛 TypeError，被误判为「网络失败」
+          stream: false,
         }),
         externalSignal: controller.signal,
         timeoutMs: 120_000,
@@ -476,8 +623,9 @@ export function MentorChat({ mentorId, onBack, onAnxiousDetected, onLettersTrigg
                 setIsThinking(false);
                 setChatStatus("generating");
               } else if (payload.type === "meta" && Array.isArray(payload.cards)) {
+                const metaCards = payload.cards;
                 setMessages((prev) =>
-                  prev.map((m) => (m.id === mentorMessageId ? { ...m, cards: payload.cards.slice(0, 3) } : m)),
+                  prev.map((m) => (m.id === mentorMessageId ? { ...m, cards: metaCards.slice(0, 3) } : m)),
                 );
               } else if (payload.type === "error") {
                 throw new Error(payload.message ?? "生成失败");
@@ -519,7 +667,19 @@ export function MentorChat({ mentorId, onBack, onAnxiousDetected, onLettersTrigg
       }
     } catch (error) {
       const aborted = error instanceof DOMException && error.name === "AbortError";
-      if (!aborted) {
+      const reason = abortReasonRef.current;
+      abortReasonRef.current = null;
+      if (aborted) {
+        if (reason === "away-timeout") {
+          const sec = Math.round(awayAbortMs / 1000);
+          const tip =
+            sec >= 60
+              ? `离开导师对话超过约 ${Math.round(sec / 60)} 分钟，已停止生成。可点击「重试上次」或重新提问。`
+              : `离开导师对话超过 ${sec} 秒，已停止生成。可点击「重试上次」或重新提问。`;
+          updateMentorMessageContent(mentorMessageId, tip, false);
+        }
+        setChatStatus("idle");
+      } else {
         clientLog("warn", "mentor.chat", "request failed", { detail: String(error) });
         const fallback = `抱歉：${userFacingMessage(error)} 可点击重试或换个问题继续。`;
         updateMentorMessageContent(mentorMessageId, fallback, false);
@@ -527,6 +687,7 @@ export function MentorChat({ mentorId, onBack, onAnxiousDetected, onLettersTrigg
       }
       setIsThinking(false);
     } finally {
+      clearAwayAbortTimer();
       abortRef.current = null;
       setActiveMentorMessageId(null);
       setMessages((prev) =>
@@ -581,26 +742,18 @@ export function MentorChat({ mentorId, onBack, onAnxiousDetected, onLettersTrigg
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          {/* 静音按钮 */}
-          <motion.button
-            onClick={() => setIsMuted(!isMuted)}
-            className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/40 hover:text-white transition-colors"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-          </motion.button>
-          
-          {/* 更多选项 */}
-          <motion.button
-            className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/40 hover:text-white transition-colors"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <MoreVertical className="w-4 h-4" />
-          </motion.button>
-        </div>
+        <motion.button
+          type="button"
+          title="清除本会话记忆"
+          onClick={resetMentorSession}
+          disabled={isThinking}
+          className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs text-white/80 hover:bg-white/10 hover:text-white transition-colors disabled:opacity-50"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <RefreshCw className="w-4 h-4" />
+          刷新
+        </motion.button>
       </header>
 
       {/* 聊天区域 */}

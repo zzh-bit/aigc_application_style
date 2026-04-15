@@ -43,7 +43,7 @@ export function MessageBubble({ role, name, message, direction, isHost = false, 
       animate={{ x: 0, y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
       className={cn(
-        "relative flex gap-3 p-4 rounded-2xl backdrop-blur-xl border border-border/50 max-w-md",
+        "relative flex gap-2.5 p-3 rounded-2xl backdrop-blur-xl border border-border/50 max-w-[20rem] md:max-w-[22rem]",
         isHost
           ? "bg-gradient-to-r from-host/10 via-card/80 to-host/10"
           : "bg-card/60"
@@ -78,7 +78,7 @@ export function MessageBubble({ role, name, message, direction, isHost = false, 
         </>
       )}
       
-      <div className="flex flex-col gap-1 pl-3">
+      <div className="flex flex-col gap-1 pl-2.5">
         <span className={cn(
           "text-xs font-semibold",
           role === "radical" && "text-radical",
@@ -89,7 +89,7 @@ export function MessageBubble({ role, name, message, direction, isHost = false, 
         )}>
           {name}
         </span>
-        <p className="text-sm text-foreground/90 leading-relaxed">{message}</p>
+        <p className="text-[13px] text-foreground/90 leading-relaxed">{message}</p>
       </div>
     </motion.div>
   );

@@ -2,13 +2,19 @@ import { NextResponse } from "next/server";
 
 const ALLOWED_ORIGINS = new Set<string>([
   "https://appassets.androidplatform.net",
+  "http://appassets.androidplatform.net",
 ]);
 
 function pickAllowOrigin(req: Request): string | null {
   const origin = req.headers.get("origin");
-  if (!origin) return null;
-  if (ALLOWED_ORIGINS.has(origin)) return origin;
-  return null;
+  if (!origin) {
+    // WebView 某些请求可能缺失 Origin；此时放宽到 * 避免误拦截。
+    return "*";
+  }
+  const normalized = origin.trim().replace(/\/$/, "");
+  if (ALLOWED_ORIGINS.has(normalized)) return normalized;
+  // 调试期允许反射当前 Origin，避免跨域预检误拦截导致“网络失败”。
+  return normalized;
 }
 
 export function applyCorsHeaders(req: Request, headers: Headers): void {

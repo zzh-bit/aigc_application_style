@@ -37,6 +37,15 @@ function MentorColumn({
   return (
     <motion.div
       className={`pointer-events-auto flex flex-col items-center ${isLandscape ? "flex-1 min-w-0 max-w-[30%]" : "flex-1"}`}
+      role="button"
+      tabIndex={0}
+      onClick={() => onGoToMentor?.()}
+      onPointerUp={(e) => {
+        if (e.pointerType !== "mouse") onGoToMentor?.();
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") onGoToMentor?.();
+      }}
       onMouseEnter={() => setHoverMentor(true)}
       onMouseLeave={() => setHoverMentor(false)}
     >
@@ -132,6 +141,15 @@ function LettersColumn({
   return (
     <motion.div
       className={`pointer-events-auto flex flex-col items-center ${isLandscape ? "flex-1 min-w-0 max-w-[30%]" : "flex-1"}`}
+      role="button"
+      tabIndex={0}
+      onClick={() => onGoToLetters?.()}
+      onPointerUp={(e) => {
+        if (e.pointerType !== "mouse") onGoToLetters?.();
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") onGoToLetters?.();
+      }}
       onMouseEnter={() => setHoverLetter(true)}
       onMouseLeave={() => setHoverLetter(false)}
     >
@@ -157,7 +175,7 @@ function LettersColumn({
           >
             <motion.div
               className="absolute inset-0"
-              style={{ backgroundColor: "rgba(245,158,11,0.3)" }}
+              style={{ backgroundColor: "rgba(245,158,11,0.3)", transformOrigin: "top" }}
               animate={{
                 scaleY: isHoveringLetter ? [1, 0, 1] : [1, 0.3, 1],
               }}
@@ -165,7 +183,6 @@ function LettersColumn({
                 duration: isHoveringLetter ? 0.5 : 2,
                 repeat: Infinity,
               }}
-              transformOrigin="top"
             />
           </motion.div>
         </motion.div>
@@ -237,7 +254,18 @@ function WelcomeCenterHub({
   onEnter: () => void;
 }) {
   return (
-    <div className={`pointer-events-auto flex flex-col items-center shrink-0 ${isLandscape ? "w-[36%] max-w-[320px]" : ""}`}>
+    <div
+      className={`pointer-events-auto flex flex-col items-center shrink-0 ${isLandscape ? "w-[36%] max-w-[320px]" : ""}`}
+      role="button"
+      tabIndex={0}
+      onClick={onEnter}
+      onPointerUp={(e) => {
+        if (e.pointerType !== "mouse") onEnter();
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") onEnter();
+      }}
+    >
       <h2 className={`${isLandscape ? "text-lg mb-0.5" : "text-2xl mb-2"} font-light text-white/90 tracking-wide text-center`}>
         与你的平行自我对话
       </h2>
@@ -507,8 +535,10 @@ export function WelcomeScreen({ onEnter, onGoToMentor, onGoToLetters, onGoToDeci
         )}
       </AnimatePresence>
 
-      {/* ====== 顶部：品牌区 (10%) ====== */}
-      <header className={`absolute top-0 left-0 right-0 flex items-center justify-between z-20 ${isLandscape ? "h-[9%] px-6" : "h-[10%] px-8"}`}>
+      {/* ====== 顶部：品牌区 (10%) — 避让状态栏 / 刘海安全区，避免设置与系统栏重合 ====== */}
+      <header
+        className={`absolute left-0 right-0 flex items-center justify-between z-20 box-border ${isLandscape ? "h-[9%] px-6" : "h-[10%] px-8"} top-0 pt-[max(0.75rem,env(safe-area-inset-top,0px))]`}
+      >
         {/* 左侧：PS² 发光徽标 */}
         <motion.div 
           className="flex items-center gap-2"
@@ -540,9 +570,10 @@ export function WelcomeScreen({ onEnter, onGoToMentor, onGoToLetters, onGoToDeci
           </p>
         </div>
 
-        {/* 右侧：设置 */}
+        {/* 右侧：设置（与 header 一并受 safe-area 下移） */}
         <button
-          className="p-2 rounded-full hover:bg-white/5 transition-colors"
+          type="button"
+          className="p-2 rounded-full hover:bg-white/5 transition-colors shrink-0"
           onClick={() => setShowSettings(true)}
         >
           <Settings className={`${isLandscape ? "w-4 h-4" : "w-5 h-5"} text-white/50`} />
@@ -715,7 +746,14 @@ export function WelcomeScreen({ onEnter, onGoToMentor, onGoToLetters, onGoToDeci
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-white text-lg">设置中心</h3>
-                <button className="text-white/60 hover:text-white" onClick={() => setShowSettings(false)}>
+                <button
+                  className="text-white/60 hover:text-white"
+                  onClick={() => {
+                    setDraftSettings(settings ?? DEFAULT_APP_SETTINGS);
+                    setSettingsHint("");
+                    setShowSettings(false);
+                  }}
+                >
                   关闭
                 </button>
               </div>
@@ -779,6 +817,9 @@ export function WelcomeScreen({ onEnter, onGoToMentor, onGoToLetters, onGoToDeci
                   ))}
                   <label className="block text-xs text-white/60">
                     情绪触发阈值（{Math.round(draftSettings.emotionTriggerThreshold * 100)}%）
+                    <p className="text-[10px] text-white/40 mt-0.5 mb-1">
+                      达到该置信度时触发高焦虑提示与呼吸引导（议会与导师会话均生效）。
+                    </p>
                     <input
                       type="range"
                       min={50}
@@ -788,6 +829,46 @@ export function WelcomeScreen({ onEnter, onGoToMentor, onGoToLetters, onGoToDeci
                         setDraftSettings((s) => ({
                           ...s,
                           emotionTriggerThreshold: Number(e.target.value) / 100,
+                        }))
+                      }
+                      className="w-full mt-1"
+                    />
+                  </label>
+                  <label className="block text-xs text-white/60">
+                    议会：离开主界面后等待上限（{Math.round(draftSettings.councilAwayAbortMs / 1000)} 秒）
+                    <p className="text-[10px] text-white/40 mt-0.5 mb-1">
+                      切到记忆库/洞察等时，后台辩论超过此时长将中止。
+                    </p>
+                    <input
+                      type="range"
+                      min={30}
+                      max={600}
+                      step={30}
+                      value={Math.round(draftSettings.councilAwayAbortMs / 1000)}
+                      onChange={(e) =>
+                        setDraftSettings((s) => ({
+                          ...s,
+                          councilAwayAbortMs: Number(e.target.value) * 1000,
+                        }))
+                      }
+                      className="w-full mt-1"
+                    />
+                  </label>
+                  <label className="block text-xs text-white/60">
+                    导师：离开对话后等待上限（{Math.round(draftSettings.mentorAwayAbortMs / 1000)} 秒）
+                    <p className="text-[10px] text-white/40 mt-0.5 mb-1">
+                      从导师对话返回导师库后，后台生成超过此时长将中止。
+                    </p>
+                    <input
+                      type="range"
+                      min={30}
+                      max={600}
+                      step={30}
+                      value={Math.round(draftSettings.mentorAwayAbortMs / 1000)}
+                      onChange={(e) =>
+                        setDraftSettings((s) => ({
+                          ...s,
+                          mentorAwayAbortMs: Number(e.target.value) * 1000,
                         }))
                       }
                       className="w-full mt-1"
@@ -845,14 +926,21 @@ export function WelcomeScreen({ onEnter, onGoToMentor, onGoToLetters, onGoToDeci
               </div>
               {settingsHint && <p className="mt-3 text-xs text-emerald-300">{settingsHint}</p>}
               <div className="mt-4 flex justify-end gap-2">
-                <button className="px-3 py-2 rounded-lg text-xs text-white/70" onClick={() => setShowSettings(false)}>
+                <button
+                  className="px-3 py-2 rounded-lg text-xs text-white/70"
+                  onClick={() => {
+                    setDraftSettings(settings ?? DEFAULT_APP_SETTINGS);
+                    setSettingsHint("");
+                    setShowSettings(false);
+                  }}
+                >
                   取消
                 </button>
                 <button
                   className="px-3 py-2 rounded-lg text-xs bg-blue-500/25 border border-blue-300/30 text-blue-100"
                   onClick={() => {
                     onSettingsChange?.(draftSettings);
-                    setSettingsHint("设置已保存，下轮对话生效");
+                    setSettingsHint("已写入本地并同步到当前应用，议会与导师页立即使用新设置。");
                   }}
                 >
                   保存设置

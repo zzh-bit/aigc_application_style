@@ -6,6 +6,10 @@ import './globals.css'
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
+/** WebView 加载 .../assets/web/index.html 时，根绝对路径 /icon.png 会落到主机根，无法映射到 assets；与 assetPrefix ./ 一致用相对路径。 */
+const iconBase =
+  process.env.NEXT_STATIC_ASSET_PREFIX === './' ? './' : '/'
+
 export const metadata: Metadata = {
   title: 'PS² 内心议会',
   description: '探索内心的多元声音，让AI帮助您做出更明智的决策',
@@ -13,19 +17,19 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: '/icon-light-32x32.png',
+        url: `${iconBase}icon-light-32x32.png`,
         media: '(prefers-color-scheme: light)',
       },
       {
-        url: '/icon-dark-32x32.png',
+        url: `${iconBase}icon-dark-32x32.png`,
         media: '(prefers-color-scheme: dark)',
       },
       {
-        url: '/icon.svg',
+        url: `${iconBase}icon.svg`,
         type: 'image/svg+xml',
       },
     ],
-    apple: '/apple-icon.png',
+    apple: `${iconBase}apple-icon.png`,
   },
 }
 

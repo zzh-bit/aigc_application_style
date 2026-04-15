@@ -30,7 +30,7 @@ function Check-Health([string]$baseUrl) {
   Step "Check GET /api/health"
   $healthUrl = "$baseUrl/api/health"
   try {
-    $resp = Invoke-WebRequest -Uri $healthUrl -Method GET -TimeoutSec 20
+    $resp = Invoke-WebRequest -UseBasicParsing -Uri $healthUrl -Method GET -TimeoutSec 20
     Report-Success "GET /api/health status=$($resp.StatusCode)"
     Write-Host "Body: $($resp.Content)"
   } catch {
@@ -47,7 +47,7 @@ function Check-CorsPreflight([string]$baseUrl) {
     "Access-Control-Request-Headers" = "content-type,authorization"
   }
   try {
-    $resp = Invoke-WebRequest -Uri $url -Method OPTIONS -Headers $headers -TimeoutSec 20
+    $resp = Invoke-WebRequest -UseBasicParsing -Uri $url -Method OPTIONS -Headers $headers -TimeoutSec 20
     $allowOrigin = $resp.Headers["Access-Control-Allow-Origin"]
     $allowMethods = $resp.Headers["Access-Control-Allow-Methods"]
     $allowHeaders = $resp.Headers["Access-Control-Allow-Headers"]
@@ -82,7 +82,7 @@ function Check-Chat([string]$baseUrl) {
   }
 
   try {
-    $resp = Invoke-WebRequest -Uri $url -Method POST -Headers $headers -Body $payload -TimeoutSec 45
+    $resp = Invoke-WebRequest -UseBasicParsing -Uri $url -Method POST -Headers $headers -Body $payload -TimeoutSec 45
     Report-Success "POST /api/chat status=$($resp.StatusCode)"
     Write-Host "Body(first 280 chars): $($resp.Content.Substring(0, [Math]::Min(280, $resp.Content.Length)))"
   } catch {

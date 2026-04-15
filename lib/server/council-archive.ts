@@ -1,5 +1,6 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { dominantInsightEmotion } from "@/lib/insights-classify";
 
 export type ArchivedEmotion = "happy" | "sad" | "anxious" | "calm" | "excited";
 
@@ -40,20 +41,6 @@ function summarizeToMaxWords(input: string, maxWords: number) {
   if (words.length === 0) return "（空）本次对话没有可总结内容。";
   if (words.length <= maxWords) return words.join(" ");
   return `${words.slice(0, maxWords).join(" ")} ...`;
-}
-
-function detectEmotions(input: string): ArchivedEmotion[] {
-  const text = input.toLowerCase();
-  const has = (keywords: string[]) => keywords.some((k) => text.includes(k));
-
-  const result: ArchivedEmotion[] = [];
-  if (has(["开心", "高兴", "幸福", "满意", "happy", "joy"])) result.push("happy");
-  if (has(["难过", "失落", "伤心", "sad", "depress"])) result.push("sad");
-  if (has(["焦虑", "紧张", "担心", "害怕", "anxious", "panic", "worried"])) result.push("anxious");
-  if (has(["平静", "放松", "安心", "calm", "relaxed"])) result.push("calm");
-  if (has(["激动", "兴奋", "期待", "excited", "thrilled"])) result.push("excited");
-
-  return result.length > 0 ? result : ["calm"];
 }
 
 function extractKeywords(input: string, maxCount: number) {
@@ -140,7 +127,7 @@ export async function saveCouncilArchive(messages: ArchivedMessage[]) {
     : compact.map((m) => `${m.name}: ${m.content}`).join("\n");
 
   const summary = summarizeToMaxWords(primaryText, 50);
-  const emotions = detectEmotions(primaryText);
+  const emotions: ArchivedEmotion[] = [dominantInsightEmotion(primaryText)];
   const keywords = extractKeywords(primaryText, 10);
 
   const record: CouncilArchiveRecord = {

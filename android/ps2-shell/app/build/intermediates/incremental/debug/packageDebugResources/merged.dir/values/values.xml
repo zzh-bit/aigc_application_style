@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="http://schemas.android.com/tools">
+    <string name="app_name">PS² Parallel Self</string>
+    <style name="Theme.PS2Shell" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:statusBarColor">#0A0F1A</item>
+        <item name="android:navigationBarColor">#0A0F1A</item>
+        <item name="android:windowBackground">#0A0F1A</item>
+        <item name="android:windowLightStatusBar" ns1:targetApi="23">false</item>
+    </style>
+</resources>

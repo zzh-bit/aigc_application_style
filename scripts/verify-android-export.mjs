@@ -38,4 +38,18 @@ if (!html.includes("./_next/")) {
   process.exit(1)
 }
 
+// 页面在 .../assets/web/index.html：href="/icon..." 会请求主机根路径，WebViewAssetLoader 的 /assets/ 映射不到。
+if (
+  html.includes('href="/icon') ||
+  html.includes("href='/icon") ||
+  html.includes('href="/apple-icon') ||
+  html.includes("href='/apple-icon")
+) {
+  console.error(
+    "verify-android-export: out/index.html uses root-absolute /icon* or /apple-icon* links.\n" +
+      "Use relative ./ paths in metadata when NEXT_STATIC_ASSET_PREFIX=./ (see app/layout.tsx).",
+  )
+  process.exit(1)
+}
+
 console.log("verify-android-export: OK (relative ./_next for WebView)")

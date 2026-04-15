@@ -65,7 +65,8 @@ function normalizeChatMessages(input: {
     .map((m) => ({
       role: m.role,
       content: m.content.slice(0, safeMaxCharsPerMessage),
-    }));
+    }))
+    .filter((m) => m.content.trim().length > 0);
 
   const reversed = normalized.slice().reverse();
   const picked: ChatMessage[] = [];
