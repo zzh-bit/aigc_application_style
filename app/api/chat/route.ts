@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { randomUUID } from "node:crypto";
 import { buildMentorSystemPrompt, getMentorPromptProfile } from "@/lib/mentor/prompt-library";
 import { applyCorsHeaders, corsPreflight } from "@/app/api/_cors";
 
@@ -198,6 +199,34 @@ function buildDeepSeekUrlCandidates(url: string) {
   }
 }
 
+function deriveVivoAppId(apiKey: string) {
+  const envAppId = process.env.VIVO_APP_ID?.trim();
+  if (envAppId) return envAppId;
+  const key = apiKey.trim();
+  if (key.includes(".")) return key.split(".")[0]?.trim() || "";
+  if (key.includes(":")) return key.split(":")[0]?.trim() || "";
+  return "";
+}
+
+function buildProviderRequestOptions(input: { url: string; apiKey: string }) {
+  const target = new URL(input.url);
+  const isVivo = /api-ai\.vivo\.com\.cn/i.test(target.hostname);
+  if (isVivo && !target.searchParams.has("request_id")) {
+    target.searchParams.set("request_id", randomUUID());
+  }
+
+  const headers: Record<string, string> = {
+    authorization: `Bearer ${input.apiKey}`,
+    "content-type": "application/json",
+  };
+  if (isVivo) {
+    const appId = deriveVivoAppId(input.apiKey);
+    if (appId) headers.app_id = appId;
+  }
+
+  return { url: target.toString(), headers };
+}
+
 async function callDeepSeekChat(input: {
   apiKey: string;
   url: string;
@@ -210,12 +239,10 @@ async function callDeepSeekChat(input: {
 
   for (const url of urlCandidates) {
     try {
-      const res = await fetch(url, {
+      const providerReq = buildProviderRequestOptions({ url, apiKey: input.apiKey });
+      const res = await fetch(providerReq.url, {
         method: "POST",
-        headers: {
-          authorization: `Bearer ${input.apiKey}`,
-          "content-type": "application/json",
-        },
+        headers: providerReq.headers,
         body: JSON.stringify({
           model: input.model,
           messages: input.messages,
@@ -281,12 +308,10 @@ async function callDeepSeekChatStream(input: {
 
   for (const url of urlCandidates) {
     try {
-      const res = await fetch(url, {
+      const providerReq = buildProviderRequestOptions({ url, apiKey: input.apiKey });
+      const res = await fetch(providerReq.url, {
         method: "POST",
-        headers: {
-          authorization: `Bearer ${input.apiKey}`,
-          "content-type": "application/json",
-        },
+        headers: providerReq.headers,
         body: JSON.stringify({
           model: input.model,
           messages: input.messages,

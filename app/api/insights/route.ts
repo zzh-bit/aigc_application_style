@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { randomUUID } from "node:crypto";
 import {
   readCouncilArchives,
   type ArchivedEmotion,
@@ -14,6 +15,24 @@ import {
 export const runtime = "nodejs";
 // 兼容 `output: "export"`：静态导出时禁止动态评估该路由
 export const dynamic = "force-static";
+
+function buildProviderRequestConfig(apiKey: string) {
+  const baseUrl = process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com/chat/completions";
+  const url = new URL(baseUrl);
+  const isVivo = /api-ai\.vivo\.com\.cn/i.test(url.hostname);
+  if (isVivo && !url.searchParams.has("request_id")) {
+    url.searchParams.set("request_id", randomUUID());
+  }
+  const headers: Record<string, string> = {
+    authorization: `Bearer ${apiKey}`,
+    "content-type": "application/json",
+  };
+  const vivoAppId = process.env.VIVO_APP_ID?.trim();
+  if (isVivo && vivoAppId) {
+    headers.app_id = vivoAppId;
+  }
+  return { url: url.toString(), headers };
+}
 
 const emotionLabels: Record<ArchivedEmotion, string> = {
   happy: "愉悦",
@@ -145,12 +164,10 @@ async function buildAiBiasCards(input: {
     sample || "（无）",
   ].join("\n");
 
-  const res = await fetch("https://api.deepseek.com/chat/completions", {
+  const providerReq = buildProviderRequestConfig(apiKey);
+  const res = await fetch(providerReq.url, {
     method: "POST",
-    headers: {
-      authorization: `Bearer ${apiKey}`,
-      "content-type": "application/json",
-    },
+    headers: providerReq.headers,
     body: JSON.stringify({
       model,
       stream: false,
@@ -214,12 +231,10 @@ async function buildAiExplanation(input: {
     `当前情绪Top: ${topEmotion}`,
   ].join("\n");
 
-  const res = await fetch("https://api.deepseek.com/chat/completions", {
+  const providerReq = buildProviderRequestConfig(apiKey);
+  const res = await fetch(providerReq.url, {
     method: "POST",
-    headers: {
-      authorization: `Bearer ${apiKey}`,
-      "content-type": "application/json",
-    },
+    headers: providerReq.headers,
     body: JSON.stringify({
       model,
       stream: false,

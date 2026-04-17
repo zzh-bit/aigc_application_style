@@ -41,23 +41,23 @@ const roleShadowColors: Record<RoleType, string> = {
   host: "shadow-host/50",
 };
 
-// 让四周分布更均匀：四派系固定四角；导师留在顶部居中；底部预留输入区高度
+// 基础布局：顶部给未来派/主持人，底部给激进派/保守派；导师固定顶部居中
 const positionClasses: Record<string, string> = {
-  "top-left": "top-4 left-4 md:top-6 md:left-6",
-  "top-right": "top-4 right-4 md:top-6 md:right-6",
-  "top-center": "top-0.5 left-1/2 -translate-x-1/2 md:top-2",
-  "bottom-left": "bottom-32 left-4 md:bottom-36 md:left-6",
-  "bottom-right": "bottom-32 right-4 md:bottom-36 md:right-6",
+  // 竖屏：两组派系分上下两排，确保同组水平对齐
+  "top-left": "top-0 left-4 md:top-2 md:left-6",
+  "top-right": "top-0 right-4 md:top-2 md:right-6",
+  "top-center": "top-0 left-1/2 -translate-x-1/2 md:top-1",
+  "bottom-left": "bottom-40 left-4 md:bottom-44 md:left-6",
+  "bottom-right": "bottom-40 right-4 md:bottom-44 md:right-6",
 };
 
 const landscapePositionClasses: Record<string, string> = {
-  // 横屏：左侧顺序需要是 PS² -> 激进派 -> 未来派，因此激进派放到中上段
-  "top-left": "top-[39%] -translate-y-1/2 left-4 md:left-6",
-  "top-right": "top-[39%] -translate-y-1/2 right-4 md:right-6",
-  // 顶到最上侧：与顶部 PS² 齐平或略高
+  // 横屏：未来派/主持人占原中排；激进派/保守派上移并与导师同水平
+  "top-left": "top-[36%] -translate-y-1/2 left-4 md:left-6",
+  "top-right": "top-[36%] -translate-y-1/2 right-4 md:right-6",
   "top-center": "top-1 left-1/2 -translate-x-1/2",
-  "bottom-left": "bottom-28 left-4 md:bottom-32 md:left-6",
-  "bottom-right": "bottom-28 right-4 md:bottom-32 md:right-6",
+  "bottom-left": "top-1 left-4 md:left-6",
+  "bottom-right": "top-1 right-4 md:right-6",
 };
 
 const roleIcons: Record<RoleType, React.ReactNode> = {

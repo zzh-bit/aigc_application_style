@@ -33,7 +33,6 @@ function PS2AppInner() {
   const [currentMentorId, setCurrentMentorId] = useState<string | null>(null);
   const [mentorChatSessionId, setMentorChatSessionId] = useState(0);
   const [showProjection, setShowProjection] = useState(false);
-  const [openProjectionAfterCouncil, setOpenProjectionAfterCouncil] = useState(false);
   const [showBreathing, setShowBreathing] = useState(false);
   const [anxietyLevel, setAnxietyLevel] = useState(0);
   const [isHighAnxiety, setIsHighAnxiety] = useState(false);
@@ -82,13 +81,6 @@ function PS2AppInner() {
     return () => window.clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    if (currentPage === "council" && openProjectionAfterCouncil) {
-      setShowProjection(true);
-      setOpenProjectionAfterCouncil(false);
-    }
-  }, [currentPage, openProjectionAfterCouncil]);
-
   // 使用 AnimatePresence 而不是条件返回，保持 hooks 调用顺序一致
   return (
     <>
@@ -105,8 +97,8 @@ function PS2AppInner() {
               onGoToMentor={() => setCurrentPage("mentor")}
               onGoToLetters={() => setCurrentPage("letters")}
               onGoToDecisionTree={() => {
-                setOpenProjectionAfterCouncil(true);
                 setCurrentPage("council");
+                setShowProjection(true);
               }}
               settings={appSettings}
               onSettingsChange={handleSettingsChange}
@@ -137,25 +129,25 @@ function PS2AppInner() {
               </div>
 
               <div
-                className={`fixed left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 p-2 bg-card/60 ${
+                className={`fixed left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 p-1.5 bg-card/60 ${
                   currentPage === "council" ? "" : "bottom-6"
                 } ${
                   perf.lowPerformanceMode ? "" : "backdrop-blur-sm"
                 } rounded-full border border-border/50`}
                 style={
                   currentPage === "council"
-                    ? { bottom: "calc(var(--ps2-council-footer-height, 0px) + max(8px, env(safe-area-inset-bottom)))" }
+                    ? { bottom: "calc(var(--ps2-council-footer-height, 0px) + max(2px, env(safe-area-inset-bottom)) - 18px)" }
                     : undefined
                 }
               >
                 <div className="relative group">
                   <motion.button
                     onClick={() => setCurrentPage("welcome")}
-                    className="flex items-center gap-2 px-3 py-2 rounded-full text-sm text-muted-foreground hover:text-foreground hover:bg-card/80 transition-colors"
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs text-muted-foreground hover:text-foreground hover:bg-card/80 transition-colors"
                     whileHover={perf.lowPerformanceMode ? undefined : { scale: 1.05 }}
                     whileTap={perf.lowPerformanceMode ? undefined : { scale: 0.95 }}
                   >
-                    <Home className="w-4 h-4" />
+                    <Home className="w-3.5 h-3.5" />
                   </motion.button>
                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 rounded bg-card/90 border border-border/50 text-xs text-foreground whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                     返回首页
@@ -165,11 +157,11 @@ function PS2AppInner() {
                 <div className="relative group">
                   <motion.button
                     onClick={() => setShowProjection(true)}
-                    className="flex items-center gap-2 px-4 py-2 rounded-full text-sm text-muted-foreground hover:text-foreground hover:bg-card/80 transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs text-muted-foreground hover:text-foreground hover:bg-card/80 transition-colors"
                     whileHover={perf.lowPerformanceMode ? undefined : { scale: 1.05 }}
                     whileTap={perf.lowPerformanceMode ? undefined : { scale: 0.95 }}
                   >
-                    <ChevronUp className="w-4 h-4" />
+                    <ChevronUp className="w-3.5 h-3.5" />
                     <span>推演</span>
                   </motion.button>
                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 rounded bg-card/90 border border-border/50 text-xs text-foreground whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
@@ -180,11 +172,11 @@ function PS2AppInner() {
                 <div className="relative group">
                   <motion.button
                     onClick={() => setCurrentPage("memory")}
-                    className="flex items-center gap-2 px-3 py-2 rounded-full text-sm text-muted-foreground hover:text-foreground hover:bg-card/80 transition-colors"
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs text-muted-foreground hover:text-foreground hover:bg-card/80 transition-colors"
                     whileHover={perf.lowPerformanceMode ? undefined : { scale: 1.05 }}
                     whileTap={perf.lowPerformanceMode ? undefined : { scale: 0.95 }}
                   >
-                    <Database className="w-4 h-4" />
+                    <Database className="w-3.5 h-3.5" />
                   </motion.button>
                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 rounded bg-card/90 border border-border/50 text-xs text-foreground whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                     记忆库
@@ -194,11 +186,11 @@ function PS2AppInner() {
                 <div className="relative group">
                   <motion.button
                     onClick={() => setCurrentPage("insights")}
-                    className="flex items-center gap-2 px-3 py-2 rounded-full text-sm text-muted-foreground hover:text-foreground hover:bg-card/80 transition-colors"
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs text-muted-foreground hover:text-foreground hover:bg-card/80 transition-colors"
                     whileHover={perf.lowPerformanceMode ? undefined : { scale: 1.05 }}
                     whileTap={perf.lowPerformanceMode ? undefined : { scale: 0.95 }}
                   >
-                    <BarChart3 className="w-4 h-4" />
+                    <BarChart3 className="w-3.5 h-3.5" />
                   </motion.button>
                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 rounded bg-card/90 border border-border/50 text-xs text-foreground whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                     数据洞察

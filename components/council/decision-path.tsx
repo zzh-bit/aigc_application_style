@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, DollarSign, Zap, X } from "lucide-react";
+import { Heart, DollarSign, Zap } from "lucide-react";
 import { useMemo, useState } from "react";
 import { usePerformanceProfile } from "@/lib/performance";
 import {
@@ -42,7 +42,7 @@ interface DecisionPathProps {
   question: string;
   branches: DecisionBranch[];
   selectedBranch: string | null;
-  onSelectBranch: (id: string) => void;
+  onSelectBranch: (id: string | null) => void;
   compareSummary?: string;
   /** 服务端推荐的默认对比分支（打开时同步到下拉框） */
   defaultCompare?: { branchA: string; branchB: string } | null;
@@ -107,6 +107,24 @@ function factionSupportText(support?: number): string {
   if (typeof support !== "number" || Number.isNaN(support)) return "--";
   const s = Math.max(0, Math.min(100, Math.round(support)));
   return `${s}%`;
+}
+
+/** 与后端约定一致：event → finance → emotion 三关键词 */
+function pickNodeLabel(nodes: PathNode[] | undefined, type: NodeType): string {
+  if (!nodes?.length) return "—";
+  const n = nodes.find((x) => x.type === type);
+  const t = n?.label?.replace(/\s+/g, " ").trim();
+  return t && t.length > 0 ? t : "—";
+}
+
+/** 决策树末端一行展示用（控制长度避免与邻分支重叠） */
+function branchKeywordLine(branch: DecisionBranch, maxLen: number): string {
+  const e = pickNodeLabel(branch.nodes, "event");
+  const f = pickNodeLabel(branch.nodes, "finance");
+  const m = pickNodeLabel(branch.nodes, "emotion");
+  const s = `${e} · ${f} · ${m}`;
+  if (s.length <= maxLen) return s;
+  return `${s.slice(0, Math.max(4, maxLen - 1))}…`;
 }
 
 function BranchCompareSelectRow({
@@ -268,21 +286,27 @@ export function DecisionPath({
     setSelectedFaction(null);
   };
 
+  const closeBranchDrawer = () => {
+    setSelectedFaction(null);
+    onSelectBranch(null);
+  };
+
   const handleFactionClick = (factionId: string) => {
     setSelectedFaction(prev => (prev === factionId ? null : factionId));
   };
 
   // SVG 坐标系：viewBox="0 0 100 100"（树在小屏/横屏下更容易被裁切，需更克制的缩放与半径）
   const CX = 50;
-  const CY = 30;
+  const CY = 26;
   const TREE_SCALE = 1.18;
   const treeTransform = `translate(${CX * (1 - TREE_SCALE)} ${(CY + 1) * (1 - TREE_SCALE)}) scale(${TREE_SCALE})`;
   const tx = CX * (1 - TREE_SCALE);
   const ty = (CY + 1) * (1 - TREE_SCALE);
 
-  const selectedBranchGeom = useMemo(() => {
-    if (!selectedBranchData) return null;
-    const index = branches.findIndex((b) => b.id === selectedBranchData.id);
+  const selectedBranchGeom = (() => {
+    const selectedBranchId = selectedBranchData?.id ?? null;
+    if (!selectedBranchId) return null;
+    const index = branches.findIndex((b) => b.id === selectedBranchId);
     if (index < 0) return null;
     const totalBranches = branches.length;
     const spread = 76;
@@ -295,7 +319,7 @@ export function DecisionPath({
     const xT = (endX + tx) * TREE_SCALE;
     const yT = (endY + ty) * TREE_SCALE;
     return { xT, yT };
-  }, [selectedBranchData, branches, CX, CY, TREE_SCALE, tx, ty]);
+  })();
 
   return (
     <div className="relative w-full h-full overflow-hidden">
@@ -326,7 +350,7 @@ export function DecisionPath({
 
       <div className="relative z-10 h-full min-h-0 flex flex-col">
         {/* 上方：决策树（左 3/4） + 分支比较（右侧） */}
-        <div className="shrink-0 h-[72dvh] md:h-[75dvh] min-h-[14rem] flex min-w-0">
+        <div className="shrink-0 h-[72dvh] md:h-[75dvh] min-h-[14rem] flex min-w-0 -mt-2 md:-mt-3">
           {/* ── 决策树 SVG：占 3/4，略左移，避免文字被遮挡 ── */}
           <div className="relative z-30 flex-[3] min-w-0 overflow-visible px-2 sm:px-4 md:pl-3 md:pr-1 md:-translate-x-1">
             {/* 顶部主题：用 HTML 叠层，避免 SVG/裁切导致遮挡 */}
@@ -490,6 +514,15 @@ export function DecisionPath({
                   >
                     {Math.round(branch.probability * 100)}%
                   </text>
+                  <text
+                    x={endX}
+                    y={endY + 13.2}
+                    textAnchor="middle"
+                    fontSize="1.75"
+                    fill="rgba(255,255,255,0.38)"
+                  >
+                    {branchKeywordLine(branch, 34)}
+                  </text>
                 </motion.g>
                     </g>
                   );
@@ -535,60 +568,8 @@ export function DecisionPath({
           )}
         </div>
 
-        {/* 下方：派系/详情（占 1/4，可滚动） */}
+        {/* 下方：分支比较（小屏） */}
         <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-4 sm:px-6 pb-4 sm:pb-6 space-y-4">
-
-        {/* 意见详情卡片（点击派系后意见已在图标上方展示，这里保留未选派系时的分支总览） */}
-        <AnimatePresence mode="wait">
-          {selectedBranch && !selectedFaction ? (
-            <motion.div
-              key="description"
-              className={`rounded-2xl border border-white/15 ${perf.lowPerformanceMode ? "" : "backdrop-blur-xl"} px-5 py-4 bg-white/5`}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0  }}
-              exit={{   opacity: 0, y: 8   }}
-              transition={{ duration: 0.22 }}
-            >
-              {(() => {
-                const sel = branches.find((b) => b.id === selectedBranch);
-                const emo = sel?.emotionForecast;
-                return (
-                  <>
-                    <div className="flex items-center gap-4 mb-2 text-xs text-white/50 flex-wrap">
-                      <span className="flex items-center gap-1">
-                        <Heart className="w-3 h-3 text-emerald-400" /> 情感
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <DollarSign className="w-3 h-3 text-blue-400" /> 财务
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Zap className="w-3 h-3 text-red-400" /> 事件
-                      </span>
-                      {emo && (
-                        <span className="text-white/60">
-                          情绪预测：{EMOTION_LABEL[emo] ?? emo}
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-sm text-white/80 leading-relaxed">{sel?.description}</p>
-                  </>
-                );
-              })()}
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
-
-        {/* 无选择时的提示 */}
-        {!selectedBranch && (
-          <motion.p
-            className="text-right text-xs text-white/35 pr-1"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2 }}
-          >
-            点击路径后，点派系图标可在图标上方查看对应意见
-          </motion.p>
-        )}
 
         {/* 分支比较视图（小屏保底放在底部；中大屏已移到右侧） */}
         {branches.length >= 2 && (
@@ -605,6 +586,97 @@ export function DecisionPath({
           </div>
         )}
       </div>
+
+      {/* 选中分支详情：底部抽屉（避免在底部提示条之下不可见） */}
+      <AnimatePresence>
+        {selectedBranch && !selectedFaction ? (
+          <motion.div
+            key="branch-drawer"
+            className="absolute inset-0 z-[120]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div
+              className="absolute inset-0 bg-black/35"
+              onClick={closeBranchDrawer}
+              role="button"
+              aria-label="关闭分支详情"
+            />
+            <motion.div
+              className={`absolute left-0 right-0 bottom-0 mx-auto w-full max-w-3xl rounded-t-3xl border border-white/15 bg-[rgba(10,15,26,0.92)] ${perf.lowPerformanceMode ? "" : "backdrop-blur-xl"} shadow-2xl`}
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 28, stiffness: 280 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="px-5 pt-3 pb-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="text-[10px] uppercase tracking-wide text-white/45">路径详情</div>
+                    <div className="mt-0.5 text-sm font-medium text-white/90 truncate">
+                      {branches.find((b) => b.id === selectedBranch)?.name ?? "已选择路径"}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={closeBranchDrawer}
+                    className="shrink-0 rounded-full border border-white/12 bg-white/5 px-3 py-1.5 text-xs text-white/70 hover:bg-white/10"
+                  >
+                    收起
+                  </button>
+                </div>
+
+                <div className="mt-3 max-h-[52vh] overflow-y-auto pr-1">
+                  {(() => {
+                    const sel = branches.find((b) => b.id === selectedBranch);
+                    const emo = sel?.emotionForecast;
+                    const ev = sel ? pickNodeLabel(sel.nodes, "event") : "—";
+                    const fi = sel ? pickNodeLabel(sel.nodes, "finance") : "—";
+                    const em = sel ? pickNodeLabel(sel.nodes, "emotion") : "—";
+                    return (
+                      <>
+                        <div className="mb-3 rounded-xl border border-white/10 bg-black/25 px-3 py-2.5 space-y-1.5">
+                          <div className="text-[10px] font-medium uppercase tracking-wide text-white/40">
+                            路径关键词（决策树提炼）
+                          </div>
+                          <div className="flex items-start gap-2 text-xs text-white/85 leading-snug">
+                            <Zap className="w-3.5 h-3.5 shrink-0 mt-0.5 text-amber-400/90" />
+                            <span>
+                              <span className="text-white/45">事件</span> · {ev}
+                            </span>
+                          </div>
+                          <div className="flex items-start gap-2 text-xs text-white/85 leading-snug">
+                            <DollarSign className="w-3.5 h-3.5 shrink-0 mt-0.5 text-sky-400/90" />
+                            <span>
+                              <span className="text-white/45">财务</span> · {fi}
+                            </span>
+                          </div>
+                          <div className="flex items-start gap-2 text-xs text-white/85 leading-snug">
+                            <Heart className="w-3.5 h-3.5 shrink-0 mt-0.5 text-emerald-400/90" />
+                            <span>
+                              <span className="text-white/45">情绪</span> · {em}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3 mb-2 text-xs text-white/45 flex-wrap">
+                          {emo && (
+                            <span className="text-white/55">
+                              路径情绪预测：{EMOTION_LABEL[emo] ?? emo}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-white/80 leading-relaxed">{sel?.description}</p>
+                      </>
+                    );
+                  })()}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </div>
     </div>
   );

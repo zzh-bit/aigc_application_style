@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { randomUUID } from "node:crypto";
 import { applyCors, corsPreflight } from "@/app/api/_cors";
 import {
   buildGroundedProjectionFromCouncil,
@@ -166,6 +167,36 @@ function clipStr(s: string, max: number): string {
   return `${t.slice(0, Math.max(1, max - 1))}…`;
 }
 
+function topicKeywords(topic: string): string[] {
+  const zh = topic.match(/[\u4e00-\u9fa5]{2,}/g) ?? [];
+  const en = topic.match(/[a-zA-Z][a-zA-Z0-9_-]{2,}/g) ?? [];
+  const stop = /还是|要不要|该不该|是否|怎么|如何|应该|选择|请据全文归纳核心决策|the|and|for|with|this|that|what|how|why/i;
+  return [...new Set([...zh, ...en].map((x) => x.trim()).filter((x) => x && !stop.test(x)))].slice(0, 10);
+}
+
+function textHitsTopic(text: string, keywords: string[]): boolean {
+  if (!keywords.length) return true;
+  const t = text.toLowerCase();
+  return keywords.some((k) => {
+    const kk = k.toLowerCase();
+    if (kk.length >= 4) return t.includes(kk) || t.includes(kk.slice(-4));
+    return t.includes(kk);
+  });
+}
+
+function anchoredOrFallback(candidate: string, fallback: string, keywords: string[]): string {
+  const c = (candidate ?? "").trim();
+  if (!c) return fallback;
+  return textHitsTopic(c, keywords) ? c : fallback;
+}
+
+function containsBannedMeetingLexicon(text: string): boolean {
+  // 与 lib/projection-grounded.ts 的会议词倾向一致：当主题不是“开会投票”语境时，这些词通常意味着跑题
+  return /妥协通过|强硬否决|延期再议|表决通过|暂缓执行|原则通过|议案通过|投票否决|会议暂缓|否决案|复议通过/.test(
+    text,
+  );
+}
+
 /**
  * 将本地主题锚定骨架交给大模型：固定 id / 条数，展开具体选项并把 nodes 写成短语级关键词。
  */
@@ -264,9 +295,11 @@ function mergeOpinions(
 function reconcileBranchesWithSkeleton(
   parsedBranches: unknown,
   skeleton: GroundedBranch[],
+  topic: string,
 ): ProjectionBranch[] {
   const arr = Array.isArray(parsedBranches) ? parsedBranches : [];
   const byId = new Map<string, Record<string, unknown>>();
+  const keywords = topicKeywords(topic);
   for (const p of arr) {
     if (p && typeof p === "object" && typeof (p as Record<string, unknown>).id === "string") {
       byId.set((p as Record<string, unknown>).id as string, p as Record<string, unknown>);
@@ -276,9 +309,23 @@ function reconcileBranchesWithSkeleton(
     const base = mapGroundedToProjection([skel])[0];
     const llm = byId.get(skel.id) ?? (arr[idx] as Record<string, unknown> | undefined);
     const raw = llm && typeof llm === "object" ? llm : {};
-    const name = typeof raw.name === "string" && raw.name.trim() ? raw.name.trim() : base.name;
-    const description =
-      typeof raw.description === "string" && raw.description.trim() ? raw.description.trim() : base.description;
+    const rawName = typeof raw.name === "string" ? raw.name.trim() : "";
+    const rawDescription = typeof raw.description === "string" ? raw.description.trim() : "";
+    const rawOpinionBlob = [
+      (raw.opinions as Record<string, Record<string, string>> | undefined)?.radical?.opinion ?? "",
+      (raw.opinions as Record<string, Record<string, string>> | undefined)?.future?.opinion ?? "",
+      (raw.opinions as Record<string, Record<string, string>> | undefined)?.conservative?.opinion ?? "",
+    ].join(" ");
+    const mergedText = `${rawName} ${rawDescription} ${rawOpinionBlob}`.trim();
+    // 过去这里用 strongAnchor（关键词命中）作为硬门槛，容易把“同义改写但仍相关”的 LLM 具体化结果误判回退成骨架模板。
+    // 新策略：仅在明显跑题（会议表决套话等）时回退；其余情况优先保留 LLM 输出，再用关键词锚定做“软约束”。
+    const looksLikeMeeting = containsBannedMeetingLexicon(mergedText) && !containsBannedMeetingLexicon(topic);
+    const name = looksLikeMeeting
+      ? base.name
+      : (anchoredOrFallback(rawName, base.name, keywords) || base.name);
+    const description = looksLikeMeeting
+      ? base.description
+      : (anchoredOrFallback(rawDescription, base.description, keywords) || base.description);
     const emotionForecast = EMOTION_FORECAST.has(raw.emotionForecast as string)
       ? (raw.emotionForecast as ProjectionBranch["emotionForecast"])
       : base.emotionForecast;
@@ -298,6 +345,24 @@ function reconcileBranchesWithSkeleton(
 }
 
 export const runtime = "nodejs";
+
+function buildProviderRequestConfig(apiKey: string) {
+  const baseUrl = process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com/chat/completions";
+  const url = new URL(baseUrl);
+  const isVivo = /api-ai\.vivo\.com\.cn/i.test(url.hostname);
+  if (isVivo && !url.searchParams.has("request_id")) {
+    url.searchParams.set("request_id", randomUUID());
+  }
+  const headers: Record<string, string> = {
+    authorization: `Bearer ${apiKey}`,
+    "content-type": "application/json",
+  };
+  const vivoAppId = process.env.VIVO_APP_ID?.trim();
+  if (isVivo && vivoAppId) {
+    headers.app_id = vivoAppId;
+  }
+  return { url: url.toString(), headers };
+}
 
 export async function POST(req: Request) {
   let body: ProjectionRequestBody;
@@ -342,12 +407,10 @@ export async function POST(req: Request) {
       }));
       const branchSkeletonJson = JSON.stringify(skeleton);
       const prompt = buildTemplateGuidedProjectionPrompt(promptTopic, contextMessages, branchSkeletonJson);
-      const res = await fetch("https://api.deepseek.com/chat/completions", {
+      const providerReq = buildProviderRequestConfig(apiKey);
+      const res = await fetch(providerReq.url, {
         method: "POST",
-        headers: {
-          authorization: `Bearer ${apiKey}`,
-          "content-type": "application/json",
-        },
+        headers: providerReq.headers,
         body: JSON.stringify({
           model,
           messages: [{ role: "user", content: prompt }],
@@ -369,7 +432,7 @@ export async function POST(req: Request) {
           };
 
           if (parsed.branches && Array.isArray(parsed.branches) && parsed.branches.length > 0) {
-            const branches = reconcileBranchesWithSkeleton(parsed.branches, grounded.branches);
+            const branches = reconcileBranchesWithSkeleton(parsed.branches, grounded.branches, promptTopic);
 
             // 模板合并后 id/条数已锚定；启发式跑题检测易误判（同义改写、模型换词），不再丢弃 LLM 结果
             if (

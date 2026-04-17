@@ -188,9 +188,9 @@ export function DataInsights({ onBack }: DataInsightsProps) {
   };
 
   return (
-    <div className="relative w-full min-h-screen overflow-hidden">
+    <div className="relative w-full h-[100dvh] overflow-hidden">
       <NebulaBackground />
-      <div className="relative z-10 w-full min-h-screen p-6">
+      <div className="relative z-10 h-full w-full overflow-y-auto p-6 pb-24">
         <header className="flex items-center justify-between mb-8">
           <motion.button
             onClick={onBack}

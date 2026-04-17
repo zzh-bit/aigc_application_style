@@ -122,6 +122,8 @@ export function ProjectionView({ isOpen, onClose }: ProjectionViewProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [blockedHint, setBlockedHint] = useState<string | null>(null);
+  /** 服务端返回 meta.source === llm 时为 true，用于顶部提示「AI 已写关键词」 */
+  const [llmProjection, setLlmProjection] = useState(false);
 
   const fetchProjection = useCallback(async (contextMessages: CouncilContextMessage[] = []) => {
     const gate = await readCouncilProjectionGate();
@@ -133,6 +135,7 @@ export function ProjectionView({ isOpen, onClose }: ProjectionViewProps) {
       setDefaultCompare(null);
       setCompareSummary("");
       setComparedDelta(null);
+      setLlmProjection(false);
       setQuestion("议会对话");
       if (gate.suppress && gate.hasUserTurn) {
         setBlockedHint("本轮正在归档或刚完成决策，请等待结束后再打开推演；或开始新一轮议会对话。");
@@ -168,6 +171,7 @@ export function ProjectionView({ isOpen, onClose }: ProjectionViewProps) {
         setCompareSummary(res.compared.summary);
         setComparedDelta(res.compared.delta ?? null);
         const src = res.meta?.source;
+        setLlmProjection(src === "llm");
         if (src === "grounded" && res.meta?.llmAttempted) {
           setError(
             "已连上 API，但服务端未走通 AI 推演（请检查服务器 DEEPSEEK_API_KEY / DeepSeek 配额）。当前为规则骨架。",
@@ -185,6 +189,7 @@ export function ProjectionView({ isOpen, onClose }: ProjectionViewProps) {
       throw new Error("Empty projection branches from API");
     } catch (e) {
       clientLog("warn", "projection.api", "cloud failed fallback local", { detail: String(e) });
+      setLlmProjection(false);
       setError("云端推演暂不可用，已切换本地兜底。");
       const grounded = buildGroundedProjectionFromCouncil(gate.displayTopic, contextMessages);
       setQuestion(gate.displayTopic);
@@ -221,6 +226,7 @@ export function ProjectionView({ isOpen, onClose }: ProjectionViewProps) {
         setCompareSummary("");
         setComparedDelta(null);
         setError(null);
+        setLlmProjection(false);
         return;
       }
       setBlockedHint(null);
@@ -242,7 +248,7 @@ export function ProjectionView({ isOpen, onClose }: ProjectionViewProps) {
           transition={{ type: "spring", damping: 25, stiffness: 200 }}
         >
           {/* 顶部栏 */}
-          <div className="flex-shrink-0 z-50 flex flex-col gap-3 px-4 pt-4 pb-2 border-b border-white/5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+          <div className="flex-shrink-0 z-50 flex flex-col gap-3 px-4 pt-4 pb-2 sm:flex-row sm:items-center sm:justify-between sm:px-6">
             <motion.h2
               className="text-lg font-medium text-foreground"
               initial={{ opacity: 0 }}
@@ -253,12 +259,18 @@ export function ProjectionView({ isOpen, onClose }: ProjectionViewProps) {
             </motion.h2>
             <div className="flex flex-wrap items-center gap-2 min-w-0">
               <div
-                className="min-w-0 max-w-[min(20rem,52vw)] flex-1 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-left backdrop-blur-sm"
+                className="inline-flex h-10 items-center rounded-xl border border-white/10 bg-black/30 px-3 text-left backdrop-blur-sm w-[132px] sm:w-[156px]"
                 title={question}
               >
-                <div className="text-[10px] uppercase tracking-wide text-muted-foreground/90">归纳议题</div>
-                <div className="text-sm font-medium text-foreground/95 truncate">
-                  {loading && branches.length === 0 ? "生成中…" : topicDisplayBrief}
+                <div className="min-w-0">
+                  <div className="text-[11px] font-medium text-foreground/95 truncate">
+                    {loading && branches.length === 0 ? "生成中…" : `归纳：${topicDisplayBrief}`}
+                  </div>
+                  {llmProjection && !loading && branches.length > 0 && (
+                    <div className="text-[10px] text-emerald-400/85 leading-tight truncate">
+                      AI 推演
+                    </div>
+                  )}
                 </div>
               </div>
               <button

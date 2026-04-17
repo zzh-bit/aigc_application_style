@@ -104,11 +104,11 @@ const MENTOR_IMPORT_OPTIONS = [
 ];
 
 const roles: { role: RoleType; name: string; position: "top-left" | "top-right" | "top-center" | "bottom-left" | "bottom-right" }[] = [
-  { role: "radical", name: "激进派", position: "top-left" },
-  { role: "conservative", name: "保守派", position: "top-right" },
+  { role: "future", name: "未来派", position: "top-left" },
+  { role: "host", name: "主持人", position: "top-right" },
   { role: "mentor", name: "智库导师", position: "top-center" },
-  { role: "future", name: "未来派", position: "bottom-left" },
-  { role: "host", name: "主持人", position: "bottom-right" },
+  { role: "radical", name: "激进派", position: "bottom-left" },
+  { role: "conservative", name: "保守派", position: "bottom-right" },
 ];
 const LOCAL_ARCHIVES_KEY = "council.archives.local.v1";
 /** 压力环 >50 时自然回落，每降 1 点间隔（毫秒） */
@@ -116,7 +116,7 @@ const MOOD_LEVEL_DECAY_MS = 10_000;
 /** 命中消极词汇或 API 判焦虑/难过后的自然回落暂停时长 */
 const MOOD_DECAY_PAUSE_AFTER_NEG_MS = 50_000;
 /** 议会底部导航在输入栏上方悬浮时，为消息区预留的硬性避让高度 */
-const COUNCIL_NAV_CLEARANCE_PX = 74;
+const COUNCIL_NAV_CLEARANCE_PX = 96;
 
 type StressBand = "low" | "mid" | "high" | "severe";
 
@@ -1111,10 +1111,10 @@ export function CouncilMain({
 
         {/* 中央消息区：加宽的圆角容器，内部上下滑动查看 */}
         <div
-          className={`relative z-10 w-full max-w-3xl transition-opacity duration-300 ${
+          className={`relative z-10 w-full max-w-[min(90vw,60rem)] transition-opacity duration-300 ${
             isResettingRound ? "opacity-0" : "opacity-100"
           }`}
-          style={{ marginTop: isLandscape ? 24 : undefined, marginBottom: COUNCIL_NAV_CLEARANCE_PX - 8 }}
+          style={{ marginTop: isLandscape ? 24 : undefined, marginBottom: COUNCIL_NAV_CLEARANCE_PX - 4 }}
         >
           {citedMemories.length > 0 && (
             <div className="absolute left-[-0.25rem] md:left-[-0.5rem] bottom-[-1.8rem] md:bottom-[-2rem] flex max-w-[72vw] flex-wrap justify-start gap-2 pr-2">
@@ -1131,30 +1131,44 @@ export function CouncilMain({
           )}
 
           {messages.length > 0 ? (
-            <div className="w-full px-2">
-              <div className="text-[10px] text-muted-foreground/70 mb-1">会话记录（上下滑动查看）</div>
-              <div 
-                ref={messageListRef as any} 
-                className="max-h-[44vh] md:max-h-[52vh] overflow-y-auto flex flex-col gap-2 pr-1 scrollbar-hide"
-              >
-                {messages.map((msg) => (
-                  <div key={`m-${msg.id}`} className="w-full flex justify-center">
-                    <MessageBubble
-                      role={msg.role}
-                      name={msg.name}
-                      message={msg.message}
-                      direction={msg.direction}
-                      isHost={msg.isHost}
-                      isSpeaking={activeRole === msg.role}
-                    />
+            <div className="mx-auto w-full px-0">
+              <div className="flex w-full items-end gap-3">
+                <div className="min-w-0 flex-1">
+                  <div className="relative">
+                    <div className="pointer-events-none absolute left-2 bottom-1 z-20">
+                      <span className="rounded-md bg-black/35 px-2 py-1 text-[10px] text-muted-foreground/75 backdrop-blur-sm">
+                        会话记录（上下滑动查看）
+                      </span>
+                    </div>
+                    <div
+                      ref={messageListRef as any}
+                      className="h-[clamp(14rem,40vh,24rem)] overflow-y-auto flex flex-col gap-2 px-1 pb-6 scrollbar-hide"
+                    >
+                      {messages.map((msg) => (
+                        <div key={`m-${msg.id}`} className="w-full flex justify-center">
+                          <MessageBubble
+                            role={msg.role}
+                            name={msg.name}
+                            message={msg.message}
+                            direction={msg.direction}
+                            isHost={msg.isHost}
+                            isSpeaking={activeRole === msg.role}
+                          />
+                        </div>
+                      ))}
+                      {/* 增加一点内部留白，避免最后一条气泡太贴底 */}
+                      <div className="h-4 shrink-0 w-full" />
+                    </div>
                   </div>
-                ))}
-                {/* 增加一点内部留白，避免最后一条气泡太贴底 */}
-                <div className="h-4 shrink-0 w-full" />
+                </div>
               </div>
             </div>
           ) : (
-            <div className="text-sm text-muted-foreground text-center py-10">输入一个议题开始讨论</div>
+            <div className="mx-auto w-full px-0">
+              <div className="h-[clamp(14rem,40vh,24rem)] flex items-center justify-center text-sm text-muted-foreground text-center">
+                输入一个议题开始讨论
+              </div>
+            </div>
           )}
         </div>
       </main>

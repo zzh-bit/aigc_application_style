@@ -593,13 +593,253 @@ function coreTripleBranches(topic: string, hostRef: string): GroundedBranch[] {
   ];
 }
 
+type DomainKind =
+  | "career"
+  | "relationship"
+  | "finance"
+  | "study"
+  | "health"
+  | "move"
+  | "buy"
+  | "generic";
+
+function detectDomainKind(blob: string): DomainKind {
+  const t = blob.replace(/\s+/g, "");
+  if (/跳槽|辞职|离职|offer|面试|升职|加薪|转岗|创业|合伙|老板|团队|同事|项目|职业|工作/.test(t)) return "career";
+  if (/分手|复合|表白|暧昧|恋爱|对象|男朋友|女朋友|伴侣|婚|离婚|相亲|父母|家庭|关系|沟通/.test(t))
+    return "relationship";
+  if (/投资|理财|基金|股票|债券|定投|收益|亏|回撤|风险|现金流|负债|贷款|利率|预算|存款/.test(t)) return "finance";
+  if (/考研|读研|读博|留学|申请|论文|考试|备考|学习|课程|专业|学校|转专业/.test(t)) return "study";
+  if (/失眠|焦虑|抑郁|情绪|压力|运动|锻炼|减肥|增肌|饮食|熬夜|胃|头痛|健康|冥想/.test(t)) return "health";
+  if (/搬家|租房|买房|房子|通勤|户口|落户|城市|迁移|定居|回老家|去留/.test(t)) return "move";
+  if (/买不买|要不要买|下单|购买|换机|电脑|手机|相机|车|装修|家电/.test(t)) return "buy";
+  return "generic";
+}
+
+function domainTripleBranches(topic: string, hostRef: string): GroundedBranch[] {
+  const topicShort = clip(topic.replace(/\s+/g, " "), 52);
+  const core = extractCoreDecisionPhrase(topic, hostRef);
+  const coreLabel = clip(core, 14);
+  const intro = hostRef.trim() ? `${clip(hostRef, 220)}。` : "";
+  const kind = detectDomainKind(`${topic}\n${hostRef}`);
+
+  const mk = (suffix: string, name: string, tone: "push" | "steady" | "blend", risk: number, benefit: number, emo: string, desc: string) =>
+    ({
+      id: `dom-${kind}-${suffix}`,
+      name,
+      probability: 0.34,
+      riskScore: risk,
+      benefitScore: benefit,
+      emotionForecast: emo,
+      description: desc,
+      nodes: templateDistilledNodes(`dom-${kind}-${suffix}`, tone, topicShort, core),
+      opinions: opinionsForPath(topicShort, name.replace(/[「」"]/g, ""), tone, {
+        blendPeer: `「${coreLabel}」不同路径`,
+      }),
+    }) satisfies GroundedBranch;
+
+  if (kind === "career") {
+    return [
+      mk(
+        "switch",
+        `推进：主动变更「${coreLabel}」`,
+        "push",
+        64,
+        84,
+        "excited",
+        `${intro}围绕「${topicShort}」，采取更主动的职业动作（如投递/面试/谈判/转岗）来推进「${core}」。优点是反馈更快；代价是短期不确定性更高。`,
+      ),
+      mk(
+        "stabilize",
+        `稳住：先保留「${coreLabel}」`,
+        "steady",
+        36,
+        64,
+        "calm",
+        `${intro}围绕「${topicShort}」，先保留当前安排并补信息（盘点能力、市场、现金流、健康）。优点是风险可控；缺点是窗口期可能变窄。`,
+      ),
+      mk(
+        "prepare",
+        `折中：为「${coreLabel}」做准备金`,
+        "blend",
+        48,
+        76,
+        "happy",
+        `${intro}围绕「${topicShort}」，先做低风险试点：简历/作品集/人脉/小项目/旁路收入，设 2～4 周复盘点后再决定是否全面推进「${core}」。`,
+      ),
+    ];
+  }
+
+  if (kind === "relationship") {
+    return [
+      mk(
+        "talk",
+        `推进：直面沟通「${coreLabel}」`,
+        "push",
+        58,
+        82,
+        "anxious",
+        `${intro}围绕「${topicShort}」，把「${core}」落到一次明确沟通：目标、边界、底线、下一步。优点是能快速止损/止拖；缺点是情绪波动更大。`,
+      ),
+      mk(
+        "pause",
+        `稳住：先暂停「${coreLabel}」`,
+        "steady",
+        34,
+        62,
+        "calm",
+        `${intro}围绕「${topicShort}」，先暂停高烈度互动，拉开一点时间与空间，观察一致性与现实约束。优点是降低冲突；缺点是容易继续悬而未决。`,
+      ),
+      mk(
+        "steps",
+        `折中：小步验证「${coreLabel}」`,
+        "blend",
+        44,
+        74,
+        "happy",
+        `${intro}围绕「${topicShort}」，用小步验证替代“全有或全无”：先定义 1～2 个可观察行为指标与期限，达标再升级投入，不达标就调整方向。`,
+      ),
+    ];
+  }
+
+  if (kind === "finance" || kind === "buy") {
+    return [
+      mk(
+        "commit",
+        `推进：执行「${coreLabel}」`,
+        "push",
+        kind === "finance" ? 66 : 60,
+        kind === "finance" ? 82 : 78,
+        "excited",
+        `${intro}围绕「${topicShort}」，执行「${core}」并以规则控制风险：预算上限、止损/止盈、分批/分期。优点是行动带来反馈；缺点是回撤与后悔成本更高。`,
+      ),
+      mk(
+        "holdcash",
+        `稳住：先不做「${coreLabel}」`,
+        "steady",
+        30,
+        60,
+        "calm",
+        `${intro}围绕「${topicShort}」，先不做「${core}」，保留现金流与确定性，补齐信息（价格、替代品、机会成本、后续支出）。优点是稳；缺点是可能错过时机。`,
+      ),
+      mk(
+        "trial",
+        `折中：小额试「${coreLabel}」`,
+        "blend",
+        44,
+        74,
+        "happy",
+        `${intro}围绕「${topicShort}」，先以小额/二手/短租/试用/试投替代一次押注，设定触发条件（价格、使用频率、收益曲线）后再决定扩大。`,
+      ),
+    ];
+  }
+
+  if (kind === "study") {
+    return [
+      mk(
+        "full",
+        `推进：全力投入「${coreLabel}」`,
+        "push",
+        62,
+        84,
+        "excited",
+        `${intro}围绕「${topicShort}」，把「${core}」落到可执行计划：目标院校/项目、科目安排、周节奏与模拟检验。优点是进展快；缺点是压力更高。`,
+      ),
+      mk(
+        "defer",
+        `稳住：延后「${coreLabel}」`,
+        "steady",
+        34,
+        62,
+        "calm",
+        `${intro}围绕「${topicShort}」，先延后「${core}」，把基础盘（健康/财务/时间块）打稳，再决定投入窗口。优点是可持续；缺点是进度变慢。`,
+      ),
+      mk(
+        "probe",
+        `折中：试学/试跑「${coreLabel}」`,
+        "blend",
+        46,
+        76,
+        "happy",
+        `${intro}围绕「${topicShort}」，先做 2～3 周“试跑”：小规模复习/选课/旁听/做题，记录投入产出与兴趣强度，再决定是否升级投入。`,
+      ),
+    ];
+  }
+
+  if (kind === "health") {
+    return [
+      mk(
+        "intervene",
+        `推进：立刻干预「${coreLabel}」`,
+        "push",
+        54,
+        80,
+        "happy",
+        `${intro}围绕「${topicShort}」，先把「${core}」拆成 1～2 个今天就能做的动作（运动/作息/饮食/就医/冥想），用“最小可行改变”快速止损。`,
+      ),
+      mk(
+        "rest",
+        `稳住：先休整「${coreLabel}」`,
+        "steady",
+        28,
+        62,
+        "calm",
+        `${intro}围绕「${topicShort}」，先让身体与情绪恢复到可决策状态：睡眠、补水、降低刺激，避免在低状态下对「${core}」做不可逆决定。`,
+      ),
+      mk(
+        "routine",
+        `折中：建立习惯「${coreLabel}」`,
+        "blend",
+        40,
+        74,
+        "happy",
+        `${intro}围绕「${topicShort}」，用可持续习惯代替一口气猛改：固定时间块、触发器、可量化目标与复盘点，让「${core}」逐步落地。`,
+      ),
+    ];
+  }
+
+  if (kind === "move") {
+    return [
+      mk(
+        "move",
+        `推进：迁移/落地「${coreLabel}」`,
+        "push",
+        64,
+        82,
+        "excited",
+        `${intro}围绕「${topicShort}」，把「${core}」推进到可落地：目标片区/预算/通勤、时间表、关键资源。优点是密度更高；缺点是适应成本更大。`,
+      ),
+      mk(
+        "stay",
+        `稳住：先不动「${coreLabel}」`,
+        "steady",
+        34,
+        64,
+        "calm",
+        `${intro}围绕「${topicShort}」，先维持现状，把不确定性压下来（工作、现金流、家庭支持），再择机推进「${core}」。`,
+      ),
+      mk(
+        "pilot",
+        `折中：双城/短租试点「${coreLabel}」`,
+        "blend",
+        50,
+        74,
+        "happy",
+        `${intro}围绕「${topicShort}」，用短租、出差、远程或双城过渡获取真实体感，再决定是否全面迁移。`,
+      ),
+    ];
+  }
+
+  return coreTripleBranches(topic, hostRef);
+}
+
 export function buildGroundedProjectionFromCouncil(
   displayTopic: string,
   messages: GroundedCouncilMsg[],
 ): { branches: GroundedBranch[]; compared: GroundedCompared } {
   const topic = (displayTopic ?? "").trim() || "当前关键决策";
   const digest = hostOrFactionDigest(messages, topic);
-  const branches = getStructuredChoiceBranches(topic, digest) ?? coreTripleBranches(topic, digest);
+  const branches = getStructuredChoiceBranches(topic, digest) ?? domainTripleBranches(topic, digest);
   const [a, b] = [branches[0], branches[2] ?? branches[1]];
   return {
     branches,

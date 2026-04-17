@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { randomUUID } from "node:crypto";
 import { buildMentorSystemPrompt, getMentorPromptProfile } from "@/lib/mentor/prompt-library";
 import { applyCors, corsPreflight } from "@/app/api/_cors";
 
@@ -62,6 +63,24 @@ const ROLE_META: Record<RoleType, { name: string; prompt: string }> = {
 export const runtime = "nodejs";
 // 兼容 `output: "export"`：静态导出时禁止动态评估该路由
 export const dynamic = "force-static";
+
+function buildProviderRequestConfig(apiKey: string) {
+  const baseUrl = process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com/chat/completions";
+  const url = new URL(baseUrl);
+  const isVivo = /api-ai\.vivo\.com\.cn/i.test(url.hostname);
+  if (isVivo && !url.searchParams.has("request_id")) {
+    url.searchParams.set("request_id", randomUUID());
+  }
+  const headers: Record<string, string> = {
+    authorization: `Bearer ${apiKey}`,
+    "content-type": "application/json",
+  };
+  const vivoAppId = process.env.VIVO_APP_ID?.trim();
+  if (isVivo && vivoAppId) {
+    headers.app_id = vivoAppId;
+  }
+  return { url: url.toString(), headers };
+}
 
 function buildPersonalityProfile(memories: DebateRequestBody["memories"]) {
   if (!Array.isArray(memories) || memories.length === 0) {
@@ -297,12 +316,10 @@ async function callDeepSeek(input: {
     priorRepliesInRound: clipText(input.priorRepliesInRound, 2000),
   });
 
-  const res = await fetch("https://api.deepseek.com/chat/completions", {
+  const providerReq = buildProviderRequestConfig(input.apiKey);
+  const res = await fetch(providerReq.url, {
     method: "POST",
-    headers: {
-      authorization: `Bearer ${input.apiKey}`,
-      "content-type": "application/json",
-    },
+    headers: providerReq.headers,
     body: JSON.stringify({
       model: input.model,
       stream: false,
