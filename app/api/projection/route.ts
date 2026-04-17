@@ -446,14 +446,15 @@ export async function POST(req: Request) {
       const branchSkeletonJson = JSON.stringify(skeleton);
       const prompt = buildTemplateGuidedProjectionPrompt(promptTopic, contextMessages, branchSkeletonJson);
       const providerReq = buildProviderRequestConfig(apiKey);
-      const upstreamTimeoutMs = readPositiveIntEnv("PS2_PROJECTION_UPSTREAM_TIMEOUT_MS", 35_000);
+      // Projection 提示词较长，vivo 在高峰期首包可能较慢；默认放宽到 90s，避免误判回退
+      const upstreamTimeoutMs = readPositiveIntEnv("PS2_PROJECTION_UPSTREAM_TIMEOUT_MS", 90_000);
       const ac = new AbortController();
       const timer = setTimeout(() => ac.abort(), upstreamTimeoutMs);
       const reqBody: Record<string, unknown> = {
         model,
         messages: [{ role: "user", content: prompt }],
         temperature: 0.45,
-        max_tokens: 2000,
+        max_tokens: 1200,
       };
       // 兼容 vivo：部分网关对 response_format 支持不稳定，避免因此降级到 grounded
       if (!providerReq.isVivo) {
