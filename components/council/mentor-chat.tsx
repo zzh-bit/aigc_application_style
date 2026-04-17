@@ -23,6 +23,7 @@ import {
   Microscope,
   Gavel,
   ScrollText,
+  Copy,
 } from "lucide-react";
 import { storageGet } from "@/lib/storage";
 import {
@@ -356,6 +357,7 @@ export function MentorChat({
   const [inputValue, setInputValue] = useState("");
   const [isThinking, setIsThinking] = useState(false);
   const [chatStatus, setChatStatus] = useState<"idle" | "generating" | "cancelled" | "retrying">("idle");
+  const [diagnosticText, setDiagnosticText] = useState("");
   const [activeMentorMessageId, setActiveMentorMessageId] = useState<string | null>(null);
   const [citedMemories, setCitedMemories] = useState<MemoryContextHit[]>([]);
   const [lastUserInput, setLastUserInput] = useState<string>("");
@@ -583,7 +585,7 @@ export function MentorChat({
           stream: false,
         }),
         externalSignal: controller.signal,
-        timeoutMs: 120_000,
+        timeoutMs: 240_000,
       });
 
       const contentType = response.headers.get("content-type") ?? "";
@@ -682,6 +684,7 @@ export function MentorChat({
       } else {
         clientLog("warn", "mentor.chat", "request failed", { detail: String(error) });
         const fallback = `抱歉：${userFacingMessage(error)} 可点击重试或换个问题继续。`;
+        setDiagnosticText(buildDiagnosticText(error));
         updateMentorMessageContent(mentorMessageId, fallback, false);
         setChatStatus("idle");
       }
@@ -699,6 +702,24 @@ export function MentorChat({
   // 发送消息
   const handleSend = async () => {
     await sendMentorMessage(inputValue);
+  };
+
+  const buildDiagnosticText = (error: unknown) => {
+    const now = new Date().toISOString();
+    const detail = userFacingMessage(error);
+    const host = typeof window !== "undefined" ? window.location.hostname : "unknown";
+    const online = typeof navigator !== "undefined" ? String(navigator.onLine) : "unknown";
+    const ua = typeof navigator !== "undefined" ? navigator.userAgent : "unknown";
+    return [
+      `[${now}] 导师聊天请求失败`,
+      `页面主机: ${host}`,
+      `请求接口: /api/chat (mentor mode)`,
+      `状态: ${chatStatus}`,
+      `网络在线: ${online}`,
+      `错误信息: ${detail}`,
+      `原始错误: ${String(error)}`,
+      `UA: ${ua}`,
+    ].join("\n");
   };
 
   // 键盘发送
@@ -970,6 +991,32 @@ export function MentorChat({
                 <Send className="w-5 h-5" />
               </motion.button>
             )}
+          </div>
+          <div className="mt-3 rounded-xl border border-white/10 bg-white/5 p-3">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-xs text-white/60">网络诊断文本框（报错后可复制给我）</span>
+              <button
+                type="button"
+                className="inline-flex items-center gap-1 rounded-md border border-white/15 px-2 py-1 text-[11px] text-white/70 hover:text-white"
+                onClick={async () => {
+                  if (!diagnosticText.trim()) return;
+                  try {
+                    await navigator.clipboard.writeText(diagnosticText);
+                  } catch {
+                    // ignore clipboard errors
+                  }
+                }}
+              >
+                <Copy className="h-3.5 w-3.5" />
+                复制
+              </button>
+            </div>
+            <textarea
+              value={diagnosticText}
+              readOnly
+              placeholder="出现“请求超时/网络失败”后，这里会自动生成诊断信息。"
+              className="h-24 w-full resize-y rounded-md border border-white/10 bg-black/20 px-2 py-1 text-xs text-white/80 placeholder:text-white/35 focus:outline-none"
+            />
           </div>
         </div>
       </footer>

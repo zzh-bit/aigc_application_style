@@ -540,6 +540,7 @@ export async function POST(req: Request) {
     maxCharsPerMessage,
     maxTotalChars,
   });
+  const mentorMode = parseMentorMode(body.mode);
   const finalMessages = buildMessagesForMode({ mode: body.mode, messages });
 
   const lastUser = [...messages].reverse().find((m) => m.role === "user");
@@ -548,7 +549,9 @@ export async function POST(req: Request) {
   const url = process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com/chat/completions";
   const model = process.env.DEEPSEEK_MODEL || "deepseek-chat";
   const debugEnabled = process.env.PS2_DEBUG === "1";
-  const maxTokens = toInt(process.env.PS2_MAX_TOKENS, 256);
+  const maxTokensBase = toInt(process.env.PS2_MAX_TOKENS, 256);
+  const mentorCap = toInt(process.env.PS2_MENTOR_MAX_TOKENS, 192);
+  const maxTokens = mentorMode ? Math.max(64, Math.min(maxTokensBase, mentorCap)) : maxTokensBase;
 
   const wantsStream = body.stream === true;
   let content: string;
