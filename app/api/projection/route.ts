@@ -206,8 +206,10 @@ function buildTemplateGuidedProjectionPrompt(
   branchSkeletonJson: string,
 ) {
   const chatHistory = contextMessages
-    .map((m) => `${m.name || m.role}: ${m.content}`)
-    .join("\n");
+    .slice(-16)
+    .map((m) => `${m.name || m.role}: ${clipStr(m.content, 120)}`)
+    .join("\n")
+    .slice(0, 1800);
 
   return `你是「Parallel Self」决策推演助手。必须在单一主题下输出结构化 JSON，禁止跑题。
 
@@ -220,7 +222,7 @@ function buildTemplateGuidedProjectionPrompt(
 - 在骨架对应取向上，结合对话把 name、description 写得更具体可执行；
 - 每个 branch 的 **nodes 必须恰好 3 个**，且 type 依次为 "event"、"finance"、"emotion"；每个 node 的 label 为 **≤16 字的提炼关键词**（短语，非长句），分别概括：关键动作/事件、成本或资源、情绪或心态；
 - probability 为 0～1 小数；riskScore、benefitScore 为 0～100 整数；emotionForecast 只能是 "excited"|"calm"|"anxious"|"happy"|"sad"；
-- opinions 必须含 radical、future、conservative；每项 opinion 为 2～3 句中文，紧扣主题与路径；support 为 0～100 整数。
+- opinions 必须含 radical、future、conservative；每项 opinion 为 1～2 句中文（尽量短），紧扣主题与路径；support 为 0～100 整数。
 
 【禁止用语】（除非用户主题本身就是开会投票）：妥协通过、激烈否决、延期再审、表决、议案、否决案、原则通过、复议等。
 
@@ -402,6 +404,37 @@ function extractAssistantText(data: unknown): string {
   return "";
 }
 
+function extractFirstJsonObject(raw: string): string {
+  const text = unwrapJsonFence(raw);
+  const start = text.indexOf("{");
+  if (start < 0) return text;
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+  for (let i = start; i < text.length; i++) {
+    const ch = text[i];
+    if (escaped) {
+      escaped = false;
+      continue;
+    }
+    if (ch === "\\") {
+      escaped = true;
+      continue;
+    }
+    if (ch === '"') {
+      inString = !inString;
+      continue;
+    }
+    if (inString) continue;
+    if (ch === "{") depth++;
+    if (ch === "}") {
+      depth--;
+      if (depth === 0) return text.slice(start, i + 1);
+    }
+  }
+  return text.slice(start);
+}
+
 export async function POST(req: Request) {
   let body: ProjectionRequestBody;
   try {
@@ -446,68 +479,86 @@ export async function POST(req: Request) {
       const branchSkeletonJson = JSON.stringify(skeleton);
       const prompt = buildTemplateGuidedProjectionPrompt(promptTopic, contextMessages, branchSkeletonJson);
       const providerReq = buildProviderRequestConfig(apiKey);
-      // Projection 提示词较长，vivo 在高峰期首包可能较慢；默认放宽到 90s，避免误判回退
-      const upstreamTimeoutMs = readPositiveIntEnv("PS2_PROJECTION_UPSTREAM_TIMEOUT_MS", 90_000);
-      const ac = new AbortController();
-      const timer = setTimeout(() => ac.abort(), upstreamTimeoutMs);
-      const reqBody: Record<string, unknown> = {
+      // Projection 提示词较长，vivo 在高峰期首包可能较慢；默认放宽到 120s，避免误判回退
+      const upstreamTimeoutMs = readPositiveIntEnv("PS2_PROJECTION_UPSTREAM_TIMEOUT_MS", 120_000);
+      const reqBodyBase: Record<string, unknown> = {
         model,
         messages: [{ role: "user", content: prompt }],
         temperature: 0.45,
-        max_tokens: 1200,
+        max_tokens: readPositiveIntEnv("PS2_PROJECTION_MAX_TOKENS", 1400),
       };
       // 兼容 vivo：部分网关对 response_format 支持不稳定，避免因此降级到 grounded
       if (!providerReq.isVivo) {
-        reqBody.response_format = { type: "json_object" };
+        reqBodyBase.response_format = { type: "json_object" };
       }
-      const res = await fetch(providerReq.url, {
-        method: "POST",
-        headers: providerReq.headers,
-        signal: ac.signal,
-        body: JSON.stringify(reqBody),
-      }).finally(() => clearTimeout(timer));
+      for (let attempt = 1; attempt <= 2; attempt++) {
+        // 第二次重试：给更长超时，并压缩输出 token，提升成功率
+        const attemptTimeoutMs = attempt === 1 ? upstreamTimeoutMs : Math.max(upstreamTimeoutMs, 180_000);
+        const attemptBody = {
+          ...reqBodyBase,
+          max_tokens:
+            attempt === 1
+              ? reqBodyBase.max_tokens
+              : Math.min(readPositiveIntEnv("PS2_PROJECTION_RETRY_MAX_TOKENS", 900), Number(reqBodyBase.max_tokens)),
+        };
+        try {
+          const ac = new AbortController();
+          const timer = setTimeout(() => ac.abort(), attemptTimeoutMs);
+          const res = await fetch(providerReq.url, {
+            method: "POST",
+            headers: providerReq.headers,
+            signal: ac.signal,
+            body: JSON.stringify(attemptBody),
+          }).finally(() => clearTimeout(timer));
 
-      if (res.ok) {
-        const data = await res.json();
-        let content = extractAssistantText(data);
-        if (content) {
-          content = unwrapJsonFence(content);
-          const parsed = JSON.parse(content) as {
-            topic?: string;
-            branches?: unknown;
-            compared?: unknown;
-          };
+          if (res.ok) {
+            const data = await res.json();
+            let content = extractAssistantText(data);
+            if (content) {
+              const parsed = JSON.parse(extractFirstJsonObject(content)) as {
+                topic?: string;
+                branches?: unknown;
+                compared?: unknown;
+              };
 
-          if (parsed.branches && Array.isArray(parsed.branches) && parsed.branches.length > 0) {
-            const branches = reconcileBranchesWithSkeleton(parsed.branches, grounded.branches, promptTopic);
+              if (parsed.branches && Array.isArray(parsed.branches) && parsed.branches.length > 0) {
+                const branches = reconcileBranchesWithSkeleton(parsed.branches, grounded.branches, promptTopic);
 
-            // 模板合并后 id/条数已锚定；启发式跑题检测易误判（同义改写、模型换词），不再丢弃 LLM 结果
-            if (
-              projectionBranchesLookOffTopic(
-                branches as GroundedBranch[],
-                promptTopic,
-                contextMessages as GroundedCouncilMsg[],
-              )
-            ) {
-              console.warn("[ps2] projection: post-merge off-topic heuristics flagged; still returning LLM merge");
+                // 模板合并后 id/条数已锚定；启发式跑题检测易误判（同义改写、模型换词），不再丢弃 LLM 结果
+                if (
+                  projectionBranchesLookOffTopic(
+                    branches as GroundedBranch[],
+                    promptTopic,
+                    contextMessages as GroundedCouncilMsg[],
+                  )
+                ) {
+                  console.warn("[ps2] projection: post-merge off-topic heuristics flagged; still returning LLM merge");
+                }
+
+                const compared = normalizeCompared(parsed.compared, branches);
+
+                return applyCors(
+                  req,
+                  NextResponse.json({
+                    topic: isPlaceholderTopic(parsed.topic) ? promptTopic : (parsed.topic as string),
+                    branches,
+                    compared,
+                    meta: { source: "llm" as const },
+                  }),
+                );
+              }
             }
-
-            const compared = normalizeCompared(parsed.compared, branches);
-
-            return applyCors(
-              req,
-              NextResponse.json({
-                topic: isPlaceholderTopic(parsed.topic) ? promptTopic : (parsed.topic as string),
-                branches,
-                compared,
-                meta: { source: "llm" as const },
-              }),
-            );
+          } else {
+            const errText = await res.text().catch(() => "");
+            console.warn("[ps2] DeepSeek HTTP", res.status, errText.slice(0, 400));
           }
+        } catch (e) {
+          console.warn(`[ps2] projection llm attempt ${attempt} aborted/failed`, e);
         }
-      } else {
-        const errText = await res.text().catch(() => "");
-        console.warn("[ps2] DeepSeek HTTP", res.status, errText.slice(0, 400));
+        if (attempt < 2) {
+          console.warn(`[ps2] projection llm attempt ${attempt} failed, retrying once`);
+          continue;
+        }
       }
     } catch (e) {
       console.warn("[ps2] template-guided projection LLM failed, falling back to grounded only", e);

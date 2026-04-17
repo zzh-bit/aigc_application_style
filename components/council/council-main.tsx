@@ -8,7 +8,7 @@ import { InputBar } from "./input-bar";
 import { MemoryFragment } from "./memory-fragment";
 import { useState, useEffect, useRef } from "react";
 import { storageGet, storageSet, storageRemove } from "@/lib/storage";
-import { CheckCheck, ClipboardCopy, RefreshCw } from "lucide-react";
+import { CheckCheck, RefreshCw } from "lucide-react";
 import {
   selectRelevantMemories,
   formatHitsForUserEvidence,
@@ -36,7 +36,6 @@ import {
 } from "@/lib/emotion-event-signals";
 import { dominantInsightEmotion } from "@/lib/insights-classify";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import type { MouseEvent as ReactMouseEvent } from "react";
 
 interface Message {
@@ -187,8 +186,6 @@ export function CouncilMain({
   const [isImportingMentor, setIsImportingMentor] = useState(false);
   const [mentorImported, setMentorImported] = useState(false);
   const [councilNetworkError, setCouncilNetworkError] = useState<string | null>(null);
-  const [issueFeedbackText, setIssueFeedbackText] = useState("");
-  const [issueCopied, setIssueCopied] = useState(false);
   const [sessionHydrated, setSessionHydrated] = useState(false);
   const [clickRipples, setClickRipples] = useState<Array<{ id: string; x: number; y: number }>>([]);
   const messageListRef = useRef<HTMLDivElement | null>(null);
@@ -1014,28 +1011,6 @@ export function CouncilMain({
   }, []);
 
   useEffect(() => {
-    if (!councilNetworkError) return;
-    const stamp = new Date().toLocaleString();
-    setIssueFeedbackText((prev) => {
-      if (prev.includes(councilNetworkError)) return prev;
-      const next = `[${stamp}] ${councilNetworkError}`;
-      return prev.trim().length > 0 ? `${next}\n${prev}` : next;
-    });
-  }, [councilNetworkError]);
-
-  const handleCopyIssueFeedback = async () => {
-    const payload = issueFeedbackText.trim();
-    if (!payload) return;
-    try {
-      await navigator.clipboard.writeText(payload);
-      setIssueCopied(true);
-      window.setTimeout(() => setIssueCopied(false), 1500);
-    } catch {
-      setIssueCopied(false);
-    }
-  };
-
-  useEffect(() => {
     const el = footerRef.current;
     if (!el) return;
     const update = () => {
@@ -1101,27 +1076,6 @@ export function CouncilMain({
           </button>
         </div>
       )}
-
-      <div className="relative z-20 mx-4 mb-2 rounded-xl border border-white/10 bg-black/20 p-3 backdrop-blur-sm">
-        <div className="mb-2 flex items-center justify-between gap-2">
-          <span className="text-xs text-white/80">问题反馈文本框（复制后可直接发给我排查）</span>
-          <button
-            type="button"
-            onClick={() => void handleCopyIssueFeedback()}
-            disabled={!issueFeedbackText.trim()}
-            className="inline-flex items-center gap-1 rounded-md border border-white/20 px-2 py-1 text-[11px] text-white/80 hover:bg-white/10 disabled:opacity-40"
-          >
-            <ClipboardCopy className="h-3.5 w-3.5" />
-            {issueCopied ? "已复制" : "复制文本"}
-          </button>
-        </div>
-        <Textarea
-          value={issueFeedbackText}
-          onChange={(e) => setIssueFeedbackText(e.target.value)}
-          placeholder="可描述你的现象、复现步骤、报错文案；出现网络错误时会自动写入这里。"
-          className="min-h-[92px] resize-y border-white/20 bg-black/25 text-xs text-white placeholder:text-white/45"
-        />
-      </div>
 
       {/* 角色席位：放到整页根层，确保 top 定位与顶部栏对齐（横屏导师齐平/略高） */}
       <div className="pointer-events-none absolute inset-0 z-20">
