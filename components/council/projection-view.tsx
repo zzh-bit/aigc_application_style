@@ -163,6 +163,8 @@ export function ProjectionView({ isOpen, onClose }: ProjectionViewProps) {
           focusTopic: gate.displayTopic,
           contextMessages,
         }),
+        /** 单次 LLM 推演 + 大 JSON，默认 fetchJson 45s 不够 */
+        timeoutMs: 180_000,
       });
       if (res?.branches?.length) {
         setQuestion(sanitizeProjectionTopicForUi(res.topic, gate.displayTopic));

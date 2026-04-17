@@ -64,6 +64,13 @@ export const runtime = "nodejs";
 // 兼容 `output: "export"`：静态导出时禁止动态评估该路由
 export const dynamic = "force-static";
 
+function readPositiveIntEnv(name: string, fallback: number) {
+  const raw = process.env[name];
+  if (!raw) return fallback;
+  const n = Number.parseInt(raw, 10);
+  return Number.isFinite(n) && n > 0 ? n : fallback;
+}
+
 function buildProviderRequestConfig(apiKey: string) {
   const baseUrl = process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com/chat/completions";
   const url = new URL(baseUrl);
@@ -317,9 +324,13 @@ async function callDeepSeek(input: {
   });
 
   const providerReq = buildProviderRequestConfig(input.apiKey);
+  const upstreamTimeoutMs = readPositiveIntEnv("PS2_DEBATE_UPSTREAM_TIMEOUT_MS", 25_000);
+  const ac = new AbortController();
+  const timer = setTimeout(() => ac.abort(), upstreamTimeoutMs);
   const res = await fetch(providerReq.url, {
     method: "POST",
     headers: providerReq.headers,
+    signal: ac.signal,
     body: JSON.stringify({
       model: input.model,
       stream: false,
@@ -333,7 +344,7 @@ async function callDeepSeek(input: {
         },
       ],
     }),
-  });
+  }).finally(() => clearTimeout(timer));
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");
@@ -385,6 +396,46 @@ function mockReply(
   return `综合前面发言：分歧主要在节奏与风险承受。建议折中——先小步试点并设止损，同时选对一年后仍有复利的那条主线；可按“本周试点 → 两周复盘 → 一月固化”推进「${topic}」。`;
 }
 
+async function generateRoleMessage(input: {
+  role: RoleType;
+  topic: string;
+  memoryContext: string;
+  personalityProfile: string;
+  conversationContext: string;
+  priorRepliesInRound: string;
+  mentorInviteOnly: boolean;
+  mentorId?: string;
+  apiKey?: string;
+  model: string;
+  maxTokens: number;
+}) {
+  const factionLearning = inferFactionLearning(input.role, input.conversationContext);
+  if (input.apiKey) {
+    try {
+      return await callDeepSeek({
+        apiKey: input.apiKey,
+        model: input.model,
+        rolePrompt: buildRolePrompt(input.role, input.personalityProfile, input.mentorId, input.mentorInviteOnly),
+        topic: input.topic,
+        memoryContext: input.memoryContext,
+        conversationContext: input.conversationContext,
+        priorRepliesInRound: input.priorRepliesInRound,
+        factionLearning,
+        maxTokens: input.maxTokens,
+      });
+    } catch {
+      return mockReply(input.role, input.topic, input.memoryContext, input.priorRepliesInRound, factionLearning, {
+        mentorInviteOnly: input.mentorInviteOnly,
+        mentorId: input.mentorId,
+      });
+    }
+  }
+  return mockReply(input.role, input.topic, input.memoryContext, input.priorRepliesInRound, factionLearning, {
+    mentorInviteOnly: input.mentorInviteOnly,
+    mentorId: input.mentorId,
+  });
+}
+
 export async function POST(req: Request) {
   let body: DebateRequestBody;
   try {
@@ -404,51 +455,70 @@ export async function POST(req: Request) {
   const apiKey = process.env.DEEPSEEK_API_KEY;
   const model = process.env.DEEPSEEK_MODEL || "deepseek-chat";
 
-  const order: RoleType[] = mentorInviteOnly
-    ? ["mentor"]
-    : body.includeMentor
-      ? ["radical", "conservative", "future", "mentor", "host"]
-      : ["radical", "conservative", "future", "host"];
+  const hostMaxTokens = readPositiveIntEnv("PS2_DEBATE_HOST_MAX_TOKENS", 160);
+  const roleMaxTokens = readPositiveIntEnv("PS2_DEBATE_MAX_TOKENS", 120);
   const replies: RoleReply[] = [];
 
-  for (const role of order) {
-    const meta = ROLE_META[role];
-    let message = "";
-    const priorRepliesInRound = replies
-      .map((r) => `${ROLE_META[r.role].name}：${r.message}`)
-      .join("\n");
-    const factionLearning = inferFactionLearning(role, conversationContext);
-    const maxTokens = role === "host" ? 300 : 240;
-    if (apiKey) {
-      try {
-        message = await callDeepSeek({
-          apiKey,
-          model,
-          rolePrompt: buildRolePrompt(role, personalityProfile, body.mentorId, mentorInviteOnly),
-          topic,
-          memoryContext,
-          conversationContext,
-          priorRepliesInRound,
-          factionLearning,
-          maxTokens,
-        });
-      } catch {
-        message = mockReply(role, topic, memoryContext, priorRepliesInRound, factionLearning, {
-          mentorInviteOnly,
-          mentorId: body.mentorId,
-        });
-      }
-    } else {
-      message = mockReply(role, topic, memoryContext, priorRepliesInRound, factionLearning, {
-        mentorInviteOnly,
-        mentorId: body.mentorId,
-      });
-    }
-    if (!(mentorInviteOnly && role === "mentor")) {
-      message = enforceReplyTopicAnchor(role, message, topic);
-    }
-    replies.push({ role, name: meta.name, message });
+  if (mentorInviteOnly) {
+    let mentorMessage = await generateRoleMessage({
+      role: "mentor",
+      topic,
+      memoryContext,
+      personalityProfile,
+      conversationContext,
+      priorRepliesInRound: "",
+      mentorInviteOnly: true,
+      mentorId: body.mentorId,
+      apiKey,
+      model,
+      maxTokens: roleMaxTokens,
+    });
+    replies.push({ role: "mentor", name: ROLE_META.mentor.name, message: mentorMessage });
+    return applyCors(req, NextResponse.json({ replies }));
   }
+
+  const factionOrder: RoleType[] = body.includeMentor
+    ? ["radical", "conservative", "future", "mentor"]
+    : ["radical", "conservative", "future"];
+
+  // 根因修复：派系回复并行生成，避免串行累计时延导致前端超时。
+  const factionReplies = await Promise.all(
+    factionOrder.map(async (role) => {
+      let message = await generateRoleMessage({
+        role,
+        topic,
+        memoryContext,
+        personalityProfile,
+        conversationContext,
+        priorRepliesInRound: "",
+        mentorInviteOnly: false,
+        mentorId: body.mentorId,
+        apiKey,
+        model,
+        maxTokens: roleMaxTokens,
+      });
+      message = enforceReplyTopicAnchor(role, message, topic);
+      return { role, name: ROLE_META[role].name, message } as RoleReply;
+    }),
+  );
+  replies.push(...factionReplies);
+
+  const hostPrior = replies.map((r) => `${ROLE_META[r.role].name}：${r.message}`).join("\n");
+  let hostMessage = await generateRoleMessage({
+    role: "host",
+    topic,
+    memoryContext,
+    personalityProfile,
+    conversationContext,
+    priorRepliesInRound: hostPrior,
+    mentorInviteOnly: false,
+    mentorId: body.mentorId,
+    apiKey,
+    model,
+    maxTokens: hostMaxTokens,
+  });
+  hostMessage = enforceReplyTopicAnchor("host", hostMessage, topic);
+  replies.push({ role: "host", name: ROLE_META.host.name, message: hostMessage });
 
   return applyCors(req, NextResponse.json({ replies }));
 }
