@@ -361,7 +361,45 @@ function buildProviderRequestConfig(apiKey: string) {
   if (isVivo && vivoAppId) {
     headers.app_id = vivoAppId;
   }
-  return { url: url.toString(), headers };
+  return { url: url.toString(), headers, isVivo };
+}
+
+function readPositiveIntEnv(name: string, fallback: number) {
+  const raw = process.env[name];
+  if (!raw) return fallback;
+  const n = Number.parseInt(raw, 10);
+  return Number.isFinite(n) && n > 0 ? n : fallback;
+}
+
+function unwrapJsonFence(text: string): string {
+  return text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+}
+
+function extractAssistantText(data: unknown): string {
+  if (!data || typeof data !== "object") return "";
+  const root = data as Record<string, unknown>;
+  const choices = Array.isArray(root.choices) ? root.choices : [];
+  const first = choices[0] && typeof choices[0] === "object" ? (choices[0] as Record<string, unknown>) : null;
+  const msg = first?.message && typeof first.message === "object" ? (first.message as Record<string, unknown>) : null;
+  const content = msg?.content;
+  if (typeof content === "string" && content.trim()) return content.trim();
+  if (Array.isArray(content)) {
+    const joined = content
+      .map((x) => {
+        if (typeof x === "string") return x;
+        if (x && typeof x === "object") {
+          const p = x as Record<string, unknown>;
+          if (typeof p.text === "string") return p.text;
+          if (typeof p.content === "string") return p.content;
+        }
+        return "";
+      })
+      .join("")
+      .trim();
+    if (joined) return joined;
+  }
+  if (typeof root.output_text === "string" && root.output_text.trim()) return root.output_text.trim();
+  return "";
 }
 
 export async function POST(req: Request) {
@@ -408,23 +446,31 @@ export async function POST(req: Request) {
       const branchSkeletonJson = JSON.stringify(skeleton);
       const prompt = buildTemplateGuidedProjectionPrompt(promptTopic, contextMessages, branchSkeletonJson);
       const providerReq = buildProviderRequestConfig(apiKey);
+      const upstreamTimeoutMs = readPositiveIntEnv("PS2_PROJECTION_UPSTREAM_TIMEOUT_MS", 35_000);
+      const ac = new AbortController();
+      const timer = setTimeout(() => ac.abort(), upstreamTimeoutMs);
+      const reqBody: Record<string, unknown> = {
+        model,
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.45,
+        max_tokens: 2000,
+      };
+      // 兼容 vivo：部分网关对 response_format 支持不稳定，避免因此降级到 grounded
+      if (!providerReq.isVivo) {
+        reqBody.response_format = { type: "json_object" };
+      }
       const res = await fetch(providerReq.url, {
         method: "POST",
         headers: providerReq.headers,
-        body: JSON.stringify({
-          model,
-          messages: [{ role: "user", content: prompt }],
-          temperature: 0.45,
-          max_tokens: 2000,
-          response_format: { type: "json_object" },
-        }),
-      });
+        signal: ac.signal,
+        body: JSON.stringify(reqBody),
+      }).finally(() => clearTimeout(timer));
 
       if (res.ok) {
         const data = await res.json();
-        let content = data.choices?.[0]?.message?.content;
+        let content = extractAssistantText(data);
         if (content) {
-          content = content.replace(/^```json\s*/i, "").replace(/\s*```$/i, "").trim();
+          content = unwrapJsonFence(content);
           const parsed = JSON.parse(content) as {
             topic?: string;
             branches?: unknown;
