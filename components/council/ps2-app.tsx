@@ -140,6 +140,14 @@ function PS2AppInner() {
                     : undefined
                 }
               >
+                {currentPage === "council" && (
+                  <div className="pointer-events-none mr-1.5 ml-1 flex items-center whitespace-nowrap">
+                    <div className="rounded-md bg-black/35 px-2 py-1 backdrop-blur-sm">
+                      <span className="text-[10px] text-muted-foreground/75">会话记录</span>
+                      <span className="text-[10px] text-muted-foreground/45">（上下滑动）</span>
+                    </div>
+                  </div>
+                )}
                 <div className="relative group">
                   <motion.button
                     onClick={() => setCurrentPage("welcome")}
@@ -335,9 +343,13 @@ function PS2AppInner() {
       <AnimatePresence>
         {showBootTransition && (
           <motion.div
-            className="pointer-events-none fixed inset-0 z-[100] flex items-center justify-center"
+            className="pointer-events-auto fixed inset-0 z-[100] flex items-center justify-center"
             style={{
-              background: "radial-gradient(circle at 50% 45%, #10264B 0%, #0A0F1A 58%, #070B14 100%)",
+              background: "radial-gradient(circle at 50% 38%, #173A70 0%, #0A1223 56%, #060A14 100%)",
+            }}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
             }}
             initial={{ opacity: 1 }}
             animate={{ opacity: 1 }}
@@ -350,8 +362,49 @@ function PS2AppInner() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, ease: "easeOut" }}
             >
-              <div className="text-3xl tracking-wide font-light text-white/90">Parallel Self 2.0</div>
-              <div className="mt-2 text-xs tracking-[0.22em] text-white/45">LOADING YOUR COUNCIL...</div>
+              <motion.div
+                className="mx-auto mb-5 h-14 w-14 rounded-2xl border border-white/25 bg-white/5 shadow-[0_0_28px_rgba(59,130,246,0.22)] flex items-center justify-center"
+                initial={{ scale: 0.92, opacity: 0.75 }}
+                animate={{ scale: [0.96, 1.04, 0.96], opacity: [0.72, 1, 0.72] }}
+                transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <svg
+                  width="44"
+                  height="44"
+                  viewBox="0 0 108 108"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M54 20 L84 72 L24 72 Z"
+                    stroke="rgba(118,168,255,0.95)"
+                    strokeWidth="5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M54 88 L24 36 L84 36 Z"
+                    stroke="rgba(184,210,255,0.92)"
+                    strokeWidth="5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </motion.div>
+              <div className="text-3xl tracking-wide font-light text-white/92">Parallel Self 2.0</div>
+              <div className="mt-2 text-xs tracking-[0.22em] text-white/55">INITIALIZING COUNCIL...</div>
+              <motion.div
+                className="mt-4 h-0.5 w-36 overflow-hidden rounded-full bg-white/15 mx-auto"
+                initial={false}
+              >
+                <motion.div
+                  className="h-full bg-gradient-to-r from-blue-300/65 via-cyan-200/90 to-blue-300/65"
+                  initial={{ x: "-100%" }}
+                  animate={{ x: "100%" }}
+                  transition={{ duration: 1.35, repeat: Infinity, ease: "linear" }}
+                />
+              </motion.div>
             </motion.div>
           </motion.div>
         )}

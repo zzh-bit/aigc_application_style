@@ -8,7 +8,10 @@ import { storageGet } from "@/lib/storage";
 import { fetchJson } from "@/lib/api-client";
 import { clientLog } from "@/lib/client-log";
 import { COUNCIL_MESSAGES_KEY, COUNCIL_PROJECTION_SUPPRESS_KEY } from "@/lib/council-storage-keys";
-import { buildGroundedProjectionFromCouncil } from "@/lib/projection-grounded";
+import {
+  buildGroundedProjectionFromCouncil,
+  finalizeProjectionForClient,
+} from "@/lib/projection-grounded";
 
 interface ProjectionViewProps {
   isOpen: boolean;
@@ -112,6 +115,13 @@ async function readCouncilProjectionGate(): Promise<{
   return { allowed, topicSeed, displayTopic, suppress, hasUserTurn };
 }
 
+function hostRefFromMessages(msgs: CouncilContextMessage[]): string {
+  return msgs
+    .slice(-12)
+    .map((m) => `${m.name}: ${m.content}`)
+    .join("\n");
+}
+
 export function ProjectionView({ isOpen, onClose }: ProjectionViewProps) {
   const [selectedBranch, setSelectedBranch] = useState<string | null>(null);
   const [branches, setBranches] = useState<ProjectionBranch[]>([]);
@@ -167,8 +177,10 @@ export function ProjectionView({ isOpen, onClose }: ProjectionViewProps) {
         timeoutMs: 180_000,
       });
       if (res?.branches?.length) {
+        const hostRef = hostRefFromMessages(contextMessages);
+        const cleaned = finalizeProjectionForClient(res.branches, gate.displayTopic, hostRef) as ProjectionBranch[];
         setQuestion(sanitizeProjectionTopicForUi(res.topic, gate.displayTopic));
-        setBranches(res.branches);
+        setBranches(cleaned);
         setDefaultCompare({ branchA: res.compared.branchA, branchB: res.compared.branchB });
         setCompareSummary(res.compared.summary);
         setComparedDelta(res.compared.delta ?? null);
@@ -176,13 +188,13 @@ export function ProjectionView({ isOpen, onClose }: ProjectionViewProps) {
         setLlmProjection(src === "llm");
         if (src === "grounded" && res.meta?.llmAttempted) {
           setError(
-            "已连上 API，但服务端未走通 AI 推演（请检查服务器 DEEPSEEK_API_KEY / DeepSeek 配额）。当前为规则骨架。",
+            "已连上 API，但服务端未走通 AI 推演（请检查服务器 DEEPSEEK_API_KEY / DeepSeek 配额）。当前为本地议题推演。",
           );
         } else {
           setError(null);
         }
         clientLog("info", "projection.api", "cloud success", {
-          branchCount: res.branches.length,
+          branchCount: cleaned.length,
           source: src,
           llmAttempted: res.meta?.llmAttempted,
         });
@@ -194,8 +206,14 @@ export function ProjectionView({ isOpen, onClose }: ProjectionViewProps) {
       setLlmProjection(false);
       setError("云端推演暂不可用，已切换本地兜底。");
       const grounded = buildGroundedProjectionFromCouncil(gate.displayTopic, contextMessages);
+      const hostRef = hostRefFromMessages(contextMessages);
+      const cleaned = finalizeProjectionForClient(
+        grounded.branches as ProjectionBranch[],
+        gate.displayTopic,
+        hostRef,
+      ) as ProjectionBranch[];
       setQuestion(gate.displayTopic);
-      setBranches(grounded.branches as ProjectionBranch[]);
+      setBranches(cleaned);
       setDefaultCompare({ branchA: grounded.compared.branchA, branchB: grounded.compared.branchB });
       setCompareSummary(grounded.compared.summary);
       setComparedDelta(grounded.compared.delta ?? null);

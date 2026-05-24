@@ -44,20 +44,23 @@ const roleShadowColors: Record<RoleType, string> = {
 // 基础布局：顶部给未来派/主持人，底部给激进派/保守派；导师固定顶部居中
 const positionClasses: Record<string, string> = {
   // 竖屏：两组派系分上下两排，确保同组水平对齐
-  "top-left": "top-0 left-4 md:top-2 md:left-6",
-  "top-right": "top-0 right-4 md:top-2 md:right-6",
+  "top-left": "top-2 left-4 md:top-4 md:left-6",
+  "top-right": "top-2 right-4 md:top-4 md:right-6",
   "top-center": "top-0 left-1/2 -translate-x-1/2 md:top-1",
-  "bottom-left": "bottom-40 left-4 md:bottom-44 md:left-6",
-  "bottom-right": "bottom-40 right-4 md:bottom-44 md:right-6",
+  // 四派整体上移：保证保守派在右下角“邀请导师”按钮上方
+  "bottom-left": "bottom-48 left-4 md:bottom-52 md:left-6",
+  "bottom-right": "bottom-48 right-4 md:bottom-52 md:right-6",
 };
 
 const landscapePositionClasses: Record<string, string> = {
-  // 横屏：未来派/主持人占原中排；激进派/保守派上移并与导师同水平
-  "top-left": "top-[36%] -translate-y-1/2 left-4 md:left-6",
-  "top-right": "top-[36%] -translate-y-1/2 right-4 md:right-6",
-  "top-center": "top-1 left-1/2 -translate-x-1/2",
-  "bottom-left": "top-1 left-4 md:left-6",
-  "bottom-right": "top-1 right-4 md:right-6",
+  // 横屏：围绕导师与中央会话框形成上二下二“芒星感”结构，并避免与底部输入区重叠
+  // 四派（未来/主持/激进/保守）整体再上移一档，避免遮挡右下角按钮区
+  "top-left": "top-[22%] -translate-y-1/2 left-3 md:left-6",
+  "top-right": "top-[22%] -translate-y-1/2 right-3 md:right-6",
+  "top-center": "top-2 left-1/2 -translate-x-1/2",
+  // 四派整体上移一档：确保不压住右下角按钮区；导师保持不动
+  "bottom-left": "top-[44%] -translate-y-1/2 left-3 md:left-6",
+  "bottom-right": "top-[44%] -translate-y-1/2 right-3 md:right-6",
 };
 
 const roleIcons: Record<RoleType, React.ReactNode> = {

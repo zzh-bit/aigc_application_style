@@ -7,7 +7,9 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 
 import {
+  applyGroundedProjectionStructure,
   buildGroundedProjectionFromCouncil,
+  isValidBranchName,
   projectionBranchesLookOffTopic,
   type GroundedCouncilMsg,
 } from "../lib/projection-grounded";
@@ -20,6 +22,7 @@ const samples: { topic: string; messages: GroundedCouncilMsg[] }[] = [
   { topic: "是否换城市重新开始", messages: [] },
   { topic: "买不买学区房", messages: [] },
   { topic: "去不去杭州上班", messages: [] },
+  { topic: "去西安还是北京工作", messages: [] },
   { topic: "去北京还是西安发展", messages: [] },
   { topic: "去北京还是留在南京", messages: [] },
   { topic: "晚上吃麻辣烫还是喝粥", messages: [] },
@@ -104,6 +107,7 @@ for (const { topic, messages } of samples) {
   assert.ok(!off, `跑题: ${topic}`);
   for (const b of branches) {
     assert.ok(`${b.name}${b.description}`.length > 4, `空路径: ${topic}`);
+    assert.ok(isValidBranchName(b.name, topic), `路径名像聊天摘录: ${topic} → ${b.name}`);
   }
   expectAnchored(topic, branches);
   rows.push(
@@ -127,3 +131,20 @@ fs.writeFileSync(outPath, html, "utf8");
 
 console.log(`verify-projection-topics: OK (${samples.length} cases)`);
 console.log(`Report: ${outPath}`);
+
+const polluted = applyGroundedProjectionStructure("要不要去北京工作", [
+  {
+    name: "你:要不要去北京工作激进派:去北京工作别...",
+    description: "投3家北京头部公司，承担面试差旅成本，敢闯敢试心态",
+  },
+  {
+    name: "返乡创业都有降维优势",
+    description: "查头部企业核心岗布局，测算3年资源积累溢价，理性权衡心态",
+  },
+]);
+assert.equal(polluted.length, 2);
+assert.equal(polluted[0].name, "去北京工作");
+assert.equal(polluted[1].name, "不去北京工作");
+assert.ok(isValidBranchName(polluted[0].name, "要不要去北京工作"));
+assert.ok(isValidBranchName(polluted[1].name, "要不要去北京工作"));
+console.log("applyGroundedProjectionStructure: polluted LLM names replaced OK");

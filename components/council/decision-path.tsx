@@ -200,9 +200,69 @@ function BranchComparePanel({
   compareSummary?: string;
   comparedDelta: DecisionPathProps["comparedDelta"];
 }) {
+  const a = effectiveCompareA ? branches.find((b) => b.id === effectiveCompareA) ?? null : null;
+  const b = effectiveCompareB ? branches.find((b) => b.id === effectiveCompareB) ?? null : null;
+
+  const ScoreBar = ({
+    label,
+    value,
+    tone,
+  }: {
+    label: string;
+    value: number | null;
+    tone: "benefit" | "risk";
+  }) => {
+    const v = typeof value === "number" && Number.isFinite(value) ? Math.max(0, Math.min(100, value)) : null;
+    const track = "bg-white/10";
+    const fill =
+      tone === "benefit"
+        ? "bg-gradient-to-r from-emerald-400/70 via-emerald-300/70 to-emerald-200/60"
+        : "bg-gradient-to-r from-rose-400/70 via-rose-300/70 to-rose-200/60";
+    return (
+      <div className="space-y-1">
+        <div className="flex items-center justify-between text-[11px] text-white/55">
+          <span>{label}</span>
+          <span className="tabular-nums text-white/70">{v === null ? "—" : v}</span>
+        </div>
+        <div className={cn("h-2 w-full rounded-full overflow-hidden", track)}>
+          <div className={cn("h-full rounded-full", fill)} style={{ width: `${v ?? 0}%` }} />
+        </div>
+      </div>
+    );
+  };
+
+  const EmotionPill = ({ emo }: { emo: string | undefined }) => {
+    const text = emo ? EMOTION_LABEL[emo] ?? emo : "—";
+    return (
+      <span className="inline-flex items-center rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[11px] text-white/70">
+        {text}
+      </span>
+    );
+  };
+
+  const DeltaChip = ({ label, value, tone }: { label: string; value: number; tone: "good" | "bad" }) => {
+    const good = value > 0;
+    const isGood = tone === "good" ? good : !good;
+    const color = isGood ? "text-emerald-200 border-emerald-300/25 bg-emerald-500/10" : "text-rose-200 border-rose-300/25 bg-rose-500/10";
+    return (
+      <span className={cn("inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] tabular-nums", color)}>
+        <span className="text-white/60">{label}</span>
+        <span>{value > 0 ? `+${value}` : `${value}`}</span>
+      </span>
+    );
+  };
+
   return (
     <>
-      <div className="text-xs font-medium text-white/65 mb-2">分支比较</div>
+      <div className="flex items-center justify-between mb-2">
+        <div className="text-xs font-medium text-white/70">分支比较</div>
+        {a && b && a.id !== b.id && comparedDelta && (
+          <div className="flex items-center gap-1.5">
+            <DeltaChip label="收益" value={comparedDelta.benefit} tone="good" />
+            <DeltaChip label="风险" value={comparedDelta.risk} tone="bad" />
+          </div>
+        )}
+      </div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-3 mb-3">
         <BranchCompareSelectRow
           slot="A"
@@ -219,35 +279,43 @@ function BranchComparePanel({
           excludeId={effectiveCompareA ?? undefined}
         />
       </div>
-      {effectiveCompareA && effectiveCompareB && effectiveCompareA !== effectiveCompareB && (
-        <div className="text-xs text-white/75 leading-relaxed space-y-2">
-          {(() => {
-            const a = branches.find((b) => b.id === effectiveCompareA);
-            const b = branches.find((b) => b.id === effectiveCompareB);
-            if (!a || !b) return "请选择有效分支。";
-            const emoA = a.emotionForecast ? EMOTION_LABEL[a.emotionForecast] ?? a.emotionForecast : "-";
-            const emoB = b.emotionForecast ? EMOTION_LABEL[b.emotionForecast] ?? b.emotionForecast : "-";
-            return (
-              <>
-                <p>
-                  <span className="text-white/90 font-medium">A · {a.name}</span>：收益 {a.benefitScore ?? "-"} /
-                  风险 {a.riskScore ?? "-"} · 情绪预测 {emoA}
-                </p>
-                <p>
-                  <span className="text-white/90 font-medium">B · {b.name}</span>：收益 {b.benefitScore ?? "-"} /
-                  风险 {b.riskScore ?? "-"} · 情绪预测 {emoB}
-                </p>
-                {comparedDelta && (
-                  <p className="text-white/55">
-                    相对差值（A−B）：收益 {comparedDelta.benefit > 0 ? "+" : ""}
-                    {comparedDelta.benefit}，风险 {comparedDelta.risk > 0 ? "+" : ""}
-                    {comparedDelta.risk}
-                  </p>
-                )}
-                {(compareSummary ?? "").trim().length > 0 && <p>{compareSummary}</p>}
-              </>
-            );
-          })()}
+      {a && b && a.id !== b.id && (
+        <div className="space-y-3">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <div className="rounded-xl border border-white/10 bg-black/25 px-3 py-2.5">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <div className="text-[10px] uppercase tracking-wide text-white/45">A 路径</div>
+                  <div className="mt-0.5 text-xs font-medium text-white/90 leading-snug break-words">{a.name}</div>
+                </div>
+                <EmotionPill emo={a.emotionForecast} />
+              </div>
+              <div className="mt-2 space-y-2">
+                <ScoreBar label="收益" value={typeof a.benefitScore === "number" ? a.benefitScore : null} tone="benefit" />
+                <ScoreBar label="风险" value={typeof a.riskScore === "number" ? a.riskScore : null} tone="risk" />
+              </div>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-black/25 px-3 py-2.5">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <div className="text-[10px] uppercase tracking-wide text-white/45">B 路径</div>
+                  <div className="mt-0.5 text-xs font-medium text-white/90 leading-snug break-words">{b.name}</div>
+                </div>
+                <EmotionPill emo={b.emotionForecast} />
+              </div>
+              <div className="mt-2 space-y-2">
+                <ScoreBar label="收益" value={typeof b.benefitScore === "number" ? b.benefitScore : null} tone="benefit" />
+                <ScoreBar label="风险" value={typeof b.riskScore === "number" ? b.riskScore : null} tone="risk" />
+              </div>
+            </div>
+          </div>
+
+          {(compareSummary ?? "").trim().length > 0 && (
+            <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2.5">
+              <div className="text-[10px] uppercase tracking-wide text-white/45 mb-1">对比结论</div>
+              <div className="text-xs text-white/80 leading-relaxed">{compareSummary}</div>
+            </div>
+          )}
         </div>
       )}
     </>
@@ -303,24 +371,6 @@ export function DecisionPath({
   const tx = CX * (1 - TREE_SCALE);
   const ty = (CY + 1) * (1 - TREE_SCALE);
 
-  const selectedBranchGeom = (() => {
-    const selectedBranchId = selectedBranchData?.id ?? null;
-    if (!selectedBranchId) return null;
-    const index = branches.findIndex((b) => b.id === selectedBranchId);
-    if (index < 0) return null;
-    const totalBranches = branches.length;
-    const spread = 76;
-    const angleDenom = Math.max(1, totalBranches - 1);
-    const angleOffset = (index - (totalBranches - 1) / 2) * (spread / angleDenom);
-    const rad = (angleOffset * Math.PI) / 180;
-    const endX = CX + Math.sin(rad) * 46;
-    const endY = CY + 44 + Math.abs(Math.sin(rad)) * 4;
-    // Apply the same transform as the SVG group: translate then scale.
-    const xT = (endX + tx) * TREE_SCALE;
-    const yT = (endY + ty) * TREE_SCALE;
-    return { xT, yT };
-  })();
-
   return (
     <div className="relative w-full h-full overflow-hidden">
 
@@ -362,71 +412,6 @@ export function DecisionPath({
                 {question}
               </div>
             </div>
-
-            {/* 选中分支：派系意见用 HTML 叠层（避免 WebView foreignObject 不显示） */}
-            {selectedBranch && selectedBranchGeom && (
-              <div
-                className="absolute z-[90] pointer-events-none"
-                style={{
-                  left: `${selectedBranchGeom.xT}%`,
-                  top: `${selectedBranchGeom.yT}%`,
-                  transform: "translate(-50%, -50%)",
-                }}
-              >
-                <div className="relative pointer-events-auto">
-                  {(() => {
-                    const offsets = [
-                      { x: -40, y: -44 },
-                      { x: 0, y: -58 },
-                      { x: 40, y: -44 },
-                    ];
-                    return FACTIONS.map((f, i) => {
-                      const op = currentBranchOpinions[f.id];
-                      const isActive = selectedFaction === f.id;
-                      const o = offsets[i] ?? { x: 0, y: 0 };
-                      return (
-                        <div
-                          key={`overlay-faction-${f.id}`}
-                          className="absolute"
-                          style={{ transform: `translate(${o.x}px, ${o.y}px)` }}
-                        >
-                          {isActive && op?.opinion && (
-                            <div
-                              className="mb-1 w-[168px] max-w-[42vw] rounded-xl border px-2 py-2 text-[11px] leading-snug text-white/90 backdrop-blur-xl"
-                              style={{
-                                backgroundColor: "rgba(10,15,26,0.92)",
-                                borderColor: f.borderColor,
-                                boxShadow: `0 0 18px ${f.glow}`,
-                              }}
-                            >
-                              {op.opinion}
-                            </div>
-                          )}
-                          <button
-                            type="button"
-                            className="flex flex-col items-center gap-0.5 select-none"
-                            onClick={() => handleFactionClick(f.id)}
-                          >
-                            <div
-                              className="h-8 w-8 rounded-full flex items-center justify-center text-[12px] font-bold"
-                              style={{
-                                backgroundColor: f.bgColor,
-                                border: `2px solid ${isActive ? f.color : f.borderColor}`,
-                                color: f.color,
-                                boxShadow: isActive ? `0 0 18px ${f.glow}` : "none",
-                              }}
-                            >
-                              {f.name[0]}
-                            </div>
-                            <div className="text-[10px] text-white/55">{factionSupportText(op?.support)}</div>
-                          </button>
-                        </div>
-                      );
-                    });
-                  })()}
-                </div>
-              </div>
-            )}
 
             <svg className="w-full h-full overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
               <g transform={treeTransform}>
@@ -587,9 +572,9 @@ export function DecisionPath({
         )}
       </div>
 
-      {/* 选中分支详情：底部抽屉（避免在底部提示条之下不可见） */}
+      {/* 选中分支详情：底部抽屉（内置派系意见按钮，避免被遮挡） */}
       <AnimatePresence>
-        {selectedBranch && !selectedFaction ? (
+        {selectedBranch ? (
           <motion.div
             key="branch-drawer"
             className="absolute inset-0 z-[120]"
@@ -635,6 +620,7 @@ export function DecisionPath({
                     const ev = sel ? pickNodeLabel(sel.nodes, "event") : "—";
                     const fi = sel ? pickNodeLabel(sel.nodes, "finance") : "—";
                     const em = sel ? pickNodeLabel(sel.nodes, "emotion") : "—";
+                    const opinions = sel?.opinions ?? {};
                     return (
                       <>
                         <div className="mb-3 rounded-xl border border-white/10 bg-black/25 px-3 py-2.5 space-y-1.5">
@@ -668,6 +654,49 @@ export function DecisionPath({
                           )}
                         </div>
                         <p className="text-sm text-white/80 leading-relaxed">{sel?.description}</p>
+
+                        <div className="mt-4 rounded-xl border border-white/10 bg-black/20 px-3 py-2.5">
+                          <div className="text-[10px] font-medium uppercase tracking-wide text-white/45 mb-2">
+                            各派系意见（点击查看）
+                          </div>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            {FACTIONS.map((f) => {
+                              const op = opinions[f.id];
+                              const isActive = selectedFaction === f.id;
+                              return (
+                                <button
+                                  key={`drawer-faction-${f.id}`}
+                                  type="button"
+                                  onClick={() => handleFactionClick(f.id)}
+                                  className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px]"
+                                  style={{
+                                    backgroundColor: f.bgColor,
+                                    border: `1.5px solid ${isActive ? f.color : f.borderColor}`,
+                                    color: f.color,
+                                    boxShadow: isActive ? `0 0 12px ${f.glow}` : "none",
+                                  }}
+                                >
+                                  <span className="font-semibold">{f.name}</span>
+                                  <span className="text-white/65">{factionSupportText(op?.support)}</span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                          {selectedFaction && activeFaction && activeOpinion?.opinion && (
+                            <div
+                              className="mt-3 rounded-lg border px-2.5 py-2 text-xs leading-relaxed text-white/90"
+                              style={{
+                                backgroundColor: "rgba(10,15,26,0.92)",
+                                borderColor: activeFaction.borderColor,
+                              }}
+                            >
+                              <div className="mb-1 text-[10px]" style={{ color: activeFaction.color }}>
+                                {activeFaction.name}观点
+                              </div>
+                              {activeOpinion.opinion}
+                            </div>
+                          )}
+                        </div>
                       </>
                     );
                   })()}

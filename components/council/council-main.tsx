@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { RoleSeat, RoleType } from "./role-seat";
 import { MessageBubble } from "./message-bubble";
 import { MoodIndicator, MoodType } from "./mood-indicator";
@@ -186,6 +186,7 @@ export function CouncilMain({
   const [isImportingMentor, setIsImportingMentor] = useState(false);
   const [mentorImported, setMentorImported] = useState(false);
   const [councilNetworkError, setCouncilNetworkError] = useState<string | null>(null);
+  const [isRetrying, setIsRetrying] = useState(false);
   const [sessionHydrated, setSessionHydrated] = useState(false);
   const [clickRipples, setClickRipples] = useState<Array<{ id: string; x: number; y: number }>>([]);
   const messageListRef = useRef<HTMLDivElement | null>(null);
@@ -226,11 +227,12 @@ export function CouncilMain({
   };
 
   useEffect(() => {
+    const hasPendingDebate = isSending || isRetrying;
     if (isUiActive) {
       clearCouncilAwayTimer();
       return;
     }
-    if (!isSending) {
+    if (!hasPendingDebate) {
       clearCouncilAwayTimer();
       return;
     }
@@ -243,7 +245,7 @@ export function CouncilMain({
     return () => {
       clearCouncilAwayTimer();
     };
-  }, [isUiActive, isSending, councilAwayMs]);
+  }, [isUiActive, isSending, isRetrying, councilAwayMs]);
 
   const CALM_FLOOR = 35;
   /** 与 MoodIndicator anxietyOnly 一致：level < 65 显示平静，否则显示焦虑；积极类情绪应把 level 压在此阈值以下 */
@@ -643,9 +645,9 @@ export function CouncilMain({
 
   const retryLastDebate = async () => {
     const p = lastDebatePayloadRef.current;
-    if (!p || isSending) return;
+    if (!p || isSending || isRetrying) return;
     councilAwayInterruptRef.current = false;
-    setIsSending(true);
+    setIsRetrying(true);
     setCouncilNetworkError(null);
     const debateAc = new AbortController();
     councilDebateAbortRef.current = debateAc;
@@ -698,7 +700,7 @@ export function CouncilMain({
       clearCouncilAwayTimer();
       councilDebateAbortRef.current = null;
       councilAwayInterruptRef.current = false;
-      setIsSending(false);
+      setIsRetrying(false);
       setThinkingRole(null);
       setActiveRole(null);
     }
@@ -706,6 +708,10 @@ export function CouncilMain({
 
   const handleSend = async (message: string) => {
     if (isSending) return;
+    if (isRetrying) {
+      councilDebateAbortRef.current?.abort();
+      setIsRetrying(false);
+    }
     councilAwayInterruptRef.current = false;
     void storageRemove(COUNCIL_PROJECTION_SUPPRESS_KEY);
     setCitedMemories([]);
@@ -1061,11 +1067,11 @@ export function CouncilMain({
           <button
             type="button"
             onClick={() => void retryLastDebate()}
-            disabled={isSending || !lastDebatePayloadRef.current}
+            disabled={isSending || isRetrying || !lastDebatePayloadRef.current}
             className="inline-flex items-center gap-1 rounded-lg border border-amber-400/40 px-2 py-1 text-amber-50 hover:bg-amber-500/20 disabled:opacity-50"
           >
             <RefreshCw className="h-3.5 w-3.5" />
-            重试
+            {isRetrying ? "重试中…" : "重试"}
           </button>
           <button
             type="button"
@@ -1118,7 +1124,9 @@ export function CouncilMain({
           className={`relative z-10 w-full max-w-[min(90vw,60rem)] transition-opacity duration-300 ${
             isResettingRound ? "opacity-0" : "opacity-100"
           }`}
-          style={{ marginTop: isLandscape ? 24 : undefined, marginBottom: COUNCIL_NAV_CLEARANCE_PX - 4 }}
+          // 顶部下移：底部由 paddingBottom/footHeight 控制，保持不变
+          // 顶部下移：竖屏与横屏都要生效；底部由 footerHeight 控制，保持不变
+          style={{ marginTop: isLandscape ? 44 : 60, marginBottom: COUNCIL_NAV_CLEARANCE_PX - 4 }}
         >
           {citedMemories.length > 0 && (
             <div className="absolute left-[-0.25rem] md:left-[-0.5rem] bottom-[-1.8rem] md:bottom-[-2rem] flex max-w-[72vw] flex-wrap justify-start gap-2 pr-2">
@@ -1139,11 +1147,21 @@ export function CouncilMain({
               <div className="flex w-full items-end gap-3">
                 <div className="min-w-0 flex-1">
                   <div className="relative">
-                    <div className="pointer-events-none absolute left-2 bottom-1 z-20">
-                      <span className="rounded-md bg-black/35 px-2 py-1 text-[10px] text-muted-foreground/75 backdrop-blur-sm">
-                        会话记录（上下滑动查看）
-                      </span>
-                    </div>
+                    <AnimatePresence>
+                      {archiveHint && (
+                        <motion.div
+                          key={`archive-hint-${archiveHint}`}
+                          initial={{ opacity: 0, y: 8, scale: 0.985 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: -8, scale: 0.99 }}
+                          transition={{ duration: 0.45, ease: "easeOut" }}
+                          className="pointer-events-none absolute left-1/2 top-2 z-30 -translate-x-1/2 rounded-lg border border-emerald-300/35 bg-emerald-500/15 px-3 py-1.5 text-xs text-emerald-100 shadow-[0_6px_24px_rgba(16,185,129,0.18)] backdrop-blur-sm"
+                        >
+                          {archiveHint}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                    {/* 会话记录提示已移至底部导航栏左侧，这里移除避免重复 */}
                     <div
                       ref={messageListRef as any}
                       className="h-[clamp(14rem,40vh,24rem)] overflow-y-auto flex flex-col gap-2 px-1 pb-6 scrollbar-hide"
@@ -1183,8 +1201,6 @@ export function CouncilMain({
         className="fixed bottom-0 left-0 right-0 z-30 pt-3 bg-background/20"
         style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
       >
-        {archiveHint && <div className="text-center text-xs text-emerald-300 mb-2 px-6">{archiveHint}</div>}
-
         {/* 底部输入框左侧：PS² + 情绪图标并排，且不拦截输入点击 */}
         <div className="pointer-events-none absolute left-4 md:left-6 bottom-4">
           <motion.div
@@ -1233,7 +1249,13 @@ export function CouncilMain({
         </div>
 
         {/* 输入栏始终可见 */}
-        <InputBar key={inputResetKey} onSend={handleSend} disabled={isSending} />
+        <InputBar
+          key={inputResetKey}
+          onSend={handleSend}
+          disabled={isSending || isRetrying || thinkingRole !== null}
+          loading={isSending || isRetrying || thinkingRole !== null}
+          loadingText="会话正在生成中..."
+        />
       </footer>
     </div>
   );
