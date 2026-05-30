@@ -162,7 +162,7 @@ function extractEnglishDecisionCore(raw: string): string | null {
 /**
  * 从主题与讨论摘录中抽出「核心决策语」，用于模板路径命名与决策树节点要点（避免泛化「积极行动」）。
  */
-function extractCoreDecisionPhrase(topic: string, hostRef: string): string {
+export function extractCoreDecisionPhrase(topic: string, hostRef: string): string {
   const blob = `${topic}\n${hostRef}`;
   const core =
     extractBinaryDecisionAction(topic) ??
@@ -275,7 +275,8 @@ function opPair(support: number, opinion: string) {
 }
 
 /**
- * 三派系简短意见：适用于任意议题；pathFocus 为本条路径的标签（选项名/城市/节奏名）。
+ * 三派系简短意见：按议题域类型 × 节奏生成具体建议，锚定话题关键词。
+ * pathFocus 为本条路径的标签（选项名/城市/节奏名）。
  */
 function opinionsForPath(
   topicShort: string,
@@ -287,63 +288,71 @@ function opinionsForPath(
   const p = clip(pathFocus, 16);
   const food = ctx.foodish ?? false;
   const blendPeer = ctx.blendPeer ? clip(ctx.blendPeer, 20) : "";
+  const defaultSupport: Record<FactionKey, Record<"push" | "steady" | "blend", number>> = {
+    radical: { push: 84, steady: 34, blend: 58 },
+    future: { push: 68, steady: 72, blend: 86 },
+    conservative: { push: 42, steady: 88, blend: 76 },
+  };
+  const foodSupport: Record<FactionKey, Record<"push" | "steady" | "blend", number>> = {
+    radical: { push: 82, steady: 36, blend: 58 },
+    future: { push: 66, steady: 74, blend: 86 },
+    conservative: { push: 44, steady: 88, blend: 76 },
+  };
 
-  if (tone === "push") {
-    if (food) {
-      return {
-        radical: opPair(82, `激进派：想选「${p}」就别久拖；适量，别影响休息和肠胃。`),
-        future: opPair(66, `未来派：隔天若有要事，「${p}」点到为止，留状态。`),
-        conservative: opPair(44, `保守派：太晚或胃不舒服就减量「${p}」，别硬撑。`),
-      };
-    }
-    return {
-      radical: opPair(84, `激进派：押「${p}」先落最小行动，把「${t}」推进到可验证。`),
-      future: opPair(68, `未来派：为「${p}」设 7～30 天复盘，对齐更长目标。`),
-      conservative: opPair(42, `保守派：动「${p}」前写好底线、止损与资源上限。`),
-    };
-  }
-
-  if (tone === "steady") {
-    if (food) {
-      return {
-        radical: opPair(36, `激进派：怕「${p}」太寡淡就加点搭配，别又报复性乱吃。`),
-        future: opPair(74, `未来派：「${p}」更利身体与作息时，值得优先。`),
-        conservative: opPair(88, `保守派：今晚「${p}」最省心、最稳。`),
-      };
-    }
-    return {
-      radical: opPair(34, `激进派：嫌「${p}」慢可设「到点就加码」的触发条件。`),
-      future: opPair(72, `未来派：「${p}」若更可持续，坚持到复盘日再调整。`),
-      conservative: opPair(88, `保守派：「${p}」风险更可控，适合当前承压阶段。`),
-    };
-  }
-
-  // blend / 中间取向：表述锚定 pathFocus，避免泛化「折中」套话
+  // 饮食类议题保持原有简单逻辑（食物相关的话题不需要 domain 感知）
   if (food) {
+    const sup = foodSupport;
+    if (tone === "push") {
+      return {
+        radical: opPair(sup.radical.push, `激进派：想选「${p}」就别久拖——适量，别影响休息和肠胃。`),
+        future: opPair(sup.future.push, `未来派：隔天若有要事，「${p}」点到为止，留状态。`),
+        conservative: opPair(sup.conservative.push, `保守派：太晚或胃不舒服就减量「${p}」，别硬撑。`),
+      };
+    }
+    if (tone === "steady") {
+      return {
+        radical: opPair(sup.radical.steady, `激进派：怕「${p}」太寡淡就加点搭配，别又报复性乱吃。`),
+        future: opPair(sup.future.steady, `未来派：「${p}」更利身体与作息时，值得优先。`),
+        conservative: opPair(sup.conservative.steady, `保守派：今晚「${p}」最省心、最稳。`),
+      };
+    }
     return {
-      radical: opPair(58, `激进派：「${p}」可以，今晚定主调，别越吃越杂。`),
-      future: opPair(86, `未来派：先试「${p}」，感受再选更偏哪一侧。`),
-      conservative: opPair(76, `保守派：控制总量，盯紧肠胃与睡眠。`),
+      radical: opPair(sup.radical.blend, `激进派：折中可以，今晚定主调，别越吃越杂。`),
+      future: opPair(sup.future.blend, `未来派：先试折中方案，感受再选更偏哪一侧。`),
+      conservative: opPair(sup.conservative.blend, `保守派：控制总量，盯紧肠胃与睡眠。`),
     };
   }
-  if (ctx.cityMode && blendPeer) {
-    return {
-      radical: opPair(58, `激进派：「${p}」要设截止，避免在「${t}」上无限拖延。`),
-      future: opPair(86, `未来派：在${blendPeer}之间试点迁移或通勤，再收敛。`),
-      conservative: opPair(76, `保守派：「${p}」须划清预算、通勤与健康红线。`),
-    };
+
+  // 检测域类型，使用领域感知模板
+  const kind = detectDomainKind(`${t}\n${p}`);
+  const templates = RICH_OPINIONS[kind]?.[tone] ?? RICH_OPINIONS.generic[tone];
+  const sup = defaultSupport;
+
+  // 注入话题锚点（{focus}=路径标签, {topic}=议题），确保意见提到具体话题关键词
+  const radicalText = templates.radical
+    .replace(/\{focus\}/g, p)
+    .replace(/\{topic\}/g, t);
+  let futureText = templates.future
+    .replace(/\{focus\}/g, p)
+    .replace(/\{topic\}/g, t);
+  let conservativeText = templates.conservative
+    .replace(/\{focus\}/g, p)
+    .replace(/\{topic\}/g, t);
+
+  // 确保全文话题关键词一定出现在某条意见中（用于 off-topic 检测锚定）
+  if (!radicalText.includes(t) && !futureText.includes(t) && !conservativeText.includes(t)) {
+    conservativeText = `${conservativeText}（围绕「${t}」）`;
   }
-  if (blendPeer) {
-    return {
-      radical: opPair(58, `激进派：「${p}」要设截止，别把「${t}」悬着不决。`),
-      future: opPair(86, `未来派：在${blendPeer}之间小步试点，用结果再定主方向。`),
-      conservative: opPair(76, `保守派：划清边界与成本上限，避免两头都不落实。`),
-    };
+
+  // 为 blend 城市/选项模式注入两侧名称
+  if (blendPeer && (ctx.cityMode || tone === "blend")) {
+    futureText = futureText.replace(/之间/gu, `（${blendPeer}）之间`);
   }
+
   return {
-    radical: opPair(58, `激进派：「${p}」可行，但必须有过线就选的机制。`),
-    future: opPair(86, `未来派：分阶段验证「${t}」，再收敛到主方案。`),
-    conservative: opPair(76, `保守派：每段写清投入上限与退出条件。`),
+    radical: opPair(sup.radical[tone], radicalText),
+    future: opPair(sup.future[tone], futureText),
+    conservative: opPair(sup.conservative[tone], conservativeText),
   };
 }
 
@@ -697,6 +706,16 @@ function coreTripleBranches(topic: string, hostRef: string): GroundedBranch[] {
   const intro = hostRef.trim() ? `${clip(hostRef, 220)}。` : "";
   const pathWord = clip(core, 12);
 
+  const descPush = buildRichDescription({
+    topic, topicShort, core, option: coreLabel, tone: "push", intro: intro || undefined,
+  });
+  const descSteady = buildRichDescription({
+    topic, topicShort, core, option: coreLabel, tone: "steady", intro: intro || undefined,
+  });
+  const descBlend = buildRichDescription({
+    topic, topicShort, core, option: coreLabel, tone: "blend", intro: intro || undefined,
+  });
+
   return [
     {
       id: "tpl-core-push",
@@ -705,7 +724,7 @@ function coreTripleBranches(topic: string, hostRef: string): GroundedBranch[] {
       riskScore: 62,
       benefitScore: 82,
       emotionForecast: "excited",
-      description: `${intro}围绕「${topicShort}」，全力推进「${core}」：进展最快，短期波动与压力可能更高。`,
+      description: descPush,
       nodes: templateDistilledNodes("core-push", "push", topicShort, core),
       opinions: opinionsForPath(topicShort, `推进${pathWord}`, "push", {}),
     },
@@ -716,7 +735,7 @@ function coreTripleBranches(topic: string, hostRef: string): GroundedBranch[] {
       riskScore: 34,
       benefitScore: 62,
       emotionForecast: "calm",
-      description: `${intro}围绕「${topicShort}」，暂缓「${core}」：先守基本盘、补信息，节奏更稳，可能放慢窗口。`,
+      description: descSteady,
       nodes: templateDistilledNodes("core-hold", "steady", topicShort, core),
       opinions: opinionsForPath(topicShort, `暂缓${pathWord}`, "steady", {}),
     },
@@ -727,7 +746,7 @@ function coreTripleBranches(topic: string, hostRef: string): GroundedBranch[] {
       riskScore: 48,
       benefitScore: 76,
       emotionForecast: "happy",
-      description: `${intro}围绕「${topicShort}」，对「${core}」小步试点：控制投入与截止日，再决定全面推进或收手。`,
+      description: descBlend,
       nodes: templateDistilledNodes("core-pilot", "blend", topicShort, core),
       opinions: opinionsForPath(topicShort, `试点${pathWord}`, "blend", {
         blendPeer: `「推进${pathWord}」与「暂缓${pathWord}」`,
@@ -1448,9 +1467,401 @@ export function sanitizeBranchDescription(desc: string, branchName: string, topi
   if (!t || (hadBoilerplate && t.length < 24)) {
     const label = clip(branchName.replace(/[「」"]/g, ""), 20);
     const subj = clip(topic.replace(/\s+/g, " "), 36);
-    return `选择「${label}」：围绕「${subj}」落实该方向，关注机会、成本、节奏与情绪承受。`;
+    return `选择「${label}」：对「${subj}」走这一步会直接改变时间、精力与情绪走向——确认得失再定，不靠想象做决定。`;
   }
   return clip(t, 480);
+}
+
+// ─── 富描述生成器：按域类型 × 节奏查找具体模板 ──────────────────────────────
+
+const RICH_DESC: Record<
+  DomainKind,
+  Record<"push" | "steady" | "blend", string>
+> = {
+  career: {
+    push: "主动推进「{core}」：投递/面试/谈判同步展开——反馈快、机会多，但短期不确定性高，心力消耗最大。",
+    steady: "先保留现状观察「{core}」：补齐岗位、市场与现金流信息再动——风险最可控，但窗口可能收窄或越等越纠结。",
+    blend: "为「{core}」做准备金：简历/作品集/人脉小步试点，定复盘点后再决定是否全力推进——进可攻退可守。",
+  },
+  relationship: {
+    push: "正面沟通「{core}」：目标、边界、底线一次说清——推进快但情绪波动更大，适合憋不住、需要止损的阶段。",
+    steady: "暂缓升级「{core}」：先给彼此时间与空间观察一致性——冲突更少，但悬而未决可能更耗心力。",
+    blend: "小步验证「{core}」：先定义 1-2 个可观察行为指标与期限，达标再升级投入——不全有或全无，给自己留后路。",
+  },
+  finance: {
+    push: "执行「{core}」并设规则控制风险：预算上限、止损/止盈、分批投入——行动带来反馈，但回撤与后悔成本更高。",
+    steady: "先不做「{core}」：保留现金流与确定性，补齐信息后再判断——最稳，但可能错过时机或越等越焦虑。",
+    blend: "小额/试用/试投替代一次押注：先看真实收益曲线，达标再扩大——兼顾体验与安全，不为冲动买单。",
+  },
+  study: {
+    push: "全力投入「{core}」：目标院校/科目安排、周节奏与模拟检验——进展最快，但压力与时间成本也最高。",
+    steady: "先延后「{core}」：把基础盘（健康/财务/时间块）打稳再投入——更可持续，但进度会慢、机会窗可能过。",
+    blend: "试学 2-3 周「{core}」：小规模复习/选课/旁听，记录投入产出与兴趣强度再决定——不盲目冲也不无限拖。",
+  },
+  health: {
+    push: "立刻干预「{core}」：拆成 1-2 个今天就能做的动作（运动/作息/饮食/就医）——快速止损，但执行压力更高。",
+    steady: "先休整再看「{core}」：恢复睡眠与可决策状态再判断——降低误判风险，但症状可能持续或加重。",
+    blend: "用可持续习惯替代一口气猛改：固定时间块、触发器、复盘点——让「{core}」逐步落地不反弹。",
+  },
+  move: {
+    push: "推进落地「{core}」：目标片区/预算/通勤同步推进——资源切换更快，但适应与成本压力也更高。",
+    steady: "先暂留原地评估「{core}」：稳现金流与生活秩序，补信息后再择机——风险最低，但密度与机会少。",
+    blend: "短租/远程/双城过渡试点：先拿真实体感再决定是否全面迁移——不一步到位，也不原地踏步。",
+  },
+  buy: {
+    push: "立即决策「{core}」：尽快获得使用体验与反馈——爽快但后悔成本更高，适合价格不敏感的阶段。",
+    steady: "先不下单「{core}」：比较替代方案、后续支出与使用频率再定——稳，但可能错过优惠或越比越累。",
+    blend: "试用/租借/小规格验证「{core}」：满意再升级——按真实体验决定，不靠想象下单。",
+  },
+  startup: {
+    push: "快速上线「{core}」：尽快落 MVP 与真实用户验证——反馈最快，但资源消耗与试错成本更高。",
+    steady: "先验证需求与单元经济再推进「{core}」：风险更可控，但增长速度较慢、窗口可能被抢。",
+    blend: "小范围跑通闭环「{core}」：一个人群/渠道/场景先跑通，设里程碑再扩大——不盲目烧钱。",
+  },
+  travel: {
+    push: "按计划出发「{core}」：机酒/行程/预算尽快锁定——体验收益高，但改签与超支风险更大。",
+    steady: "先延后「{core}」：等待时间/预算/同行条件更匹配再走——风险低，但可能错过最佳窗口。",
+    blend: "轻量版方案「{core}」：短途/缩天数/降预算——保留体验同时控制投入，小满足也不错。",
+  },
+  parenting: {
+    push: "立即执行「{core}」：快速观察孩子反馈与适应性——推进快但家庭磨合成本更高，适合有紧急需求的阶段。",
+    steady: "先观察「{core}」：摸清孩子节奏与家庭承受度再定方案——冲突更少，但见效更慢。",
+    blend: "分步试行「{core}」：按周记录反馈（情绪/作息/效果）再决定是否全面执行——不急着一步到位。",
+  },
+  legal: {
+    push: "依法推进「{core}」：证据、函件、仲裁/诉讼按程序走——止损明确但时间与精力成本高。",
+    steady: "先协商处理「{core}」：通过沟通与补充协议解决——成本低但执行约束力可能不足。",
+    blend: "协商与备诉并行推进「{core}」：争取协商解决同时备齐证据与法务预案——保留主动权。",
+  },
+  content: {
+    push: "高频产出「{core}」：快速迭代选题/封面/脚本——增长潜力高，但容易透支、内容质量可能下滑。",
+    steady: "转向精品化「{core}」：降低频率、提升单条质量与品牌一致性——质量稳定，但起量更慢。",
+    blend: "双轨试验「{core}」：主号稳内容、副线做爆款实验，按数据复盘收敛策略——兼顾稳定与增长。",
+  },
+  social: {
+    push: "主动拓展「{core}」：发起连接（邀约/合作/介绍）快速扩大圈子——机会多但时间与心力成本更高。",
+    steady: "优先维护核心关系「{core}」：少量高质量连接深耕——节奏可控，但新机会增速较慢。",
+    blend: "节奏化经营「{core}」：固定节奏做维护+拓展组合动作——兼顾稳定与增量，不冷落也不透支。",
+  },
+  generic: {
+    push: "聚焦「{core}」快速推进：直接投入并换取真实反馈——进展最快，但短期波动与压力也最大，适合不试不甘心的阶段。",
+    steady: "暂缓「{core}」守住现状：先补信息、稳基本盘——风险最可控，但窗口可能关闭或越等越纠结。",
+    blend: "对「{core}」小步试点：控制投入与截止日，拿到真实反馈后再定全部投入还是果断收手——进可攻退可守。",
+  },
+};
+
+// ─── 领域感知派系意见模板（与 RICH_DESC 同构，按 DomainKind × tone） ──────────
+
+type FactionKey = "radical" | "future" | "conservative";
+
+const RICH_OPINIONS: Record<
+  DomainKind,
+  Record<"push" | "steady" | "blend", Record<FactionKey, string>>
+> = {
+  career: {
+    push: {
+      radical: "激进派：快速投简历、约面试、同步谈 offer——用最短时间拿真实反馈，别在想象里犹豫。",
+      future: "未来派：投岗位前先看公司 3-5 年天花板与技能复利，这步影响的不只是下一份工作。",
+      conservative: "保守派：锁定目标后设两周冲刺期，超期没进展就回调——别一次押满。",
+    },
+    steady: {
+      radical: "激进派：一直观望会钝化竞争力——至少每月更新简历、关注市场动向，别被动沉底。",
+      future: "未来派：留下来积累沉淀不是坏事，但写清「再评估」时间节点，别无限期耗着。",
+      conservative: "保守派：先补齐现金流、健康与合同细节，动之前确保安全垫够厚。",
+    },
+    blend: {
+      radical: "激进派：简历/作品集/人脉同步推进，设截止日到期必须有结论——不悬着。",
+      future: "未来派：在现岗位和外部机会间试点兼职/咨询/旁路收入，用结果代替空想。",
+      conservative: "保守派：每一步写清投入上限与退出条件，不在中间状态消耗太久。",
+    },
+  },
+  relationship: {
+    push: {
+      radical: "激进派：直接约一次正式沟通——目标、底线、下一步摊开说，长痛不如短痛。",
+      future: "未来派：沟通前先想清楚这段关系 3 年后对你的意义，别只解决眼前矛盾。",
+      conservative: "保守派：摊牌前备好情绪缓冲与边界话术，避免情绪上头把路堵死。",
+    },
+    steady: {
+      radical: "激进派：暂停沟通如果拖太久就是消耗——设一个观察期，超期必须给结论。",
+      future: "未来派：给自己空间没错，但拉长时间线看行为一致性比看单次对话更准。",
+      conservative: "保守派：先恢复自身状态再谈关系，低能量时刻做的决定容易日后后悔。",
+    },
+    blend: {
+      radical: "激进派：先定 1-2 个可观察行为指标（回应速度、主动度），再决定升温还是收手。",
+      future: "未来派：用小步试探替代全有或全无，每次互动后复盘是否符合你的长期需求。",
+      conservative: "保守派：试探前先明确你绝对不能接受的红线，达标才升级，不达标记得撤。",
+    },
+  },
+  finance: {
+    push: {
+      radical: "激进派：分批执行并设止损止盈——只有真实交易能检验策略，纸上谈兵没用。",
+      future: "未来派：这笔投入在 3 年后回头看是资产还是开销？想清楚再下注。",
+      conservative: "保守派：单笔不超过可投资产 10%，设好止损线，纪律比方向更重要。",
+    },
+    steady: {
+      radical: "激进派：持币观望太久会错过周期——至少定好触发条件，到点就执行。",
+      future: "未来派：现在不动的每一块钱都在被通胀吃掉——找最稳的现金替代品先放着。",
+      conservative: "保守派：保持高流动性没错，但至少要跑赢通胀，否则也是在亏。",
+    },
+    blend: {
+      radical: "激进派：先用小额试水真实收益曲线，别让「研究」变成「拖延」。",
+      future: "未来派：试投同时列好如果判断错了的补救方案，两头都不耽误。",
+      conservative: "保守派：小额试投也要设最大回撤上限，亏到红线就停。",
+    },
+  },
+  study: {
+    push: {
+      radical: "激进派：定好目标院校/科目和每周最低学习量——先动起来，别在计划里耗光冲劲。",
+      future: "未来派：选方向时拉长到 5 年看回报——热门不等于适合你，技能迁移性更关键。",
+      conservative: "保守派：全力投入前先确认身体状况和时间块够不够支撑——别拼到一半崩了。",
+    },
+    steady: {
+      radical: "激进派：延迟太久容易彻底放弃——设一个最晚启动日，过期必须做决定。",
+      future: "未来派：把基础盘（健康、财务、时间）打稳再投入是对的，但窗口期也不会等你。",
+      conservative: "保守派：先把手头的事清干净再开新坑，别两头都半桶水。",
+    },
+    blend: {
+      radical: "激进派：先试 2-3 周小规模学习，看真实投入产出再定——不靠想象评估难度。",
+      future: "未来派：试跑阶段重点观察兴趣能否持续——短期热情和长期坚持是两回事。",
+      conservative: "保守派：试学期间设每周上限（时间+费用），超支就重新评估。",
+    },
+  },
+  health: {
+    push: {
+      radical: "激进派：今天就开始做 1 个最小动作（散步/早睡/少糖），别等「准备好了」。",
+      future: "未来派：这步能让你 3 年后的身体状态完全不同——现在不动，以后要花更多代价。",
+      conservative: "保守派：动之前先确认有没有隐藏伤病或禁忌，盲目猛冲反而容易出问题。",
+    },
+    steady: {
+      radical: "激进派：一直休息解决不了根本问题——设一个恢复期截止日，到点必须启动。",
+      future: "未来派：休整是为了更可持续地前进，不是回避——休整≠放弃。",
+      conservative: "保守派：先睡够、吃好、把心态稳下来，低状态下做的任何决定都不可靠。",
+    },
+    blend: {
+      radical: "激进派：固定时间块做固定动作，别靠意志力——习惯化了才算真正落地。",
+      future: "未来派：选一个能坚持 10 年的方式，而不是两周就放弃的猛药。",
+      conservative: "保守派：从小到不可能失败的量开始，宁可慢一点也别一口气搞垮。",
+    },
+  },
+  move: {
+    push: {
+      radical: "激进派：尽快实地踩点、算清通勤与预算——真实体感比网上看一百篇帖子有用。",
+      future: "未来派：这一搬影响 3-5 年生活半径与职业密度——不只是换张床，是换种活法。",
+      conservative: "保守派：动之前先做最坏打算：如果那边不如预期，退路是什么？",
+    },
+    steady: {
+      radical: "激进派：一直「评估」下去就永远动不了——设一个最晚决策日，过期必须选一边。",
+      future: "未来派：留下意味着放弃那边的密度与机会——这个代价你确认能接受吗？",
+      conservative: "保守派：先稳现金流与当前生活秩序，动之前确保新城市有至少 3 个月缓冲金。",
+    },
+    blend: {
+      radical: "激进派：短租/出差先试住两周，别在键盘上决定生活——真实感受会打脸所有预设。",
+      future: "未来派：双城过渡不是长久之计——设一个最终落脚时间点，避免长期分裂消耗。",
+      conservative: "保守派：过渡期间设预算和时间上限，超支就收——别让试点变成新的拖延。",
+    },
+  },
+  buy: {
+    push: {
+      radical: "激进派：下单前确认使用频率——用「每次使用成本」替代「总价」判断值不值。",
+      future: "未来派：这笔消费 1 年后回头看是资产还是负担？冲动满足感和长期价值要分清。",
+      conservative: "保守派：设一个冷静期（≥24h），高单价商品别在情绪高点决定。",
+    },
+    steady: {
+      radical: "激进派：一直不买有时候反而更费钱——算清替代方案的实际成本再定。",
+      future: "未来派：省下钱是手段不是目的——如果这个东西能提升你每天的生活质量，值得花。",
+      conservative: "保守派：先比价 3 家、算清后续费用（维护/配件/耗材）再定。",
+    },
+    blend: {
+      radical: "激进派：先租/借/买小规格试用，真实体验后决定——别靠想象和测评下判断。",
+      future: "未来派：试用时留意使用频率和真实满意度——数据不会骗你。",
+      conservative: "保守派：试用期间设好期限，到期必须决定——别让试用变成变相拖延。",
+    },
+  },
+  travel: {
+    push: {
+      radical: "激进派：机票酒店越拖越贵——尽早锁定核心资源，其余可以灵活调整。",
+      future: "未来派：此行是否和你的长期目标一致？放松≠逃避，确认出发的动机。",
+      conservative: "保守派：出发前确认预算含 20% 弹性——行程总有意料之外。",
+    },
+    steady: {
+      radical: "激进派：一直等着就永远走不了——定一个最晚订票日，过期不等。",
+      future: "未来派：有些窗口（季节/假期/优惠）错过就没了——权衡等待成本和错过成本。",
+      conservative: "保守派：等预算、时间、同伴全齐再动——缺一项就减配方案，别无限延期。",
+    },
+    blend: {
+      radical: "激进派：短途/缩天数也能换环境——不求完美旅行，先走出去再说。",
+      future: "未来派：轻量版也能积累体验和回忆——品质不完全等于时长和预算。",
+      conservative: "保守派：轻量出行前确认关键底线（安全/健康/通讯），其余从简。",
+    },
+  },
+  startup: {
+    push: {
+      radical: "激进派：MVP 两周内上线拿真实用户反馈——速度是你此刻最大的优势，别在打磨里耗死。",
+      future: "未来派：上线前先确认这个方向 3 年后市场规模是否够大——别在萎缩赛道里拼命。",
+      conservative: "保守派：设好烧钱上限和止损节点——跑起来的同时别把退路烧光。",
+    },
+    steady: {
+      radical: "激进派：过度验证容易错过窗口——市场不会等你完美了才开跑。",
+      future: "未来派：验证阶段收集的不只是数据，还有你对赛道真实体感——认真对待每一条反馈。",
+      conservative: "保守派：先确认目标用户的付费意愿和留存——虚荣指标好看没用。",
+    },
+    blend: {
+      radical: "激进派：小范围跑通闭环再扩大——不用一开始就做所有人，先做一群人。",
+      future: "未来派：试点时关注可复制性——一个渠道/人群跑通后能不能规模化？",
+      conservative: "保守派：试点阶段设明确里程碑与预算上限，达标才进下一轮。",
+    },
+  },
+  parenting: {
+    push: {
+      radical: "激进派：尽快执行并密切观察孩子反馈——真实反馈比计划和理论更有用。",
+      future: "未来派：这步影响孩子的成长节奏与安全感——短痛长通，别只求眼前平静。",
+      conservative: "保守派：执行前确认全家人（包括老人）的态度与底线——家人不齐力，方案再好也难落地。",
+    },
+    steady: {
+      radical: "激进派：观察太久会错过干预窗口——设一个观察截止日，到期必须有结论。",
+      future: "未来派：孩子的节奏比大人的计划更重要——观察期里认真记录，别凭印象做决定。",
+      conservative: "保守派：先摸清孩子的真实需求与家庭承受力，方案不匹配比不做更糟。",
+    },
+    blend: {
+      radical: "激进派：按周分步试、记录反馈（情绪/作息/效果），数据够了就定——别一直试。",
+      future: "未来派：试行期关注的不只是效果，还有孩子和全家人的情绪消耗——可持续性更重要。",
+      conservative: "保守派：试行方案必须有「中止条件」——孩子出现明显抗拒或异常时立刻停。",
+    },
+  },
+  legal: {
+    push: {
+      radical: "激进派：证据、函件、程序同步走——法律路径慢但止损明确，别在拖延里损失扩大。",
+      future: "未来派：推进前评估整个流程的时间、金钱与情绪成本——法律战周期很长，做好心理准备。",
+      conservative: "保守派：每一个动作都留书面记录——程序正义比一时爽快更重要。",
+    },
+    steady: {
+      radical: "激进派：协商如果对方无诚意就是浪费时间——设谈判期限，超期马上转正式路径。",
+      future: "未来派：协商成本低但执行力弱——如果对方有违约前科，别抱太大期待。",
+      conservative: "保守派：协商是首选但不是唯一选项——背后备好证据与法务预案，随时能升级。",
+    },
+    blend: {
+      radical: "激进派：协商与备诉同步进行——一边争取和解一边保留主动权，对方不认真就升级。",
+      future: "未来派：两条腿走路时更要控制总成本——别在两边都投入不足导致都悬着。",
+      conservative: "保守派：各阶段写清升级条件与截止时间——什么情况下从协商切换到诉讼，提前定好。",
+    },
+  },
+  content: {
+    push: {
+      radical: "激进派：高频产出、快速迭代——内容这行只有量变才能引发质变，别想着一篇封神。",
+      future: "未来派：选赛道时看准 3 年后的内容趋势——现在火的 3 年后未必还在风口。",
+      conservative: "保守派：高频产出也要有底线——不碰红线、不抄爆款、不烧口碑。",
+    },
+    steady: {
+      radical: "激进派：精品化如果太慢就会被流量淘汰——至少保证一个稳定输出节奏。",
+      future: "未来派：品牌积累比单篇爆款更有复利——质量是长期资产，别为了量牺牲辨识度。",
+      conservative: "保守派：先打磨一套可复用的创作流程与模板——稳定输出比偶尔爆发更靠谱。",
+    },
+    blend: {
+      radical: "激进派：主号稳品质、副线跑实验——按数据复盘，哪边划算倾斜哪边。",
+      future: "未来派：双轨运行期间重点观察观众的真实偏好——数据比直觉更能指引方向。",
+      conservative: "保守派：实验内容设好预算和频率上限——别让副线吃掉主线的精力。",
+    },
+  },
+  social: {
+    push: {
+      radical: "激进派：主动邀约、合作、介绍——机会是聊出来的，等着不会有人敲你的门。",
+      future: "未来派：拓展人脉时重质量而非数量——一个关键连接可能比一百条微信好友值钱。",
+      conservative: "保守派：拓展前先确认精力边界——社交耗心神，别为了认识人把自己掏空。",
+    },
+    steady: {
+      radical: "激进派：只维护不拓展会让人脉圈慢慢萎缩——至少每月认识一个新的人。",
+      future: "未来派：深耕少数高质量关系比泛泛之交更有长期价值——选对人比认识多人更关键。",
+      conservative: "保守派：维护现有关系前先分清哪些是真正重要的——不是所有人都值得你花时间。",
+    },
+    blend: {
+      radical: "激进派：固定节奏维护+拓展并行——不冷落老朋友也不错过新机会。",
+      future: "未来派：用周/月为节奏单位——维护是基本功，拓展是生长点，比例自己调。",
+      conservative: "保守派：设好每周社交时间上限——过线就停，别让社交挤掉休息和其他重要事。",
+    },
+  },
+  generic: {
+    push: {
+      radical: "激进派：押「{focus}」先落最小行动拿到反馈——别等「准备好」，真实结果比计划更能帮你判断。",
+      future: "未来派：想清楚「{focus}」这一步 3 年后回头看是资产还是弯路——对「{topic}」眼光放长再下注。",
+      conservative: "保守派：动「{focus}」前写清底线、止损与资源上限——对「{topic}」激情过后剩下的就是纪律。",
+    },
+    steady: {
+      radical: "激进派：一直按兵不动本身就是一种选择——确认「{focus}」这个选择的代价你能承受。",
+      future: "未来派：稳是手段不是目的——对「{topic}」设一个「再评估」日期，到期必须给结论。",
+      conservative: "保守派：暂缓「{focus}」没错，但要区分「真稳定」和「假安全」——别用稳当借口。",
+    },
+    blend: {
+      radical: "激进派：对「{focus}」小步试可以，但必须有过线就决定的条件——试太久等于没试。",
+      future: "未来派：分阶段验证「{focus}」不是无限试——对「{topic}」每个阶段设明确指标和时间，一步步收敛。",
+      conservative: "保守派：每段试水「{focus}」都写清投入上限与退出条件，不到底牌不翻。",
+    },
+  },
+};
+
+/** 按域类型与节奏生成 2-3 句简洁描述：锚定议题关键词，直接说明收益、风险与情绪影响 */
+function buildRichDescription(params: {
+  topic: string;
+  topicShort: string;
+  core: string;
+  option: string;
+  tone: "push" | "steady" | "blend";
+  intro?: string;
+  isFoodish?: boolean;
+}): string {
+  const { topic, topicShort, core, option, tone, intro, isFoodish } = params;
+  const kind = detectDomainKind(`${topic}\n${core}`);
+  const prefix = intro?.trim() ? `结合讨论：${clip(intro, 200)}。` : "";
+  const foodish = isFoodish ?? false;
+
+  if (foodish) {
+    if (tone === "push")
+      return `${prefix}选「${option}」：口味满足感更强——油盐辣与肠胃负担同步跟进，过得痛快还是身体舒服，各取所需。`;
+    if (tone === "steady")
+      return `${prefix}选「${option}」：更温和、身体负担更小——少一点即时满足，但对睡眠与状态更友好。`;
+    return `${prefix}折中：少油少辣/小份/搭配清淡，在「${option}」与控制量之间换平衡——不解馋也不伤身。`;
+  }
+
+  const template = RICH_DESC[kind]?.[tone] ?? RICH_DESC.generic[tone];
+  const filled = template
+    .replace(/\{core\}/g, core)
+    .replace(/\{topicShort\}/g, topicShort);
+  return prefix ? `${prefix}${filled}` : filled;
+}
+
+/** 对描述做快速质量评分（0-100）：关键词锚定 / 信息密度 / 模板化程度 */
+export function scoreDescriptionQuality(desc: string, topic: string, core: string): number {
+  const d = (desc ?? "").replace(/\s+/g, " ").trim();
+  if (!d) return 0;
+  let score = 50;
+
+  // 锚定议题关键词
+  const topicKeywords = (topic.match(/[一-龥]{2,}|[a-zA-Z][a-zA-Z0-9_-]{2,}/g) ?? [])
+    .filter((k) => !/还是|要不要|是否|怎么|如何|该不该|选择|the|and|for|with|this|that|what|how/i.test(k));
+  const hitCount = topicKeywords.filter((k) => d.includes(k)).length;
+  if (hitCount >= 2) score += 15;
+  else if (hitCount >= 1) score += 8;
+
+  // 核心决策语命中
+  if (core.length >= 2 && d.includes(core)) score += 12;
+
+  // 信息密度：有具体得失词汇
+  const tradeoffWords = /风险|代价|损失|错过|压力更高|更稳|更可控|不高|更好|更糟|波动|窗口|不确定|受影响|负担|回撤/;
+  if (tradeoffWords.test(d)) score += 10;
+
+  // 句子数在 2-3 句理想区间
+  const sentences = d.replace(/[！!]/g, "。").split(/[。.；;]/).filter((s) => s.trim().length > 1);
+  if (sentences.length >= 2 && sentences.length <= 4) score += 10;
+  else if (sentences.length < 2) score -= 10;
+
+  // 惩罚模板化用词
+  const boilerplateCount = (d.match(/走这一结果路径|收益与代价随该选项倾斜|落实该方向/g) ?? []).length;
+  score -= boilerplateCount * 20;
+
+  // 惩罚过短/过长
+  if (d.length < 20) score -= 30;
+  if (d.length > 400) score -= 5;
+
+  return Math.max(0, Math.min(100, score));
 }
 
 function buildBranchForOption(
@@ -1468,9 +1879,15 @@ function buildBranchForOption(
   const benefitBase = tone === "push" ? (foodish ? 78 : 80) : tone === "steady" ? (foodish ? 64 : 62) : 72;
   const emo = tone === "push" ? "excited" : tone === "steady" ? "calm" : "happy";
 
-  const rawDesc = foodish
-    ? `若选择「${label}」：围绕「${topicShort}」落实该结果，口味与身体负担随该选项变化。`
-    : `若选择「${label}」：围绕「${topicShort}」走这一结果路径，收益、风险与节奏随该方向倾斜。`;
+  const rawDesc = buildRichDescription({
+    topic,
+    topicShort,
+    core: option,
+    option: label,
+    tone,
+    intro: hostRef?.trim() || undefined,
+    isFoodish: foodish,
+  });
 
   return {
     id: slugForOption(option, index),
@@ -1495,19 +1912,25 @@ function normalizeBranchProbabilities(branches: GroundedBranch[]): GroundedBranc
 }
 
 /** 按议题动态生成 2～4 条互斥决策结果（结构只依赖议题语义，不读议会聊天） */
-export function buildDynamicProjectionBranches(topic: string, _hostRef = ""): GroundedBranch[] {
+export function buildDynamicProjectionBranches(topic: string, hostRef = ""): GroundedBranch[] {
   const options = extractDecisionOptionsFromTopic(topic, "");
   let branches: GroundedBranch[];
 
   if (options.length >= MIN_PROJECTION_BRANCHES) {
-    branches = options.map((opt, i) => buildBranchForOption(topic, "", opt, i, options.length));
+    branches = options.map((opt, i) => buildBranchForOption(topic, hostRef, opt, i, options.length));
   } else {
-    const core = extractCoreDecisionPhrase(topic, "");
-    const coreLabel = clip(core, 14);
-    branches = [
-      buildBranchForOption(topic, "", coreLabel, 0, 2),
-      buildBranchForOption(topic, "", `不${coreLabel}`, 1, 2),
-    ];
+    // 尝试结构化模板（二选一/要不要/领域分支），使用 hostRef 上下文
+    const structured = getStructuredChoiceBranches(topic, hostRef);
+    if (structured) {
+      branches = structured;
+    } else {
+      const core = extractCoreDecisionPhrase(topic, hostRef);
+      const coreLabel = clip(core, 14);
+      branches = [
+        buildBranchForOption(topic, hostRef, coreLabel, 0, 2),
+        buildBranchForOption(topic, hostRef, `不${coreLabel}`, 1, 2),
+      ];
+    }
   }
 
   return normalizeBranchProbabilities(branches.slice(0, MAX_PROJECTION_BRANCHES));
@@ -1591,8 +2014,9 @@ function mergeBranchEnrichment(
 export function applyGroundedProjectionStructure(
   topic: string,
   incoming: EnrichableProjectionBranch[] | null | undefined,
+  hostRef = "",
 ): GroundedBranch[] {
-  const skeleton = buildDynamicProjectionBranches(topic, "");
+  const skeleton = buildDynamicProjectionBranches(topic, hostRef);
   if (!incoming?.length) return skeleton;
 
   const valid = incoming.filter((b) =>
@@ -1608,9 +2032,9 @@ export function applyGroundedProjectionStructure(
 export function finalizeProjectionForClient<T extends EnrichableProjectionBranch & { name: string }>(
   branches: T[],
   topic: string,
-  _hostRef: string,
+  hostRef: string,
 ): GroundedBranch[] {
-  return applyGroundedProjectionStructure(topic, branches);
+  return applyGroundedProjectionStructure(topic, branches, hostRef);
 }
 
 export function buildGroundedProjectionFromCouncil(
@@ -1618,7 +2042,8 @@ export function buildGroundedProjectionFromCouncil(
   messages: GroundedCouncilMsg[],
 ): { branches: GroundedBranch[]; compared: GroundedCompared } {
   const topic = (displayTopic ?? "").trim() || "当前关键决策";
-  const branches = applyGroundedProjectionStructure(topic, null);
+  const hostRef = extractHostSummary(messages);
+  const branches = applyGroundedProjectionStructure(topic, null, hostRef);
   const [a, b] = [branches[0], branches[1] ?? branches[0]];
   return {
     branches,

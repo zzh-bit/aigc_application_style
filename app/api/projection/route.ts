@@ -5,9 +5,12 @@ import {
   buildGroundedProjectionFromCouncil,
   filterGenericBlendPaths,
   finalizeProjectionForClient,
+  extractCoreDecisionPhrase,
   extractDecisionOptionsFromTopic,
+  extractHostSummary,
   getTopicBranchLimit,
   sanitizeBranchDescription,
+  scoreDescriptionQuality,
   MAX_PROJECTION_BRANCHES,
   MIN_PROJECTION_BRANCHES,
   type GroundedBranch,
@@ -232,11 +235,28 @@ ${optionHint}
 要求：
 - branches 条数必须恰好为 ${branchLimit}（不要超过也不要少于）；
 - **路径 name/id 由系统根据议题自动设定**，你只需按顺序输出对应条数的 enrichment 字段；
-- description 只写该路径本身的结果与影响（2～4 句），**禁止**复述主持人总结或「建议折中」类套话；
+- description 是每条路径的**核心文案**（2～3 句中文），必须满足：
+  a) 直接出现议题里的城市名/动作词/核心名词（不准用「该选择 / 该方向 / 该选项」等空泛代词）；
+  b) 说清选了这条路会得到什么、失去什么（不要「收益与风险并存 / 机遇与挑战同在」等废话）；
+  c) 一个路人只看 description 就能理解这条路的后果，不需要看上下文。
+  好例子：「去北京发展：产业密度与机会更多，但通勤、房租与竞争压力是现在的两倍，适合想突破天花板的时候。」
+  好例子：「先不辞职：保住收入和确定性，但要接受新机会可能失之交臂的代价。」
+  好例子：「分期验证：花两周试水真实情况，而不是靠想象决定——拿到反馈再选。」
+  坏例子：「选择去北京：推进该方向，收益与风险并存。」（太空泛，没说到实质）
+  坏例子：「建议折中或分期推进。」（套话，不是路径描述）
+  **禁止**复述主持人总结或「建议折中」类套话；
 - 每个 branch 的 nodes 必须恰好 3 个，type 依次为 "event"、"finance"、"emotion"；label 为 ≤16 字关键词；
 - probability 为 0～1 小数；riskScore、benefitScore 为 0～100 整数；
 - emotionForecast 只能是 "excited"|"calm"|"anxious"|"happy"|"sad"；
-- opinions 含 radical、future、conservative；每项 opinion 1～2 句中文，support 0～100；
+- opinions 是每条路径下三个派系的**独立观点**（radical / future / conservative），必须满足：
+  a) 每个派系都用**该派系的口吻**说话：激进派催行动、未来派看长期、保守派守底线；三条意见必须明确分歧，不能是同一句话换说法；
+  b) 每条 opinion 必须出现议题/路径里的具体关键词（城市名/动作词/核心名词），不准用「该方案 / 该路径 / 此方向」代指；
+  c) 每条 1～2 句中文，信息密度高，一个路人读完后能感受到这个派系的真实立场和情绪；
+  好例子——议题「要不要去北京工作」激进派：去北京，趁年轻赌一把密度和机会；现在不动，3 年后你还在纠结同一件事。
+  好例子——议题「要不要辞职读研」保守派：辞职意味着断现金流，确保有 12 个月以上生活费兜底再谈下一步。
+  好例子——议题「买不买学区房」未来派：学区溢价会继续涨还是政策落下来？拉长到 6 年看你孩子入学那年的供需。
+  坏例子：激进派：此方案可行，但需注意风险。（太泛，没有派系立场）
+  坏例子：三派系都用同一种句式，只换了几个词。（没有分歧感）
 - 每条 branch 必须有唯一 id（英文 slug，如 path-beijing）。
 
 【禁止用语】（除非用户主题本身就是开会投票）：妥协通过、激烈否决、延期再审、表决、议案、否决案、建议折中、折中或分期等。
@@ -291,14 +311,19 @@ function normalizeNodesFromLlm(
 function mergeOpinions(
   raw: unknown,
   fallback: ProjectionBranch["opinions"],
+  keywords: string[],
 ): ProjectionBranch["opinions"] {
   const o = raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
   const pick = (key: "radical" | "future" | "conservative"): BranchOpinion => {
     const v = o[key];
     if (v && typeof v === "object") {
       const op = v as Record<string, unknown>;
-      const opinion =
-        typeof op.opinion === "string" && op.opinion.trim() ? op.opinion.trim() : fallback[key].opinion;
+      const rawText = typeof op.opinion === "string" && op.opinion.trim() ? op.opinion.trim() : "";
+      // 如果 LLM 意见不含任何话题关键词（跑题/太泛），丢弃用本地模板
+      const anchored = keywords.length > 0
+        ? keywords.some((k) => rawText.includes(k))
+        : true;
+      const opinion = rawText && anchored ? rawText : fallback[key].opinion;
       return { opinion, support: clampScore(op.support, fallback[key].support) };
     }
     return fallback[key];
@@ -340,6 +365,9 @@ function parseFreeformProjectionBranches(
   const fallbackMapped = mapGroundedToProjection(fallbackGrounded);
   const keywords = topicKeywords(topic);
 
+  // 质量评分需用议题核心词（而非分支名），避免分支名自指导致评分虚高
+  const decisionCore = extractCoreDecisionPhrase(topic, hostRef);
+
   const mapped = items.map((raw, idx) => {
     const base = fallbackMapped[idx] ?? fallbackMapped[fallbackMapped.length - 1];
     const rawName = typeof raw.name === "string" ? raw.name.trim() : "";
@@ -351,15 +379,18 @@ function parseFreeformProjectionBranches(
       rawName && !looksLikeMeeting
         ? clipStr(rawName, 32)
         : base.name;
-    const description = sanitizeBranchDescription(
-      rawDescription && !looksLikeMeeting
-        ? clipStr(rawDescription, 480)
-        : looksLikeMeeting
-          ? base.description
-          : anchoredOrFallback(rawDescription, base.description, keywords) || base.description,
-      name,
-      topic,
-    );
+    const rawDescClean = rawDescription && !looksLikeMeeting
+      ? clipStr(rawDescription, 480)
+      : looksLikeMeeting
+        ? base.description
+        : anchoredOrFallback(rawDescription, base.description, keywords) || base.description;
+    let description = sanitizeBranchDescription(rawDescClean, name, topic);
+
+    // 对 LLM 输出的描述做质量评分，低分则回退到本地领域富模板（base.description 已由 buildRichDescription 生成）
+    const qualityScore = scoreDescriptionQuality(description, topic, decisionCore);
+    if (qualityScore < 40 && base.description) {
+      description = base.description;
+    }
 
     const emotionForecast = EMOTION_FORECAST.has(raw.emotionForecast as string)
       ? (raw.emotionForecast as ProjectionBranch["emotionForecast"])
@@ -379,7 +410,7 @@ function parseFreeformProjectionBranches(
       benefitScore: clampScore(raw.benefitScore, base.benefitScore),
       emotionForecast,
       nodes: normalizeNodesFromLlm(raw.nodes, base.nodes, idx),
-      opinions: mergeOpinions(raw.opinions, base.opinions),
+      opinions: mergeOpinions(raw.opinions, base.opinions, keywords),
     } satisfies ProjectionBranch;
   });
 
@@ -518,6 +549,12 @@ export async function POST(req: Request) {
     .map((m) => `${m.name}: ${m.content}`)
     .join("\n");
 
+  // hostSummary 与 buildGroundedProjectionFromCouncil 内部使用同一 extractHostSummary，
+  // 确保后续 finalizeProjectionBranches 重 ground 时 skeleton 结构一致，避免 LLM 描述错位
+  const hostSummary = contextMessages.length > 0
+    ? extractHostSummary(contextMessages as GroundedCouncilMsg[])
+    : "";
+
   const grounded = buildGroundedProjectionFromCouncil(promptTopic, contextMessages as GroundedCouncilMsg[]);
 
   const apiKey = process.env.DEEPSEEK_API_KEY;
@@ -590,7 +627,7 @@ export async function POST(req: Request) {
                   continue;
                 }
 
-                const branches = finalizeProjectionBranches(parsedFreeform, promptTopic, hostRef, grounded.branches);
+                const branches = finalizeProjectionBranches(parsedFreeform, promptTopic, hostSummary, grounded.branches);
                 const compared = normalizeCompared(parsed.compared, branches);
 
                 return applyCors(

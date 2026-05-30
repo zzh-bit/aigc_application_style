@@ -127,6 +127,57 @@ function branchKeywordLine(branch: DecisionBranch, maxLen: number): string {
   return `${s.slice(0, Math.max(4, maxLen - 1))}…`;
 }
 
+// ─── 子组件（提取到组件外，避免渲染期间创建组件） ──────────────────────────────
+
+function ScoreBar({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: number | null;
+  tone: "benefit" | "risk";
+}) {
+  const v = typeof value === "number" && Number.isFinite(value) ? Math.max(0, Math.min(100, value)) : null;
+  const track = "bg-white/10";
+  const fill =
+    tone === "benefit"
+      ? "bg-gradient-to-r from-emerald-400/70 via-emerald-300/70 to-emerald-200/60"
+      : "bg-gradient-to-r from-rose-400/70 via-rose-300/70 to-rose-200/60";
+  return (
+    <div className="space-y-1">
+      <div className="flex items-center justify-between text-[11px] text-white/55">
+        <span>{label}</span>
+        <span className="tabular-nums text-white/70">{v === null ? "—" : v}</span>
+      </div>
+      <div className={cn("h-2 w-full rounded-full overflow-hidden", track)}>
+        <div className={cn("h-full rounded-full", fill)} style={{ width: `${v ?? 0}%` }} />
+      </div>
+    </div>
+  );
+}
+
+function EmotionPill({ emo }: { emo: string | undefined }) {
+  const text = emo ? EMOTION_LABEL[emo] ?? emo : "—";
+  return (
+    <span className="inline-flex items-center rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[11px] text-white/70">
+      {text}
+    </span>
+  );
+}
+
+function DeltaChip({ label, value, tone }: { label: string; value: number; tone: "good" | "bad" }) {
+  const good = value > 0;
+  const isGood = tone === "good" ? good : !good;
+  const color = isGood ? "text-emerald-200 border-emerald-300/25 bg-emerald-500/10" : "text-rose-200 border-rose-300/25 bg-rose-500/10";
+  return (
+    <span className={cn("inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] tabular-nums", color)}>
+      <span className="text-white/60">{label}</span>
+      <span>{value > 0 ? `+${value}` : `${value}`}</span>
+    </span>
+  );
+}
+
 function BranchCompareSelectRow({
   slot,
   value,
@@ -202,55 +253,6 @@ function BranchComparePanel({
 }) {
   const a = effectiveCompareA ? branches.find((b) => b.id === effectiveCompareA) ?? null : null;
   const b = effectiveCompareB ? branches.find((b) => b.id === effectiveCompareB) ?? null : null;
-
-  const ScoreBar = ({
-    label,
-    value,
-    tone,
-  }: {
-    label: string;
-    value: number | null;
-    tone: "benefit" | "risk";
-  }) => {
-    const v = typeof value === "number" && Number.isFinite(value) ? Math.max(0, Math.min(100, value)) : null;
-    const track = "bg-white/10";
-    const fill =
-      tone === "benefit"
-        ? "bg-gradient-to-r from-emerald-400/70 via-emerald-300/70 to-emerald-200/60"
-        : "bg-gradient-to-r from-rose-400/70 via-rose-300/70 to-rose-200/60";
-    return (
-      <div className="space-y-1">
-        <div className="flex items-center justify-between text-[11px] text-white/55">
-          <span>{label}</span>
-          <span className="tabular-nums text-white/70">{v === null ? "—" : v}</span>
-        </div>
-        <div className={cn("h-2 w-full rounded-full overflow-hidden", track)}>
-          <div className={cn("h-full rounded-full", fill)} style={{ width: `${v ?? 0}%` }} />
-        </div>
-      </div>
-    );
-  };
-
-  const EmotionPill = ({ emo }: { emo: string | undefined }) => {
-    const text = emo ? EMOTION_LABEL[emo] ?? emo : "—";
-    return (
-      <span className="inline-flex items-center rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[11px] text-white/70">
-        {text}
-      </span>
-    );
-  };
-
-  const DeltaChip = ({ label, value, tone }: { label: string; value: number; tone: "good" | "bad" }) => {
-    const good = value > 0;
-    const isGood = tone === "good" ? good : !good;
-    const color = isGood ? "text-emerald-200 border-emerald-300/25 bg-emerald-500/10" : "text-rose-200 border-rose-300/25 bg-rose-500/10";
-    return (
-      <span className={cn("inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] tabular-nums", color)}>
-        <span className="text-white/60">{label}</span>
-        <span>{value > 0 ? `+${value}` : `${value}`}</span>
-      </span>
-    );
-  };
 
   return (
     <>
