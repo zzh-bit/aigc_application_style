@@ -124,6 +124,34 @@ function extractJsonObject(text: string): unknown {
   return null;
 }
 
+function buildFallbackBiasCards(params: {
+  anxiousRate: number;
+  calmRate: number;
+  reviewFrequency: number;
+  topicTop: string;
+}): BiasCard[] {
+  return [
+    {
+      type: "冲动决策",
+      level: params.anxiousRate >= 35 ? "高" : params.anxiousRate >= 20 ? "中" : "低",
+      evidence: `焦虑情绪占比 ${Math.round(params.anxiousRate)}%`,
+      suggestion: "在高压情境下引入 10 分钟冷却期，再进入最终选择。",
+    },
+    {
+      type: "拖延规避",
+      level: params.reviewFrequency < 2 ? "高" : params.reviewFrequency < 4 ? "中" : "低",
+      evidence: `周均复盘频率 ${params.reviewFrequency} 次`,
+      suggestion: "把每周至少 2 次复盘写入固定日程，降低执行阻力。",
+    },
+    {
+      type: "过度规避风险",
+      level: params.calmRate > 60 ? "中" : "低",
+      evidence: `平静占比 ${Math.round(params.calmRate)}%，主题集中在「${params.topicTop}」`,
+      suggestion: "每次决策保留 1 个可控探索选项，逐步提升风险承受带宽。",
+    },
+  ];
+}
+
 async function buildAiBiasCards(input: {
   archives: CouncilArchiveRecord[];
   emotionDistribution: Array<{ label: string; percentage: number; count: number }>;
@@ -252,6 +280,119 @@ async function buildAiExplanation(input: {
   return content;
 }
 
+async function buildAiReportContent(input: {
+  totalRecords: number;
+  reviewFrequencyPerWeek: number;
+  emotionDistribution: Array<{ label: string; count: number; percentage: number }>;
+  topicDistribution: Array<{ topic: string; count: number; percentage: number }>;
+  archiveSummaries: Array<{ date: string; summary: string; keywords: string[] }>;
+  fallbackExplanation: string;
+  fallbackBiasCards: BiasCard[];
+  fallbackWeeklyReport: string;
+}): Promise<{ aiExplanation: string; biasCards: BiasCard[]; weeklyReport: string }> {
+  const apiKey = process.env.DEEPSEEK_API_KEY;
+  const model = process.env.DEEPSEEK_MODEL || "deepseek-chat";
+  if (!apiKey) {
+    return {
+      aiExplanation: input.fallbackExplanation,
+      biasCards: input.fallbackBiasCards,
+      weeklyReport: input.fallbackWeeklyReport,
+    };
+  }
+
+  const summariesBlock = input.archiveSummaries
+    .slice(0, 16)
+    .map((a) => `[${a.date}] ${a.summary} | 关键词: ${(a.keywords ?? []).slice(0, 5).join(", ")}`)
+    .join("\n");
+
+  const systemPrompt = [
+    "你是决策洞察与周度复盘助手。基于提供的统计数据与归档摘要，输出一个 JSON 对象，包含三个部分。",
+    "",
+    "要求：",
+    "1. explanation: 1段简短中文解释（80-160字），必须引用输入中的具体数字（如占比/次数/频率），语气客观，不要编造数据",
+    "2. biasCards: 3张偏见提醒卡片数组，每张含 type(简短中文)/level(高|中|低)/evidence(必须引用统计信号)/suggestion(必须可执行且具体)",
+    "3. weeklyReport: 150-300字的周度总结与下周行动建议，语气温和鼓励，给出2-3条可执行建议",
+    "",
+    "只输出 JSON，不要 markdown 代码块。格式：",
+    '{"explanation":"...", "biasCards":[{"type":"...", "level":"高|中|低", "evidence":"...", "suggestion":"..."}], "weeklyReport":"..."}',
+  ].join("\n");
+
+  const userPrompt = [
+    `总归档数: ${input.totalRecords}`,
+    `周复盘频率: ${input.reviewFrequencyPerWeek}`,
+    `主题分布: ${JSON.stringify(input.topicDistribution)}`,
+    `情绪分布: ${JSON.stringify(input.emotionDistribution)}`,
+    "归档摘要:",
+    summariesBlock || "（无）",
+  ].join("\n");
+
+  try {
+    const providerReq = buildProviderRequestConfig(apiKey);
+    const res = await fetch(providerReq.url, {
+      method: "POST",
+      headers: providerReq.headers,
+      body: JSON.stringify({
+        model,
+        stream: false,
+        max_tokens: 900,
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt },
+        ],
+      }),
+    });
+
+    if (!res.ok) {
+      return {
+        aiExplanation: input.fallbackExplanation,
+        biasCards: input.fallbackBiasCards,
+        weeklyReport: input.fallbackWeeklyReport,
+      };
+    }
+
+    const data = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
+    const content = data.choices?.[0]?.message?.content?.trim() ?? "";
+    const parsed = extractJsonObject(content) as Record<string, unknown> | null;
+
+    // Extract each field with per-field fallback
+    const aiExplanation =
+      typeof parsed?.explanation === "string" && parsed.explanation.trim().length > 0
+        ? parsed.explanation.trim()
+        : input.fallbackExplanation;
+
+    let biasCards: BiasCard[] = input.fallbackBiasCards;
+    if (parsed && Array.isArray(parsed.biasCards)) {
+      const parsedCards = (parsed.biasCards as Array<Record<string, unknown>>)
+        .slice(0, 3)
+        .map((c) => {
+          const levelRaw = typeof c.level === "string" ? c.level : "中";
+          const level = levelRaw === "高" || levelRaw === "中" || levelRaw === "低" ? levelRaw : "中";
+          return {
+            type: typeof c.type === "string" ? c.type : "认知偏差",
+            level,
+            evidence: typeof c.evidence === "string" ? c.evidence : "统计证据不足",
+            suggestion: typeof c.suggestion === "string" ? c.suggestion : "保持记录并定期复盘。",
+          };
+        })
+        .filter((c) => c.type.trim().length > 0);
+      if (parsedCards.length > 0) biasCards = parsedCards;
+    }
+
+    const weeklyReport =
+      typeof parsed?.weeklyReport === "string" && parsed.weeklyReport.trim().length > 0
+        ? parsed.weeklyReport.trim()
+        : input.fallbackWeeklyReport;
+
+    return { aiExplanation, biasCards, weeklyReport };
+  } catch {
+    return {
+      aiExplanation: input.fallbackExplanation,
+      biasCards: input.fallbackBiasCards,
+      weeklyReport: input.fallbackWeeklyReport,
+    };
+  }
+}
+
 function calcFrequencyPerWeek(dates: string[]) {
   if (dates.length <= 1) return dates.length;
   const sorted = dates.map((d) => Date.parse(d)).filter(Number.isFinite).sort((a, b) => a - b);
@@ -308,26 +449,12 @@ export async function GET(req: Request) {
   const topicTop =
     [...topicDistribution].sort((a, b) => b.count - a.count)[0]?.topic ?? "决策复盘";
 
-  const fallbackBiasCards: BiasCard[] = [
-    {
-      type: "冲动决策",
-      level: anxiousRate >= 35 ? "高" : anxiousRate >= 20 ? "中" : "低",
-      evidence: `焦虑情绪占比 ${Math.round(anxiousRate)}%`,
-      suggestion: "在高压情境下引入 10 分钟冷却期，再进入最终选择。",
-    },
-    {
-      type: "拖延规避",
-      level: reviewFrequency < 2 ? "高" : reviewFrequency < 4 ? "中" : "低",
-      evidence: `周均复盘频率 ${reviewFrequency} 次`,
-      suggestion: "把每周至少 2 次复盘写入固定日程，降低执行阻力。",
-    },
-    {
-      type: "过度规避风险",
-      level: calmRate > 60 ? "中" : "低",
-      evidence: `平静占比 ${Math.round(calmRate)}%，主题集中在「${topicTop}」`,
-      suggestion: "每次决策保留 1 个可控探索选项，逐步提升风险承受带宽。",
-    },
-  ];
+  const fallbackBiasCards = buildFallbackBiasCards({
+    anxiousRate,
+    calmRate,
+    reviewFrequency,
+    topicTop,
+  });
   const biasCards = await buildAiBiasCards({
     archives,
     emotionDistribution: emotionDistribution.map((e) => ({ label: e.label, percentage: e.percentage, count: e.count })),
@@ -338,7 +465,7 @@ export async function GET(req: Request) {
 
   const fallbackExplanation = `最近共归档 ${total} 次决策。主题重心为「${topicTop}」，焦虑占比 ${Math.round(
     anxiousRate,
-  )}% ，周复盘频率 ${reviewFrequency} 次。建议继续使用“冷却-复盘-再决策”流程提升稳定性。`;
+  )}% ，周复盘频率 ${reviewFrequency} 次。建议继续使用”冷却-复盘-再决策”流程提升稳定性。`;
   const aiExplanation = await buildAiExplanation({
     totalRecords: total,
     reviewFrequencyPerWeek: reviewFrequency,
@@ -349,8 +476,8 @@ export async function GET(req: Request) {
 
   const weeklyAdvice =
     reviewFrequency < 3
-      ? "下周建议：固定 3 次 15 分钟复盘，优先回看高焦虑议题。"
-      : "下周建议：保持复盘频率，并增加一次“反事实推演”训练。";
+      ? `下周建议：固定 3 次 15 分钟复盘，优先回看高焦虑议题。`
+      : `下周建议：保持复盘频率，并增加一次「反事实推演」训练。`;
 
   return applyCors(req, NextResponse.json({
     totalRecords: total,
@@ -360,7 +487,90 @@ export async function GET(req: Request) {
     biasCards,
     aiExplanation,
     weeklyAdvice,
+    weeklyReport: weeklyAdvice,
   }));
+}
+
+export async function POST(req: Request) {
+  let body: {
+    totalRecords?: number;
+    reviewFrequencyPerWeek?: number;
+    emotionDistribution?: Array<{ emotion: string; label: string; count: number; percentage: number }>;
+    topicDistribution?: Array<{ topic: string; count: number; percentage: number }>;
+    archiveSummaries?: Array<{ date: string; summary: string; emotions?: string[]; keywords?: string[] }>;
+  };
+  try {
+    body = (await req.json()) as typeof body;
+  } catch {
+    return applyCors(
+      req,
+      NextResponse.json({ error: "Invalid JSON body" }, { status: 400 }),
+    );
+  }
+
+  if (!body || typeof body.totalRecords !== "number") {
+    return applyCors(
+      req,
+      NextResponse.json({ error: "Invalid request body" }, { status: 400 }),
+    );
+  }
+
+  try {
+
+    const totalRecords = body.totalRecords;
+    const reviewFrequencyPerWeek = body.reviewFrequencyPerWeek ?? 0;
+    const emotionDistribution = body.emotionDistribution ?? [];
+    const topicDistribution = body.topicDistribution ?? [];
+    const archiveSummaries = (body.archiveSummaries ?? []).map((a) => ({
+      date: a.date,
+      summary: a.summary,
+      keywords: a.keywords ?? [],
+    }));
+
+    const anxiousRate = emotionDistribution.find((e) => e.emotion === "anxious")?.percentage ?? 0;
+    const calmRate = emotionDistribution.find((e) => e.emotion === "calm")?.percentage ?? 0;
+    const topicTop =
+      [...topicDistribution].sort((a, b) => b.count - a.count)[0]?.topic ?? "决策复盘";
+
+    const fallbackExplanation =
+      totalRecords === 0
+        ? "暂无有效归档数据。请先完成真实对话并点击「决策完成」保存。"
+        : `近一周有效归档 ${reviewFrequencyPerWeek} 次（累计 ${totalRecords} 次），主题重心为「${topicTop}」，焦虑占比 ${Math.round(anxiousRate)}%，平静占比 ${Math.round(calmRate)}%。`;
+
+    const fallbackBiasCards = buildFallbackBiasCards({
+      anxiousRate,
+      calmRate,
+      reviewFrequency: reviewFrequencyPerWeek,
+      topicTop,
+    });
+
+    const fallbackWeeklyReport =
+      reviewFrequencyPerWeek < 3
+        ? "下周建议：固定3次15分钟复盘，优先回顾高焦虑议题，并在每次决策前写下1个预期结果以便事后对照。"
+        : "下周建议：保持当前复盘频率，尝试每周增加1次「反事实推演」——思考如果做了另一个选择会怎样，以拓宽决策视野。";
+
+    const report = await buildAiReportContent({
+      totalRecords,
+      reviewFrequencyPerWeek,
+      emotionDistribution: emotionDistribution.map((e) => ({
+        label: e.label,
+        count: e.count,
+        percentage: e.percentage,
+      })),
+      topicDistribution,
+      archiveSummaries,
+      fallbackExplanation,
+      fallbackBiasCards,
+      fallbackWeeklyReport,
+    });
+
+    return applyCors(req, NextResponse.json(report));
+  } catch (e) {
+    return applyCors(
+      req,
+      NextResponse.json({ error: "Internal server error" }, { status: 500 }),
+    );
+  }
 }
 
 export async function OPTIONS(req: Request) {

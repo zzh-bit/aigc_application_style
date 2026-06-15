@@ -54,6 +54,7 @@ export function DataInsights({ onBack }: DataInsightsProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const [retryKey, setRetryKey] = useState(0);
+  const [aiLoading, setAiLoading] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -159,6 +160,51 @@ export function DataInsights({ onBack }: DataInsightsProps) {
           weeklyAdvice: reviewFrequencyPerWeek < 3 ? "下周建议：固定 3 次 15 分钟复盘。" : "下周建议：保持复盘并增加一次反事实推演。",
         };
         if (!cancelled) setData(localData);
+
+        // Fetch AI-enhanced content from server (Progressive enhancement)
+        if (!cancelled && valid.length > 0) {
+          setAiLoading(true);
+          try {
+            const aiRes = await fetchJson<{
+              aiExplanation: string;
+              biasCards: InsightResponse["biasCards"];
+              weeklyReport: string;
+            }>("/api/insights", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({
+                totalRecords,
+                reviewFrequencyPerWeek,
+                emotionDistribution,
+                topicDistribution,
+                archiveSummaries: valid.slice(0, 16).map((a) => ({
+                  date: a.date,
+                  summary: a.summary,
+                  emotions: a.emotions,
+                  keywords: a.keywords,
+                })),
+              }),
+              timeoutMs: 45_000,
+            });
+            if (!cancelled) {
+              setData((prev) =>
+                prev
+                  ? {
+                      ...prev,
+                      aiExplanation: aiRes.aiExplanation,
+                      biasCards: aiRes.biasCards,
+                      weeklyAdvice: aiRes.weeklyReport,
+                    }
+                  : prev,
+              );
+            }
+          } catch (e) {
+            clientLog("warn", "insights.ai.fetch", "failed", { detail: String(e) });
+            // Keep localData's template content — silent degradation
+          } finally {
+            if (!cancelled) setAiLoading(false);
+          }
+        }
       } catch (e) {
         clientLog("warn", "insights.load", "failed", { detail: String(e) });
         if (!cancelled) {
@@ -323,10 +369,13 @@ export function DataInsights({ onBack }: DataInsightsProps) {
               <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
                 <h3 className="text-sm text-white/70 mb-3 flex items-center gap-2">
                   <Brain className="w-4 h-4" />AI 解释
+                  {aiLoading && (
+                    <span className="inline-block w-2.5 h-4 bg-violet-400/60 animate-pulse rounded-sm" />
+                  )}
                 </h3>
                 <p className="text-sm text-white/80 leading-6">{data.aiExplanation}</p>
-                <div className="mt-4 p-3 rounded-xl bg-indigo-500/10 border border-indigo-400/20 text-indigo-100 text-sm">
-                  下周建议：{data.weeklyAdvice}
+                <div className="mt-4 p-4 rounded-xl bg-indigo-500/10 border border-indigo-400/20 text-indigo-100 text-sm leading-relaxed whitespace-pre-line">
+                  {data.weeklyAdvice}
                 </div>
                 <div className="mt-3 text-xs text-white/45">当前主题重心：{topTopic}</div>
               </div>
