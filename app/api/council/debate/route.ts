@@ -389,7 +389,7 @@ function mockReply(
     const memHint = memoryContext && memoryContext !== "无历史记忆可用。" ? "可对照你的记忆摘录，挑一条最相关的约束写进计划里。" : "";
     const profile = opts?.mentorId ? getMentorPromptProfile(opts.mentorId) : undefined;
     if (profile) {
-      return `${profile.name}（离线示意）：关于「${topic}」，${profile.philosophy}先写清一个可量化指标，再做一周可验证的小步并复盘。${memHint}`.trim();
+      return `${profile.name}：关于「${topic}」，${profile.philosophy}先写清一个可量化指标，再做一周可验证的小步并复盘。${memHint}`.trim();
     }
     return `导师补充：针对「${topic}」，先写清“要优化的一个指标”，再做一周可验证的小步实验并记录复盘。${memHint}`.trim();
   }
@@ -455,8 +455,8 @@ export async function POST(req: Request) {
   const apiKey = process.env.DEEPSEEK_API_KEY;
   const model = process.env.DEEPSEEK_MODEL || "deepseek-chat";
 
-  const hostMaxTokens = readPositiveIntEnv("PS2_DEBATE_HOST_MAX_TOKENS", 160);
-  const roleMaxTokens = readPositiveIntEnv("PS2_DEBATE_MAX_TOKENS", 120);
+  const hostMaxTokens = readPositiveIntEnv("PS2_DEBATE_HOST_MAX_TOKENS", 280);
+  const roleMaxTokens = readPositiveIntEnv("PS2_DEBATE_MAX_TOKENS", 250);
   const replies: RoleReply[] = [];
 
   if (mentorInviteOnly) {
